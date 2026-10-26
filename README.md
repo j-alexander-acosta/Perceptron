@@ -2,6 +2,8 @@
 
 Este repositorio implementa y demuestra la teoría según la cual **un perceptrón multicapa (MLP) es capaz de resolver el problema del operador lógico XOR ($\oplus$)**, superando la limitación histórica de separabilidad lineal del perceptrón simple (Minsky & Papert, 1969).
 
+> 📄 **Informe Académico Completo:** Consulta el documento formal en [`INFORME.md`](INFORME.md).
+
 ---
 
 ## 1. Fundamento Teórico
@@ -99,12 +101,14 @@ python3 perceptron_xor.py --auto
 
 ## Estructura del Repositorio
 ```
-├── README.md                 # Documentación técnica del proyecto
+├── README.md                 # Resumen y guía de uso rápido
+├── INFORME.md                # Informe técnico-científico académico formal
 ├── .gitignore                # Archivos ignorados por Git
 ├── perceptron_xor.py         # Implementación del perceptrón y modos de uso
 ├── xor_espacio_decision.png  # Gráfico del espacio de decisión 2D
 └── contexto/                 # Historial estructurado de requerimientos
     ├── context1.md           # Verificación teórica inicial
     ├── context2.md           # Habilitación del modo manual interactivo
-    └── context3.md           # Sincronización con GitHub
+    ├── context3.md           # Sincronización con GitHub
+    └── context4.md           # Redacción del informe académico formal
 ```
