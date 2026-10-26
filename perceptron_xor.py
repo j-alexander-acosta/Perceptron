@@ -271,10 +271,34 @@ def generate_plot(output_filename: str = "xor_espacio_decision.png"):
     print(f"[Info] Gráfico de decisión guardado en: {output_filename}")
 
 
+def launch_gui():
+    """
+    Inicia la aplicación gráfica nativa de escritorio con Tkinter.
+    """
+    try:
+        from gui_xor import launch
+        print("\nIniciando entorno gráfico de escritorio (Tkinter)...")
+        launch()
+    except Exception as e:
+        print(f"⚠️ Error al iniciar la interfaz gráfica: {e}")
+        print("Puede ejecutarla directamente con: python3 gui_xor.py")
+
+
+def launch_web():
+    """
+    Abre la aplicación gráfica web interactiva en el navegador predeterminado.
+    """
+    import os
+    import webbrowser
+    html_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "web", "index.html"))
+    print(f"\nAbriendo entorno gráfico web en: file://{html_path}")
+    webbrowser.open(f"file://{html_path}")
+
+
 def main():
     mlp = PerceptronMulticapaXOR()
     
-    # Soporte para paso directo por línea de comandos: python3 perceptron_xor.py 1 0
+    # Argumentos por línea de comandos
     if len(sys.argv) >= 3:
         try:
             x = int(sys.argv[1])
@@ -288,12 +312,20 @@ def main():
         except ValueError:
             print("Error: Argumentos no válidos. Ejemplo de uso: python3 perceptron_xor.py 1 0")
             sys.exit(1)
-    elif len(sys.argv) == 2 and sys.argv[1] in ('--auto', '-a', '--all'):
-        run_verification()
-        generate_plot()
-        return
+    elif len(sys.argv) == 2:
+        arg = sys.argv[1].lower()
+        if arg in ('--auto', '-a', '--all'):
+            run_verification()
+            generate_plot()
+            return
+        elif arg in ('--gui', '-g'):
+            launch_gui()
+            return
+        elif arg in ('--web', '-w'):
+            launch_web()
+            return
 
-    # Menú Interactivo
+    # Menú Interactivo en Consola
     while True:
         print("\n" + "=" * 65)
         print(" PERCEPTRÓN MULTICAPA - COMPUERTA XOR")
@@ -302,23 +334,29 @@ def main():
         print(" Seleccione una opción:")
         print("   [1] Ingresar datos de manera manual (X e Y)")
         print("   [2] Ver comprobación completa de la tabla de verdad")
-        print("   [3] Generar gráfico de frontera de decisión (.png)")
-        print("   [4] Salir")
+        print("   [3] Generar gráfico estático de frontera (.png)")
+        print("   [4] 🖥️  Abrir Interfaz Gráfica de Escritorio (Tkinter)")
+        print("   [5] 🌐 Abrir Interfaz Gráfica Web Interactiva (Navegador)")
+        print("   [6] Salir")
         print("-" * 65)
         
         try:
-            opc = input("Ingrese opción [1-4]: ").strip()
+            opc = input("Ingrese opción [1-6]: ").strip()
             if opc == '1':
                 run_manual_mode(mlp)
             elif opc == '2':
                 run_verification()
             elif opc == '3':
                 generate_plot()
-            elif opc in ('4', 'q', 'salir', 'exit'):
+            elif opc == '4':
+                launch_gui()
+            elif opc == '5':
+                launch_web()
+            elif opc in ('6', 'q', 'salir', 'exit'):
                 print("Saliendo. ¡Hasta luego!")
                 break
             else:
-                print("⚠️ Opción no válida. Por favor elija un número del 1 al 4.")
+                print("⚠️ Opción no válida. Por favor elija un número del 1 al 6.")
         except (KeyboardInterrupt, EOFError):
             print("\nSaliendo. ¡Hasta luego!")
             break

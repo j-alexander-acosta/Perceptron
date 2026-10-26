@@ -73,27 +73,42 @@ $$f(z - \theta) = \begin{cases} 1 & \text{si } z \ge \theta \\ 0 & \text{si } z 
 
 ---
 
-## 5. Instrucciones de Uso
+## 5. Entorno Gráfico e Instrucciones de Uso
 
-El script no requiere librerías externas para los cálculos (emplea la biblioteca estándar de Python). Para la generación del gráfico visual se utiliza opcionalmente `matplotlib`.
+### 🖥️ Interfaz Gráfica de Escritorio (Nativa con Tkinter)
+Una aplicación de escritorio interactiva con diagrama dinámico de la red, activación de neuronas, cálculo matemático en tiempo real y tabla sincronizada:
+```bash
+python3 gui_xor.py
+```
+*(También accesible mediante la opción `[4]` o con `python3 perceptron_xor.py --gui`)*.
 
-### Modo Interactivo (Menú):
+---
+
+### 🌐 Interfaz Gráfica Web Interactiva
+Una aplicación web con estética moderna (modo oscuro, brillo de activación, diagrama SVG animado, canvas 2D interactivo y tabla dinámica):
+* Abre directamente [`web/index.html`](web/index.html) en tu navegador, o ejecuta:
+```bash
+open web/index.html
+# O bien mediante el script principal:
+python3 perceptron_xor.py --web
+```
+
+---
+
+### 📟 Modo Consola e Interactivo:
 ```bash
 python3 perceptron_xor.py
 ```
-Permite seleccionar entre:
-* **[1] Ingreso manual de datos:** Evalúa pares $(X, Y)$ con desglose aritmético paso a paso.
+Opciones del menú:
+* **[1] Ingreso manual:** Introduce $X$ e $Y$ por teclado con validación.
 * **[2] Comprobación completa:** Muestra la tabla de verdad y trazado de todos los casos.
-* **[3] Generar gráfico de decisión:** Exporta `xor_espacio_decision.png`.
+* **[3] Generar gráfico de frontera (.png):** Exporta `xor_espacio_decision.png`.
+* **[4] Abrir GUI de escritorio (Tkinter).**
+* **[5] Abrir GUI Web (Navegador).**
 
-### Paso Directo de Parámetros por Consola:
+**Paso directo por consola:**
 ```bash
 python3 perceptron_xor.py 1 0
-python3 perceptron_xor.py 1 1
-```
-
-### Ejecución Automática Completa:
-```bash
 python3 perceptron_xor.py --auto
 ```
 
@@ -105,10 +120,14 @@ python3 perceptron_xor.py --auto
 ├── INFORME.md                # Informe técnico-científico académico formal
 ├── .gitignore                # Archivos ignorados por Git
 ├── perceptron_xor.py         # Implementación del perceptrón y modos de uso
+├── gui_xor.py                # Interfaz gráfica de escritorio (Tkinter)
+├── web/
+│   └── index.html            # Entorno gráfico web interactivo (SVG + Canvas)
 ├── xor_espacio_decision.png  # Gráfico del espacio de decisión 2D
 └── contexto/                 # Historial estructurado de requerimientos
     ├── context1.md           # Verificación teórica inicial
     ├── context2.md           # Habilitación del modo manual interactivo
     ├── context3.md           # Sincronización con GitHub
-    └── context4.md           # Redacción del informe académico formal
+    ├── context4.md           # Redacción del informe académico formal
+    └── context5.md           # Creación del entorno gráfico interactivo
 ```
