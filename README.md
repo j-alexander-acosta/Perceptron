@@ -1,133 +1,80 @@
-# Perceptrón Multicapa para Resolver la Función XOR
+# Aproximación Universal con Redes Neuronales y Perceptrón Multicapa (XOR)
 
-Este repositorio implementa y demuestra la teoría según la cual **un perceptrón multicapa (MLP) es capaz de resolver el problema del operador lógico XOR ($\oplus$)**, superando la limitación histórica de separabilidad lineal del perceptrón simple (Minsky & Papert, 1969).
+Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos de la clase **«Aproximación Universal con Redes Neuronales»** (*Ciencia de Datos — Doctorado UCN, basado en el curso CMU 11-785 de B. Raj et al.*).
 
-> 📄 **Informe Académico Completo:** Consulta el documento formal en [`INFORME.md`](INFORME.md).
-
----
-
-## 1. Fundamento Teórico
-
-El operador lógico **XOR** se define mediante la siguiente equivalencia booleana:
-
-$$X \oplus Y = (X \lor Y) \land (\bar{X} \lor \bar{Y})$$
-
-> *"Disparar cuando al menos uno es 1 y no ambos. Componer capas sí resuelve XOR."*
-
-### Función de Activación
-Se utiliza la función escalón unitario (Heaviside) con umbral $\theta$:
-
-$$f(z - \theta) = \begin{cases} 1 & \text{si } z \ge \theta \\ 0 & \text{si } z < \theta \end{cases} \quad \text{donde } z = \sum_{i} w_i x_i$$
+> 📄 **Informe Académico Completo:** Consulta el desarrollo matemático y las demostraciones en [`INFORME.md`](INFORME.md).
 
 ---
 
-## 2. Arquitectura de la Red
+## 🎓 Los 4 Ejes Educativos Implementados
 
-```
-       X (Entrada)               Capa Oculta                       Salida
-          \        1        +-------------------+
-           \ -------------> |   Neurona 1       | 1
-            \        -1     |   (Umbral: 1)     | ----\
-             \    /-------> |   h1 = X ∨ Y      |      \
-              \  /          +-------------------+       \   +-------------------+
-               \/                                        -> |   Neurona Salida  |
-               /\                                        -> |   (Umbral: 2)     | ---> X ⊕ Y
-              /  \          +-------------------+       /   |   X ⊕ Y = h1 ∧ h2 |
-             /    \-------> |   Neurona 2       |      /    +-------------------+
-            /        1      |   (Umbral: -1)    | ----/ 1
-           / -------------> |   h2 = X̄ ∨ Ȳ      |
-          /                 +-------------------+
-       Y (Entrada)
-```
+### 1. El MLP como Función Booleana Universal (Diapositivas 11–29)
+* **Compuertas lógicas y universales de $N$ entradas:** Una sola unidad de umbral calcula «al menos $K$ de $N$» asignando pesos $\pm 1$ y umbral $L - N + K$.
+* **Dos arquitecturas para XOR:**
+  1. **MLP Clásico (3 neuronas):** Capa oculta con `OR` ($X+Y \ge 1$) y `NAND` ($-X-Y \ge -1$), combinadas por una salida `AND` ($h_1 + h_2 \ge 2$).
+  2. **Construcción de Friedland (Solo 2 neuronas):** Una única neurona oculta calcula $X \land Y$ (umbral 2) y la neurona de salida recibe conexiones directas de $X$ e $Y$ evaluando $X + Y - 2(X \land Y) \ge 1$.
+* **Síntesis vía Forma Normal Disyuntiva (DNF) y Mapas de Karnaugh:** Cualquier tabla de verdad se convierte en un MLP de **una sola capa oculta** (una neurona `AND` por minitérmino con salida `1` y una neurona `OR` de salida). Reducir el mapa de Karnaugh equivale a reducir el ancho de la capa oculta (por ejemplo, de 7 a 3 neuronas en la diapositiva 19).
+* **El costo exponencial de una sola capa oculta vs. redes profundas:** El peor caso booleano es el «tablero de ajedrez» (la función de paridad $X_1 \oplus X_2 \oplus \dots \oplus X_N$).
+  * Con **una sola capa oculta**: requiere **$2^{N-1}$ neuronas ocultas** ($2^{N-1} + 1$ en total). Para $N=16$, exige $32,769$ neuronas.
+  * Con una **red profunda en árbol** de bloques XOR: requiere solo **$3(N-1)$ neuronas** (o $2(N-1)$ con bloques de 2 neuronas) organizadas en $2\log_2(N)$ capas. Para $N=16$, apenas $45$ neuronas.
 
-### Especificación de Neuronas:
-1. **Neurona Oculta 1 ($h_1$ - Disyunción / OR):**
-   - Pesos: $w_{1,X} = 1.0, w_{1,Y} = 1.0$
-   - Umbral: $\theta_1 = 1.0$
-   - Ecuación: $z_1 = 1\cdot X + 1\cdot Y$. Dispara ($h_1=1$) si $X + Y \ge 1$.
-2. **Neurona Oculta 2 ($h_2$ - Negación de Conjunción / NAND):**
-   - Pesos: $w_{2,X} = -1.0, w_{2,Y} = -1.0$
-   - Umbral: $\theta_2 = -1.0$
-   - Ecuación: $z_2 = -X - Y$. Dispara ($h_2=1$) si $-X - Y \ge -1 \iff X + Y \le 1$.
-3. **Neurona de Salida (Conjunción / AND de la capa oculta):**
-   - Pesos: $w_{\text{out},1} = 1.0, w_{\text{out},2} = 1.0$
-   - Umbral: $\theta_{\text{out}} = 2.0$
-   - Ecuación: $z_{\text{out}} = 1\cdot h_1 + 1\cdot h_2$. Dispara ($\text{Salida}=1$) si $h_1 + h_2 \ge 2$.
+### 2. El MLP como Clasificador Universal en $\mathbb{R}^2$ (Diapositivas 30–48)
+* **De polígonos al cilindro circular:** Un polígono convexo de $N$ lados se construye con $N$ neuronas ocultas (una por semiplano) y una salida `AND` con umbral $N$.
+* **El piso asintótico $N/2$ y el rol del sesgo:** Al aumentar $N \to \infty$, el polígono tiende a un círculo de radio $r$. Adentro la suma vale $N$, y afuera (a distancia $d > r$) cae según:
+  $$\sum_{i=1}^N y_i = N\left(\frac{1}{2} + \frac{1}{\pi}\arcsin\frac{r}{d}\right) \xrightarrow{d \to \infty} \frac{N}{2}$$
+  Agregando un **sesgo $-N/2$** en la salida, el piso exterior baja a $\approx 0$, permitiendo sumar múltiples círculos en una sola capa oculta para aproximar cualquier región arbitraria.
+
+### 3. El MLP como Aproximador Universal de Funciones Continuas (Diapositivas 49–54)
+* **Construcción con pulsos cuadrados:** Dos neuronas de umbral en la capa oculta ($\mathbf{1}[x \ge T_1]$ con peso $+h_i$ y $\mathbf{1}[x \ge T_2]$ con peso $-h_i$) generan un pulso cuadrado de altura $h_i$ en $[T_1, T_2]$. Sumando múltiples pulsos se aproxima cualquier función continua $f(x)$ con error $\varepsilon > 0$ arbitrariamente pequeño.
+* **Tres verbos que no dicen lo mismo:** *Representar* (igualdad exacta), *Aproximar* (error $< \varepsilon$ con red finita) y *el límite* ($\varepsilon \to 0$).
+
+### 4. Suficiencia de la Arquitectura: Ancho, Profundidad y Activaciones (Diapositivas 55–61)
+* **Franjas y celdas:** Una capa con pocas neuronas de umbral colapsa regiones enteras del espacio al mismo código binario, perdiendo información fina que ninguna capa posterior puede recuperar.
+* **Activaciones graduadas ($\sigma(z)$, $\tanh(z)$, $\text{ReLU}(z)$):** A diferencia del escalón binario, transmiten *cuánto más allá* de la frontera se encuentra la entrada.
+* **El triángulo de compensaciones:** **Ancho $\leftrightarrow$ Profundidad $\leftrightarrow$ Activaciones** se compensan parcialmente entre sí, pero ninguno reemplaza por completo a los otros.
 
 ---
 
-## 3. Tabla de Verdad y Comprobación
+## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-| $X$ | $Y$ | $z_1 = X+Y$ | $h_1$ ($z_1 \ge 1$) | $z_2 = -X-Y$ | $h_2$ ($z_2 \ge -1$) | $z_{\text{out}} = h_1+h_2$ | Salida ($z_{\text{out}} \ge 2$) | Esperado ($X \oplus Y$) | ¿Correcto? |
-|:---:|:---:|:-----------:|:-------------------:|:------------:|:--------------------:|:--------------------------:|:-------------------------------:|:-----------------------:|:----------:|
-|  0  |  0  |     0.0     |        **0**        |      0.0     |        **1**         |            1.0             |              **0**              |          **0**          |   ✅ SÍ    |
-|  0  |  1  |     1.0     |        **1**        |     -1.0     |        **1**         |            2.0             |              **1**              |          **1**          |   ✅ SÍ    |
-|  1  |  0  |     1.0     |        **1**        |     -1.0     |        **1**         |            2.0             |              **1**              |          **1**          |   ✅ SÍ    |
-|  1  |  1  |     2.0     |        **1**        |     -2.0     |        **0**         |            1.0             |              **0**              |          **0**          |   ✅ SÍ    |
-
----
-
-## 4. Frontera de Decisión Geométrica
-
-![Espacio de Decisión](xor_espacio_decision.png)
-
----
-
-## 5. Entorno Gráfico e Instrucciones de Uso
-
-### 🖥️ Interfaz Gráfica de Escritorio (Nativa con Tkinter)
-Una aplicación de escritorio interactiva con diagrama dinámico de la red, activación de neuronas, cálculo matemático en tiempo real y tabla sincronizada:
-```bash
-python3 gui_xor.py
-```
-*(También accesible mediante la opción `[4]` o con `python3 perceptron_xor.py --gui`)*.
-
----
-
-### 🌐 Interfaz Gráfica Web Interactiva
-Una aplicación web con estética moderna (modo oscuro, brillo de activación, diagrama SVG animado, canvas 2D interactivo y tabla dinámica):
-* Abre directamente [`web/index.html`](web/index.html) en tu navegador, o ejecuta:
+### 1. 🌐 Suite Web Educativa Interactiva (5 Laboratorios en Tiempo Real)
+Incluye simulador de compuertas y XOR (3 vs. 2 neuronas), Mapa de Karnaugh $4\times 4$ interactivo, comparador exponencial vs. profundo, compositor geométrico 2D de polígonos/círculos, aproximador de funciones continuas por pulsos y autoevaluación interactiva:
 ```bash
 open web/index.html
-# O bien mediante el script principal:
+# O desde Python:
 python3 perceptron_xor.py --web
 ```
 
----
-
-### 📟 Modo Consola e Interactivo:
+### 2. 🎓 Laboratorio Educativo en Consola (`aproximacion_universal.py`)
+Ejecuta todas las demostraciones matemáticas y tablas comparativas de las 61 diapositivas:
 ```bash
+# Modo interactivo por módulos:
+python3 aproximacion_universal.py
+
+# Ejecutar todas las demostraciones de una vez:
+python3 aproximacion_universal.py --auto
+```
+
+### 3. 🖥️ Aplicación de Escritorio Nativa XOR (`gui_xor.py`) y Script Principal (`perceptron_xor.py`)
+```bash
+# Menú integrado completo:
 python3 perceptron_xor.py
-```
-Opciones del menú:
-* **[1] Ingreso manual:** Introduce $X$ e $Y$ por teclado con validación.
-* **[2] Comprobación completa:** Muestra la tabla de verdad y trazado de todos los casos.
-* **[3] Generar gráfico de frontera (.png):** Exporta `xor_espacio_decision.png`.
-* **[4] Abrir GUI de escritorio (Tkinter).**
-* **[5] Abrir GUI Web (Navegador).**
 
-**Paso directo por consola:**
-```bash
-python3 perceptron_xor.py 1 0
-python3 perceptron_xor.py --auto
+# Interfaz nativa con Tkinter:
+python3 gui_xor.py
 ```
 
 ---
 
-## Estructura del Repositorio
+## 📁 Estructura del Proyecto
 ```
-├── README.md                 # Resumen y guía de uso rápido
-├── INFORME.md                # Informe técnico-científico académico formal
-├── .gitignore                # Archivos ignorados por Git
-├── perceptron_xor.py         # Implementación del perceptrón y modos de uso
-├── gui_xor.py                # Interfaz gráfica de escritorio (Tkinter)
+├── README.md                    # Guía general y síntesis de los 4 pilares educativos
+├── INFORME.md                   # Informe académico detallado de toda la teoría y pruebas
+├── aproximacion_universal.py    # Implementación en Python de los 4 módulos de Aproximación Universal
+├── perceptron_xor.py            # Verificador del MLP XOR y lanzador central
+├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html            # Entorno gráfico web interactivo (SVG + Canvas)
-├── xor_espacio_decision.png  # Gráfico del espacio de decisión 2D
-└── contexto/                 # Historial estructurado de requerimientos
-    ├── context1.md           # Verificación teórica inicial
-    ├── context2.md           # Habilitación del modo manual interactivo
-    ├── context3.md           # Sincronización con GitHub
-    ├── context4.md           # Redacción del informe académico formal
-    └── context5.md           # Creación del entorno gráfico interactivo
+│   └── index.html               # Suite Educativa Web con 5 laboratorios interactivos
+├── xor_espacio_decision.png     # Gráfico 2D de separación lineal para XOR
+└── contexto/                    # Historial secuencial de planes de trabajo (context1..context6)
 ```

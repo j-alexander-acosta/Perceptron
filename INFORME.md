@@ -207,20 +207,43 @@ La ejecución del modelo sobre la totalidad del espacio de estados arrojó la si
 
 ---
 
-## 6. Discusión y Relevancia en el Aprendizaje Profundo
+## 6. Aproximación Universal con Redes Neuronales (Extensión Completa CMU 11-785)
 
-La superación del problema XOR mediante la composición de capas no es únicamente un ejercicio de álgebra booleana, sino la piedra angular sobre la que se fundamenta el **Aprendizaje Profundo moderno** (*Deep Learning*):
+En adición al caso fundamental de XOR, el módulo [`aproximacion_universal.py`](aproximacion_universal.py) y la suite interactiva [`web/index.html`](web/index.html) implementan los cuatro pilares de la teoría de **Aproximación Universal**:
 
-1. **Aprendizaje de representaciones:** El éxito del perceptrón multicapa radica en que las capas intermedias aprenden o construyen un nuevo espacio de características (*feature representation*) en el que problemas originalmente intrincados o no lineales se vuelven linealmente solubles.
-2. **Teorema de Aproximación Universal:** Demostrado posteriormente por George Cybenko (1989) y Kurt Hornik (1991), formaliza que una red neuronal *feedforward* con al menos una capa oculta y funciones de activación continuas no lineales puede aproximar cualquier función continua en subconjuntos compactos de $\mathbb{R}^n$ con cualquier grado de precisión arbitrario. El ejemplo XOR es la mínima manifestación discreta de este principio.
+### 6.1. El MLP como Función Booleana Universal y el Costo de Una Sola Capa
+* **Construcción de Friedland para XOR con 2 neuronas:** Si se permiten conexiones directas desde las entradas hacia la neurona de salida (*skip connections*), basta **una única neurona oculta** $h = \mathbf{1}[X + Y \ge 2] = X \land Y$ y una neurona de salida que evalúa:
+  $$y = \mathbf{1}[X + Y - 2(X \land Y) \ge 1]$$
+  empleando en total solo **2 neuronas, 5 pesos y 2 umbrales**.
+* **Síntesis por Forma Normal Disyuntiva (DNF) y Mapas de Karnaugh:** Cualquier función booleana $f:\{0,1\}^N \to \{0,1\}$ se puede expresar como una disyunción (`OR`) de conjunciones (`AND`), asignando una neurona oculta por cada fila activa de la tabla de verdad. La simplificación mediante Mapas de Karnaugh reduce directamente el ancho de la capa oculta (por ejemplo, de 7 a 3 neuronas ocultas para la función $Y = \bar{Y}\bar{Z} + \bar{W}X\bar{Y} + \bar{X}\bar{Z}$).
+* **El peor caso (Tablero de Ajedrez / Paridad de $N$ variables):** Cuando dos entradas que difieren en un solo bit siempre producen salidas distintas ($O = X_1 \oplus X_2 \oplus \dots \oplus X_N$), ningún término del mapa de Karnaugh se puede agrupar:
+  * **Con una sola capa oculta:** requiere **$2^{N-1}$ neuronas ocultas** ($2^{N-1} + 1$ neuronas en total), creciendo exponencialmente. Para $N=16$, requiere $32,769$ neuronas.
+  * **Con una red profunda en árbol:** componiendo bloques XOR en un árbol binario de $2\log_2(N)$ capas, el costo cae a **$3(N-1)$ neuronas** (o $2(N-1)$ con bloques de Friedland), creciendo linealmente con $N$ ($45$ neuronas para $N=16$).
+
+### 6.2. El MLP como Clasificador Universal en $\mathbb{R}^D$
+* **Polígonos y el límite del cilindro circular:** Cada neurona oculta define un semiplano. Con $N$ neuronas ocultas rodeando una región central y una neurona de salida `AND` con umbral $N$, se captura cualquier polígono convexo de $N$ lados.
+* **El piso asintótico $N/2$:** Cuando $N \to \infty$, el polígono tiende a un círculo de radio $r$. Adentro la suma vale $N$, mientras que afuera (a distancia $d > r$ del centro) la suma obedece:
+  $$\sum_{i=1}^N y_i = N\left(\frac{1}{2} + \frac{1}{\pi}\arcsin\frac{r}{d}\right) \xrightarrow{d \to \infty} \frac{N}{2}$$
+  Incorporando un **sesgo $b = -N/2$** en la salida, el piso exterior se anula ($\approx 0$) y el cilindro interior queda con altura $N/2$, permitiendo sumar múltiples cilindros circulares en una misma capa oculta para aproximar cualquier región de decisión con precisión arbitraria.
+
+### 6.3. El MLP como Aproximador Universal de Funciones Continuas
+* **Suma de pulsos cuadrados:** En 1D, dos neuronas de umbral en la capa oculta ($\mathbf{1}[x \ge T_1]$ con peso $+h_i$ y $\mathbf{1}[x \ge T_2]$ con peso $-h_i$) generan un pulso rectangular de altura $h_i$ en el intervalo $[T_1, T_2]$. Sumando $P$ pulsos (usando $2P$ neuronas ocultas y una salida lineal sumadora) se aproxima cualquier función continua $f(x)$.
+* **Distinción conceptual clave:**
+  * **Representar:** Calcular exactamente $f(x)$ (con unidades de umbral solo es posible si $f$ ya es escalonada).
+  * **Aproximar:** Para cualquier tolerancia $\varepsilon > 0$, existe una red *finita* cuyo error es menor que $\varepsilon$.
+  * **El límite:** Aunque $\varepsilon \to 0$ al afinar los pulsos, ninguna suma de pulsos deja de ser escalonada; la universalidad es de aproximación, no de igualdad exacta.
+
+### 6.4. Suficiencia de la Arquitectura: Ancho, Profundidad y Activaciones
+* **Cuello de botella por ancho insuficiente (Franjas vs. Celdas):** Una primera capa con pocas neuronas de umbral particiona el plano en un número reducido de celdas. Como la función escalón entrega únicamente `0` o `1`, todos los puntos que caen en la misma celda reciben exactamente el mismo vector binario; la posición fina dentro de la celda se pierde irreversiblemente y ninguna cantidad de capas posteriores puede recuperarla.
+* **Activaciones graduadas ($\sigma(z)$, $\tanh(z)$, $\text{ReLU}(z)$):** Al variar continuamente con la distancia a la frontera $z = \mathbf{w}\cdot\mathbf{x} + b$, transmiten información de magnitud hacia las capas siguientes, compensando parcialmente la falta de ancho si se dispone de mayor profundidad (**Triángulo de compensaciones: Ancho $\leftrightarrow$ Profundidad $\leftrightarrow$ Activaciones**).
 
 ---
 
 ## 7. Conclusiones
 
-1. **Comprobación de la teoría:** Se demostró de manera analítica y computacional que la red neuronal propuesta con los pesos $[1, 1]$ (umbral $1$), $[-1, -1]$ (umbral $-1$) en la capa oculta y $[1, 1]$ (umbral $2$) en la salida resuelve de forma exacta el operador lógico XOR.
-2. **Rol de la capa oculta:** La capa oculta actúa como un transformador geométrico que proyecta el espacio de entrada bidimensional en una nueva base donde la disyunción y la negación de la conjunción permiten aislar los estados donde $X \neq Y$.
-3. **Validación empírica:** Todos los estados evaluados en `perceptron_xor.py` arrojaron concordancia perfecta (100% de precisión) con la tabla teórica de la compuerta XOR.
+1. **Comprobación de la teoría:** Se demostró de manera analítica y computacional que la red neuronal propuesta con los pesos $[1, 1]$ (umbral $1$), $[-1, -1]$ (umbral $-1$) en la capa oculta y $[1, 1]$ (umbral $2$) en la salida resuelve de forma exacta el operador lógico XOR, al igual que la variante compacta de 2 neuronas de Friedland.
+2. **Universalidad y rol de la profundidad:** Un MLP de una sola capa oculta es un aproximador universal para funciones booleanas, fronteras de clasificación y funciones continuas, pero puede requerir un ancho exponencial ($2^{N-1}$). Las arquitecturas profundas logran la misma expresividad con un número lineal de unidades ($3(N-1)$).
+3. **Validación empírica e interactiva:** Todos los módulos evaluados en `perceptron_xor.py`, `aproximacion_universal.py` y la suite web interactiva `web/index.html` arrojaron concordancia del 100% con los teoremas y construcciones de la cátedra.
 
 ---
 
@@ -231,3 +254,4 @@ La superación del problema XOR mediante la composición de capas no es únicame
 3. **Minsky, M., & Papert, S. (1969).** *Perceptrons: An Introduction to Computational Geometry.* MIT Press, Cambridge, MA.
 4. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
 5. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
+6. **Raj, B., et al. (CMU 11-785).** *Introduction to Deep Learning — Universal Approximation & Neural Networks as Universal Approximators.* Carnegie Mellon University / Ciencia de Datos UCN.

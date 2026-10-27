@@ -295,6 +295,17 @@ def launch_web():
     webbrowser.open(f"file://{html_path}")
 
 
+def launch_universal_approx():
+    """
+    Ejecuta el laboratorio interactivo de Aproximación Universal con Redes Neuronales.
+    """
+    try:
+        from aproximacion_universal import interactive_menu
+        interactive_menu()
+    except Exception as e:
+        print(f"⚠️ Error al cargar el módulo de Aproximación Universal: {e}")
+
+
 def main():
     mlp = PerceptronMulticapaXOR()
     
@@ -317,6 +328,8 @@ def main():
         if arg in ('--auto', '-a', '--all'):
             run_verification()
             generate_plot()
+            from aproximacion_universal import run_all_demos
+            run_all_demos()
             return
         elif arg in ('--gui', '-g'):
             launch_gui()
@@ -324,24 +337,28 @@ def main():
         elif arg in ('--web', '-w'):
             launch_web()
             return
+        elif arg in ('--universal', '-u'):
+            launch_universal_approx()
+            return
 
     # Menú Interactivo en Consola
     while True:
-        print("\n" + "=" * 65)
-        print(" PERCEPTRÓN MULTICAPA - COMPUERTA XOR")
-        print(" Teoría: 'El perceptrón multicapa resuelve XOR'")
-        print("=" * 65)
+        print("\n" + "=" * 70)
+        print(" PERCEPTRÓN MULTICAPA Y APROXIMACIÓN UNIVERSAL — UCN")
+        print(" Teoría: 'El perceptrón multicapa resuelve XOR y es Aproximador Universal'")
+        print("=" * 70)
         print(" Seleccione una opción:")
-        print("   [1] Ingresar datos de manera manual (X e Y)")
-        print("   [2] Ver comprobación completa de la tabla de verdad")
+        print("   [1] Ingresar datos de manera manual para XOR (X e Y)")
+        print("   [2] Ver comprobación completa de la tabla de verdad XOR")
         print("   [3] Generar gráfico estático de frontera (.png)")
-        print("   [4] 🖥️  Abrir Interfaz Gráfica de Escritorio (Tkinter)")
-        print("   [5] 🌐 Abrir Interfaz Gráfica Web Interactiva (Navegador)")
-        print("   [6] Salir")
-        print("-" * 65)
+        print("   [4] 🖥️  Abrir Interfaz Gráfica de Escritorio XOR (Tkinter)")
+        print("   [5] 🌐 Abrir Suite Educativa Web Interactiva (5 Laboratorios en Navegador)")
+        print("   [6] 🎓 Laboratorio en Consola: Aproximación Universal (DNF, Polígonos, Pulsos)")
+        print("   [7] Salir")
+        print("-" * 70)
         
         try:
-            opc = input("Ingrese opción [1-6]: ").strip()
+            opc = input("Ingrese opción [1-7]: ").strip()
             if opc == '1':
                 run_manual_mode(mlp)
             elif opc == '2':
@@ -352,11 +369,13 @@ def main():
                 launch_gui()
             elif opc == '5':
                 launch_web()
-            elif opc in ('6', 'q', 'salir', 'exit'):
+            elif opc == '6':
+                launch_universal_approx()
+            elif opc in ('7', 'q', 'salir', 'exit'):
                 print("Saliendo. ¡Hasta luego!")
                 break
             else:
-                print("⚠️ Opción no válida. Por favor elija un número del 1 al 6.")
+                print("⚠️ Opción no válida. Por favor elija un número del 1 al 7.")
         except (KeyboardInterrupt, EOFError):
             print("\nSaliendo. ¡Hasta luego!")
             break

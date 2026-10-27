@@ -3,35 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador Interactivo: Perceptrón Multicapa XOR</title>
+  <title>Suite Educativa Interactiva: Aproximación Universal con Redes Neuronales — UCN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0b0f19;
-      --card-bg: rgba(18, 24, 38, 0.75);
-      --card-border: rgba(56, 189, 248, 0.15);
-      --card-glow: rgba(56, 189, 248, 0.08);
+      --bg-secondary: #111827;
+      --card-bg: rgba(18, 24, 38, 0.85);
+      --card-border: rgba(56, 189, 248, 0.18);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
       --accent-hover: #0ea5e9;
+      --amber: #f59e0b;
       --green: #22c55e;
-      --green-glow: rgba(34, 197, 94, 0.4);
+      --green-glow: rgba(34, 197, 94, 0.35);
       --red: #ef4444;
-      --red-glow: rgba(239, 68, 68, 0.4);
+      --red-glow: rgba(239, 68, 68, 0.35);
+      --purple: #a855f7;
       --node-off: #1e293b;
       --node-border-off: #475569;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Fira Code', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg);
@@ -40,913 +38,1721 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-image: 
-        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.06) 0%, transparent 40%);
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 88% 82%, rgba(168, 85, 247, 0.07) 0%, transparent 40%);
       background-attachment: fixed;
     }
 
-    /* Header */
+    /* Header & Navigation */
     header {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(12px);
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1.2rem 2rem;
+      padding: 1rem 2rem 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 0.9rem;
     }
 
     .header-title h1 {
       font-size: 1.35rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+      background: linear-gradient(135deg, #ffffff 25%, var(--accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .header-title p {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       margin-top: 0.2rem;
     }
 
-    .badge-formula {
+    .badge-course {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-size: 0.78rem;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
       color: var(--accent);
-      padding: 0.4rem 0.8rem;
-      border-radius: 9999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      white-space: nowrap;
     }
 
-    /* Container */
+    /* Module Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding-bottom: 0;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 0.7rem 1.05rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    /* Main Content Container */
     main {
       flex: 1;
-      max-width: 1400px;
+      max-width: 1440px;
       width: 100%;
       margin: 0 auto;
       padding: 1.5rem;
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 1.5rem;
     }
 
-    @media (max-width: 900px) {
-      main {
-        grid-template-columns: 1fr;
-      }
+    .module-panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .module-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 1.4rem;
+    }
+
+    .grid-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+    }
+
+    @media (max-width: 980px) {
+      .grid-2, .grid-equal { grid-template-columns: 1fr; }
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
+      padding: 1.35rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
       display: flex;
       flex-direction: column;
       gap: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     .card-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
+      font-size: 1.02rem;
+      font-weight: 700;
       color: #fff;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 0.8rem;
-    }
-
-    /* Network Visualizer */
-    .network-container {
-      position: relative;
-      background: #070b14;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      min-height: 360px;
-      overflow: hidden;
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    svg.network-svg {
-      width: 100%;
-      height: 100%;
-      min-height: 360px;
-    }
-
-    /* SVG Elements */
-    .synapse-line {
-      stroke: #1e293b;
-      stroke-width: 2;
-      transition: stroke 0.3s, stroke-width 0.3s;
-    }
-
-    .synapse-line.active {
-      stroke: var(--accent);
-      stroke-width: 3.5;
-      filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
-    }
-
-    .synapse-line.active-negative {
-      stroke: #a855f7;
-      stroke-width: 3.5;
-      filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6));
-    }
-
-    .synapse-weight {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 600;
-      fill: #64748b;
-      transition: fill 0.3s;
-    }
-
-    .synapse-weight.active {
-      fill: #e2e8f0;
-      font-weight: 700;
-    }
-
-    .node-halo {
-      fill: none;
-      stroke: transparent;
-      stroke-width: 4;
-      transition: stroke 0.3s;
-    }
-
-    .node-circle {
-      fill: var(--node-off);
-      stroke: var(--node-border-off);
-      stroke-width: 2.5;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .node-group.active .node-circle {
-      fill: #0c4a6e;
-      stroke: var(--accent);
-      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.7));
-    }
-
-    .node-group.active-output .node-circle {
-      fill: #14532d;
-      stroke: var(--green);
-      filter: drop-shadow(0 0 16px rgba(34, 197, 94, 0.8));
-    }
-
-    .node-group.inactive-output .node-circle {
-      fill: #450a0a;
-      stroke: #7f1d1d;
-    }
-
-    .node-text-val {
-      font-family: var(--font-sans);
-      font-weight: 700;
-      font-size: 16px;
-      fill: #94a3b8;
-      text-anchor: middle;
-      dominant-baseline: central;
-      pointer-events: none;
-      transition: fill 0.3s;
-    }
-
-    .node-group.active .node-text-val {
-      fill: #fff;
-    }
-
-    .node-label-title {
-      font-size: 12px;
-      font-weight: 700;
-      fill: var(--accent);
-      text-anchor: middle;
-      letter-spacing: 0.03em;
-    }
-
-    .node-label-sub {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      fill: #94a3b8;
-      text-anchor: middle;
-    }
-
-    /* Signal animation pulses */
-    @keyframes pulseParticle {
-      0% { offset-distance: 0%; opacity: 1; }
-      100% { offset-distance: 100%; opacity: 0.2; }
-    }
-
-    /* Controls Panel */
-    .controls-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .input-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .input-box-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .toggle-group {
-      display: flex;
-      background: #0f172a;
-      border-radius: 8px;
-      padding: 3px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .toggle-btn {
-      flex: 1;
-      padding: 0.5rem 0;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      font-size: 1rem;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .toggle-btn:hover {
-      color: #fff;
-    }
-
-    .toggle-btn.active {
-      background: var(--accent);
-      color: #0b0f19;
-      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
-    }
-
-    /* Big Output Banner */
-    .output-banner {
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1rem 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.3s;
-    }
-
-    .output-banner.state-1 {
-      background: rgba(34, 197, 94, 0.1);
-      border-color: rgba(34, 197, 94, 0.4);
-    }
-
-    .output-banner.state-0 {
-      background: rgba(239, 68, 68, 0.08);
-      border-color: rgba(239, 68, 68, 0.3);
-    }
-
-    .output-banner-left {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .output-banner-title {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .output-banner-subtitle {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
-
-    .output-badge {
-      font-size: 1.8rem;
-      font-weight: 800;
-      font-family: var(--font-mono);
-      padding: 0.3rem 1.2rem;
-      border-radius: 10px;
-    }
-
-    .output-badge.state-1 {
-      color: var(--green);
-      background: rgba(34, 197, 94, 0.15);
-      border: 1px solid var(--green);
-      box-shadow: 0 0 15px var(--green-glow);
-    }
-
-    .output-badge.state-0 {
-      color: var(--red);
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid var(--red);
-    }
-
-    /* Math Inspector */
-    .math-card {
-      background: #080d1a;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 0.85rem 1rem;
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
-
-    .math-step {
-      margin-bottom: 0.6rem;
-      padding-bottom: 0.6rem;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-    }
-
-    .math-step:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .math-step-title {
-      color: var(--accent);
-      font-weight: 600;
-      margin-bottom: 0.2rem;
-    }
-
-    .math-highlight-green {
-      color: var(--green);
-      font-weight: 600;
-    }
-
-    .math-highlight-red {
-      color: #f87171;
-    }
-
-    /* Truth Table */
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table.truth-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-
-    table.truth-table th {
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--accent);
-      font-weight: 600;
-      padding: 0.6rem 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    table.truth-table td {
-      padding: 0.6rem 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: #cbd5e1;
-      font-family: var(--font-mono);
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    table.truth-table tr:hover td {
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    table.truth-table tr.active-row td {
-      background: rgba(56, 189, 248, 0.15);
-      color: #fff;
-      font-weight: 700;
-    }
-
-    table.truth-table tr.active-row td:first-child {
-      border-left: 3px solid var(--accent);
-    }
-
-    /* Interactive 2D Decision Plot */
-    .plot-container {
-      position: relative;
-      background: #080d1a;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 0.5rem;
     }
 
-    canvas#decisionCanvas {
+    .slide-ref {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--amber);
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    /* Callouts */
+    .edu-callout {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 4px solid var(--accent);
+      padding: 0.85rem 1rem;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .edu-callout.warn {
+      background: rgba(245, 158, 11, 0.08);
+      border-left-color: var(--amber);
+    }
+
+    .edu-callout strong { color: #fff; }
+
+    /* Controls & Sliders */
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.75);
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .slider-group {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .slider-val {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    input[type="range"] {
       width: 100%;
-      max-width: 320px;
-      height: 240px;
-      background: #0b0f19;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .btn {
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn:hover, .btn.active {
+      background: var(--accent);
+      color: #0b0f19;
+      border-color: var(--accent);
+    }
+
+    /* SVG & Canvas Containers */
+    .viz-box {
+      background: #070b14;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    canvas {
+      max-width: 100%;
       border-radius: 8px;
     }
 
-    .plot-caption {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+    /* Tables */
+    .edu-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
       text-align: center;
     }
 
-    /* Quick Action Buttons */
-    .action-row {
-      display: flex;
-      gap: 0.8rem;
+    .edu-table th {
+      background: rgba(30, 41, 59, 0.85);
+      color: var(--text-muted);
+      padding: 0.55rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .btn-action {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
+    .edu-table td {
+      padding: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .edu-table tr.clickable { cursor: pointer; transition: background 0.15s; }
+    .edu-table tr.clickable:hover { background: rgba(255, 255, 255, 0.05); }
+    .edu-table tr.active-row {
+      background: rgba(56, 189, 248, 0.18);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Karnaugh Map Grid */
+    .kmap-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .kmap-grid {
+      display: grid;
+      grid-template-columns: 48px repeat(4, 58px);
+      gap: 5px;
+      font-family: var(--font-mono);
+    }
+
+    .kmap-header {
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      height: 36px;
     }
 
-    .btn-action:hover {
-      background: var(--accent);
-      color: #0b0f19;
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    .kmap-cell {
+      height: 54px;
+      border-radius: 8px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .kmap-cell span.coords {
+      font-size: 0.62rem;
+      color: #64748b;
+      font-weight: 400;
+    }
+
+    .kmap-cell.val-1 {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: var(--amber);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+    }
+
+    .kmap-cell.val-1 span.coords { color: #fde68a; }
+
+    /* Stat Pills */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .stat-box {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .stat-box .lbl {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-box .val {
+      font-family: var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-box .val.danger { color: var(--red); }
+    .stat-box .val.success { color: var(--green); }
+
+    /* Quiz cards for Module 5 */
+    .quiz-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .quiz-q {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .quiz-ans {
+      font-size: 0.83rem;
+      line-height: 1.45;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .quiz-ans.show { display: block; }
+    .quiz-ans.true-ans { background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.35); color: #bbf7d0; }
+    .quiz-ans.false-ans { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); color: #fecaca; }
+
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin-top: 2rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header>
-    <div class="header-title">
-      <h1>Perceptrón Multicapa: Compuerta XOR</h1>
-      <p>Simulador Visual de Redes Neuronales &bull; Doctorado UCN</p>
+    <div class="header-top">
+      <div class="header-title">
+        <h1>Aproximación Universal con Redes Neuronales</h1>
+        <p>Suite Educativa Interactiva • Ciencia de Datos — UCN (Basado en CMU 11-785, B. Raj et al.)</p>
+      </div>
+      <div class="badge-course">61 Diapositivas → 5 Laboratorios Interactivos</div>
     </div>
-    <div class="badge-formula">
-      <span>X ⊕ Y = (X ∨ Y) ∧ (X̄ ∨ Ȳ)</span>
-    </div>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab(0)">
+        <span>1. Compuertas y XOR (3 vs 2 Neuronas)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab(1)">
+        <span>2. Función Booleana Universal (DNF y Karnaugh)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab(2)">
+        <span>3. Clasificador Universal (Polígonos y Círculos)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab(3)">
+        <span>4. Aproximador Universal Continuo (Pulsos)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab(4)">
+        <span>5. Ancho, Profundidad y Activaciones</span>
+      </button>
+    </nav>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <!-- Left Column: Neural Network Diagram & Geometric Space -->
-    <section class="card">
-      <div class="card-title">
-        <span>🧠 Topología de la Red y Flujo de Señal</span>
-      </div>
 
-      <!-- Neural Network SVG Visualizer -->
-      <div class="network-container">
-        <svg class="network-svg" id="netSvg" viewBox="0 0 640 420">
-          <defs>
-            <!-- Arrow markers -->
-            <marker id="arrow" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
-            </marker>
-            <marker id="arrow-active" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
-            </marker>
-          </defs>
-
-          <!-- Layer Labels -->
-          <text x="110" y="32" fill="#64748b" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">ENTRADA</text>
-          <text x="320" y="32" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">CAPA OCULTA</text>
-          <text x="530" y="32" fill="#64748b" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">SALIDA</text>
-
-          <!-- Synapses (Lines) -->
-          <!-- X -> h1 (weight +1) -->
-          <line id="syn_x_h1" class="synapse-line" x1="110" y1="130" x2="320" y2="120" marker-end="url(#arrow)" />
-          <text id="w_x_h1" class="synapse-weight" x="200" y="110">+1</text>
-
-          <!-- X -> h2 (weight -1) -->
-          <line id="syn_x_h2" class="synapse-line" x1="110" y1="130" x2="320" y2="300" marker-end="url(#arrow)" />
-          <text id="w_x_h2" class="synapse-weight" x="180" y="235">-1</text>
-
-          <!-- Y -> h1 (weight +1) -->
-          <line id="syn_y_h1" class="synapse-line" x1="110" y1="290" x2="320" y2="120" marker-end="url(#arrow)" />
-          <text id="w_y_h1" class="synapse-weight" x="180" y="185">+1</text>
-
-          <!-- Y -> h2 (weight -1) -->
-          <line id="syn_y_h2" class="synapse-line" x1="110" y1="290" x2="320" y2="300" marker-end="url(#arrow)" />
-          <text id="w_y_h2" class="synapse-weight" x="200" y="315">-1</text>
-
-          <!-- h1 -> Out (weight +1) -->
-          <line id="syn_h1_out" class="synapse-line" x1="320" y1="120" x2="530" y2="210" marker-end="url(#arrow)" />
-          <text id="w_h1_out" class="synapse-weight" x="420" y="150">+1</text>
-
-          <!-- h2 -> Out (weight +1) -->
-          <line id="syn_h2_out" class="synapse-line" x1="320" y1="300" x2="530" y2="210" marker-end="url(#arrow)" />
-          <text id="w_h2_out" class="synapse-weight" x="420" y="275">+1</text>
-
-          <!-- Nodes -->
-          <!-- Node X -->
-          <g id="node_x" class="node-group" transform="translate(110, 130)">
-            <circle class="node-circle" r="26" />
-            <text class="node-text-val" id="text_x_val">0</text>
-            <text class="node-label-title" y="-36">Entrada X</text>
-          </g>
-
-          <!-- Node Y -->
-          <g id="node_y" class="node-group" transform="translate(110, 290)">
-            <circle class="node-circle" r="26" />
-            <text class="node-text-val" id="text_y_val">0</text>
-            <text class="node-label-title" y="-36">Entrada Y</text>
-          </g>
-
-          <!-- Hidden Node 1 (OR) -->
-          <g id="node_h1" class="node-group" transform="translate(320, 120)">
-            <circle class="node-circle" r="28" />
-            <text class="node-text-val" id="text_h1_val">1</text>
-            <text class="node-label-title" y="-38">X ∨ Y (OR)</text>
-            <text class="node-label-sub" id="sub_h1" y="44">θ=1 | z=0</text>
-          </g>
-
-          <!-- Hidden Node 2 (NAND) -->
-          <g id="node_h2" class="node-group" transform="translate(320, 300)">
-            <circle class="node-circle" r="28" />
-            <text class="node-text-val" id="text_h2_val">-1</text>
-            <text class="node-label-title" y="-38">X̄ ∨ Ȳ (NAND)</text>
-            <text class="node-label-sub" id="sub_h2" y="44">θ=-1 | z=0</text>
-          </g>
-
-          <!-- Output Node (XOR) -->
-          <g id="node_out" class="node-group" transform="translate(530, 210)">
-            <circle class="node-circle" r="32" />
-            <text class="node-text-val" id="text_out_val">2</text>
-            <text class="node-label-title" y="-42">X ⊕ Y (XOR)</text>
-            <text class="node-label-sub" id="sub_out" y="48">θ=2 | z=0</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- 2D Geometric Decision Plot -->
-      <div class="plot-container">
-        <canvas id="decisionCanvas" width="320" height="240"></canvas>
-        <p class="plot-caption">
-          <strong>Espacio 2D:</strong> La capa oculta aísla la franja $X+Y=1$ mediante $X+Y \ge 1$ (OR) y $X+Y \le 1$ (NAND).
-        </p>
-      </div>
-    </section>
-
-    <!-- Right Column: Controls, Math Breakdown & Truth Table -->
-    <section class="card">
-      <div class="card-title">
-        <span>⚙️ Controles e Inspección Matemática</span>
-      </div>
-
-      <!-- Controls -->
-      <div class="controls-grid">
-        <div class="input-box">
-          <span class="input-box-label">Entrada X</span>
-          <div class="toggle-group">
-            <button class="toggle-btn" id="btn_x_0" onclick="setInput('x', 0)">0</button>
-            <button class="toggle-btn active" id="btn_x_1" onclick="setInput('x', 1)">1</button>
+    <!-- =================================================================== -->
+    <!-- MÓDULO 1: COMPUERTAS DE UMBRAL Y REDES XOR (3 NEURONAS VS 2 NEURONAS) -->
+    <!-- =================================================================== -->
+    <div class="module-panel active" id="panel-0">
+      <div class="grid-2">
+        <!-- Left: Interactive Network Diagram -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧠 Simulador de Arquitecturas XOR: Clásica (3 Neuronas) vs. Friedland (2 Neuronas)</div>
+            <span class="slide-ref">Diapositivas 6–15</span>
           </div>
-        </div>
 
-        <div class="input-box">
-          <span class="input-box-label">Entrada Y</span>
-          <div class="toggle-group">
-            <button class="toggle-btn active" id="btn_y_0" onclick="setInput('y', 0)">0</button>
-            <button class="toggle-btn" id="btn_y_1" onclick="setInput('y', 1)">1</button>
+          <div class="control-bar">
+            <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Arquitectura:</span>
+            <button class="btn active" id="btnArch3" onclick="setXorArch(3)">MLP Clásico (3 Neuronas: OR + NAND → AND)</button>
+            <button class="btn" id="btnArch2" onclick="setXorArch(2)">MLP Compacto Friedland (Solo 2 Neuronas)</button>
           </div>
-        </div>
-      </div>
 
-      <!-- Output Banner -->
-      <div class="output-banner state-1" id="outputBanner">
-        <div class="output-banner-left">
-          <span class="output-banner-title">Resultado de la Red Neuronal:</span>
-          <span class="output-banner-subtitle" id="outputSubtitle">XOR(1, 0) = 1 (Disparo exitoso)</span>
-        </div>
-        <div class="output-badge state-1" id="outputBadge">1</div>
-      </div>
+          <div class="viz-box" style="min-height: 340px;">
+            <svg id="xorSvg" viewBox="0 0 680 320" style="width:100%; height:320px;"></svg>
+          </div>
 
-      <!-- Math Breakdown Inspector -->
-      <div class="math-card" id="mathInspector">
-        <div class="math-step">
-          <div class="math-step-title">1. Neurona Oculta 1 (Disyunción - OR)</div>
-          <div id="mathStepH1">z₁ = 1(1) + 1(0) = 1.0 &ge; 1.0 &rarr; <span class="math-highlight-green">h₁ = 1</span></div>
-        </div>
-        <div class="math-step">
-          <div class="math-step-title">2. Neurona Oculta 2 (NAND - X̄ ∨ Ȳ)</div>
-          <div id="mathStepH2">z₂ = -1(1) - 1(0) = -1.0 &ge; -1.0 &rarr; <span class="math-highlight-green">h₂ = 1</span></div>
-        </div>
-        <div class="math-step">
-          <div class="math-step-title">3. Neurona de Salida (Conjunción - AND)</div>
-          <div id="mathStepOut">z_out = 1(1) + 1(1) = 2.0 &ge; 2.0 &rarr; <span class="math-highlight-green">Salida = 1</span> ✅</div>
-        </div>
-      </div>
+          <div class="edu-callout" id="xorArchExplanation">
+            <strong>¿Cómo funciona?</strong> Una sola neurona traza una única recta y no puede separar XOR (Minsky y Papert). Con una capa oculta de 2 neuronas trazamos dos fronteras: <code>X + Y ≥ 1</code> (OR) y <code>-X - Y ≥ -1</code> (NAND). La neurona de salida hace el AND de ambas para aislar la banda central.
+          </div>
+        </section>
 
-      <!-- Synchronized Truth Table -->
-      <div class="table-container">
-        <table class="truth-table" id="truthTable">
-          <thead>
-            <tr>
-              <th>X</th>
-              <th>Y</th>
-              <th>h₁ (OR)</th>
-              <th>h₂ (NAND)</th>
-              <th>Salida (XOR)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr data-x="0" data-y="0" onclick="setInputPair(0, 0)">
-              <td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
-            </tr>
-            <tr data-x="0" data-y="1" onclick="setInputPair(0, 1)">
-              <td>0</td><td>1</td><td>1</td><td>1</td><td>1</td>
-            </tr>
-            <tr data-x="1" data-y="0" class="active-row" onclick="setInputPair(1, 0)">
-              <td>1</td><td>0</td><td>1</td><td>1</td><td>1</td>
-            </tr>
-            <tr data-x="1" data-y="1" onclick="setInputPair(1, 1)">
-              <td>1</td><td>1</td><td>1</td><td>0</td><td>0</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <!-- Right: Inputs, Math & 2D Space -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚙️ Entradas Binarias, Espacio 2D y Trazado Matemático</div>
+            <span class="slide-ref">Diapositivas 13–15, 31–32</span>
+          </div>
 
-      <!-- Actions -->
-      <div class="action-row">
-        <button class="btn-action" onclick="runAutoCycle()">
-          <span>▶ Ciclar los 4 casos</span>
-        </button>
-        <button class="btn-action" onclick="toggleInvert()">
-          <span>🔄 Invertir entradas</span>
-        </button>
+          <div class="control-bar" style="justify-content: space-around;">
+            <div>
+              <span style="font-size:0.82rem; color:var(--text-muted); margin-right:0.5rem;">Entrada X:</span>
+              <button class="btn" id="xorX0" onclick="setXorInput(0, null)">0</button>
+              <button class="btn active" id="xorX1" onclick="setXorInput(1, null)">1</button>
+            </div>
+            <div>
+              <span style="font-size:0.82rem; color:var(--text-muted); margin-right:0.5rem;">Entrada Y:</span>
+              <button class="btn active" id="xorY0" onclick="setXorInput(null, 0)">0</button>
+              <button class="btn" id="xorY1" onclick="setXorInput(null, 1)">1</button>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Entrada (X, Y)</span>
+              <span class="val" id="statXorIn">(1, 0)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Neuronas / Pesos</span>
+              <span class="val" id="statXorCount">3 neur / 6 pesos</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Salida X ⊕ Y</span>
+              <span class="val success" id="statXorOut">1 (DISPARO)</span>
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="xor2DCanvas" width="360" height="210"></canvas>
+          </div>
+
+          <table class="edu-table" id="xorTruthTable">
+            <thead>
+              <tr><th>X</th><th>Y</th><th>Capa Oculta</th><th>Ecuación Salida</th><th>X ⊕ Y</th></tr>
+            </thead>
+            <tbody id="xorTableBody"></tbody>
+          </table>
+        </section>
       </div>
-    </section>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MÓDULO 2: FUNCIÓN BOOLEANA UNIVERSAL (DNF, KARNAUGH Y EXPONENCIAL) -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-1">
+      <div class="grid-2">
+        <!-- Left: Interactive 4x4 Karnaugh Map & DNF Builder -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🗺️ Mapa de Karnaugh 4×4 Interactivo y Constructor DNF</div>
+            <span class="slide-ref">Diapositivas 17–21</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Preajustes de la clase:</span>
+            <button class="btn active" onclick="loadKmapPreset('slide19')">Ejemplo Diapositiva 19 (7 celdas → 3 términos)</button>
+            <button class="btn" onclick="loadKmapPreset('chessboard')">Peor Caso: Tablero de Ajedrez (XOR 4 vars = 8 neuronas)</button>
+            <button class="btn" onclick="loadKmapPreset('clear')">Limpiar</button>
+          </div>
+
+          <div class="kmap-wrapper">
+            <p style="font-size:0.8rem; color:var(--text-muted);">Haz clic en cualquier celda <code>(W,X,Y,Z)</code> para alternar su salida entre 0 y 1:</p>
+            <div class="kmap-grid" id="kmapGrid"></div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Celdas en 1 (Términos DNF Básica)</span>
+              <span class="val" id="kmapRawCount">7</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Ancho Capa Oculta Sin Reducir</span>
+              <span class="val danger" id="kmapRawNeurons">7 neuronas AND</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Estado de Reducción</span>
+              <span class="val success" id="kmapReducedInfo">3 términos (Diap. 19)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout" id="dnfFormulaBox" style="font-family:var(--font-mono); font-size:0.78rem; overflow-x:auto;">
+          </div>
+        </section>
+
+        <!-- Right: Exponential vs Linear Depth Comparison -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📈 El Costo de Una Sola Capa Oculta vs. Red Profunda (XOR de N Variables)</div>
+            <span class="slide-ref">Diapositivas 21–28</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Número de Variables de Entrada (N):</span>
+                <span class="slider-val" id="parityNVal">N = 10 entradas</span>
+              </div>
+              <input type="range" id="parityNSlider" min="2" max="16" step="1" value="10" oninput="updateParityComparison()">
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">1 Capa Oculta (2<sup>N-1</sup> + 1)</span>
+              <span class="val danger" id="parityShallowVal">513 neuronas</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Red Profunda Árbol 3(N-1)</span>
+              <span class="val success" id="parityDeepVal">27 neuronas</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Profundidad Árbol (2 log₂ N)</span>
+              <span class="val" id="parityDepthVal">8 capas</span>
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="parityChartCanvas" width="520" height="230"></canvas>
+          </div>
+
+          <div class="edu-callout warn">
+            <strong>¿Por qué importa la profundidad?</strong> En el tablero de ajedrez (paridad/XOR de $N$ variables), dos entradas que difieren en un solo bit siempre cambian la salida. Ninguna celda activa tiene vecinas activas: con <strong>una sola capa oculta</strong> hace falta $2^{N-1}$ neuronas AND. En cambio, componiendo bloques XOR en árbol logramos la misma función con solo <strong>$3(N-1)$ neuronas</strong> (o $2(N-1)$ con el bloque de Friedland).
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MÓDULO 3: EL MLP COMO CLASIFICADOR UNIVERSAL (POLÍGONOS Y CÍRCULOS) -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-2">
+      <div class="grid-2">
+        <!-- Left: 2D Half-plane Composer -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📐 Composición de Fronteras: De Polígonos al Cilindro Circular</div>
+            <span class="slide-ref">Diapositivas 33–43</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Lados / Neuronas Ocultas (N):</span>
+                <span class="slider-val" id="polyNVal">N = 5 (Pentágono)</span>
+              </div>
+              <input type="range" id="polyNSlider" min="3" max="64" step="1" value="5" oninput="updatePolygonClassifier()">
+            </div>
+            <div>
+              <button class="btn" onclick="setPolyN(4)">Cuadrado (4)</button>
+              <button class="btn active" onclick="setPolyN(5)">Pentágono (5)</button>
+              <button class="btn" onclick="setPolyN(16)">N=16</button>
+              <button class="btn" onclick="setPolyN(64)">Círculo (64)</button>
+            </div>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Modo de Salida:</span>
+            <button class="btn active" id="btnPolyBiasOff" onclick="setPolyBias(false)">Sin sesgo (Piso exterior = N/2)</button>
+            <button class="btn" id="btnPolyBiasOn" onclick="setPolyBias(true)">Con sesgo -N/2 (Piso exterior ≈ 0)</button>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="polyCanvas" width="460" height="360"></canvas>
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.45rem;">
+              Pasa el cursor sobre el plano para inspeccionar cuántas neuronas ocultas disparan en cada región.
+            </p>
+          </div>
+        </section>
+
+        <!-- Right: Radial Profile & Theory -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📊 Perfil Radial de la Suma y la Fórmula del Arco</div>
+            <span class="slide-ref">Diapositivas 37–41</span>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Suma Adentro (d &le; r)</span>
+              <span class="val success" id="polyInsideSum">5</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Piso Asintótico Afuera</span>
+              <span class="val" id="polyFloorSum">2.5 (N/2)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Punto Inspeccionado</span>
+              <span class="val" id="polyHoverStat">Suma = 5</span>
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="radialProfileCanvas" width="460" height="220"></canvas>
+          </div>
+
+          <div class="edu-callout">
+            <strong>El fenómeno del cilindro (Diapositivas 37–40):</strong><br>
+            • Adentro del polígono de $N$ lados, el punto cumple las $N$ desigualdades: $\sum_{i=1}^N y_i = N$.<br>
+            • Afuera (a distancia $d > r$), el punto queda del lado «bueno» de aproximadamente la mitad de las rectas. En el límite $N \to \infty$:
+            $$\sum_{i=1}^N y_i = N\left(\frac{1}{2} + \frac{1}{\pi}\arcsin\frac{r}{d}\right) \xrightarrow{d \to \infty} \frac{N}{2}$$
+            • <strong>¿Por qué restar el sesgo $-N/2$?</strong> Porque si queremos unir varios círculos en una sola capa oculta para rellenar cualquier región (Diap. 41), los pisos de altura $N/2$ se sumarían falsamente afuera. Con el sesgo $-N/2$, el exterior vale $\approx 0$.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MÓDULO 4: EL MLP COMO APROXIMADOR UNIVERSAL DE FUNCIONES CONTINUAS  -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-3">
+      <div class="grid-2">
+        <!-- Left: Interactive Function Pulse Approximator -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🌊 Aproximación de Funciones Continuas mediante Suma de Pulsos Cuadrados</div>
+            <span class="slide-ref">Diapositivas 49–54</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Función objetivo $f(x)$:</span>
+            <button class="btn active" id="fnBtn0" onclick="setTargetFn(0)">Onda Compuesta (Diap. 50)</button>
+            <button class="btn" id="fnBtn1" onclick="setTargetFn(1)">Campana Gaussiana</button>
+            <button class="btn" id="fnBtn2" onclick="setTargetFn(2)">Polinomio Oscilante</button>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Número de Pulsos Cuadrados (P):</span>
+                <span class="slider-val" id="pulseCountVal">12 pulsos (24 neuronas ocultas)</span>
+              </div>
+              <input type="range" id="pulseSlider" min="2" max="80" step="1" value="12" oninput="updatePulseApproximator()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="pulseCanvas" width="580" height="310"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Neuronas Capa Oculta (2P)</span>
+              <span class="val" id="pulseNeuronsStat">24</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Error Máximo (&epsilon;)</span>
+              <span class="val danger" id="pulseMaxErrStat">0.382</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Error Cuadrático Medio (RMSE)</span>
+              <span class="val success" id="pulseRmseStat">0.141</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: How a single square pulse is built + 3 Verbs -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧱 ¿Cómo se construye un pulso cuadrado y qué dice exactamente el teorema?</div>
+            <span class="slide-ref">Diapositivas 49, 52–54</span>
+          </div>
+
+          <div class="viz-box">
+            <svg viewBox="0 0 460 175" style="width:100%; height:175px;">
+              <!-- Input x -->
+              <circle cx="50" cy="88" r="14" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+              <text x="50" y="93" fill="#fff" font-family="Fira Code" font-size="13" text-anchor="middle">x</text>
+              <!-- Edges to T1, T2 -->
+              <line x1="64" y1="82" x2="175" y2="42" stroke="#38bdf8" stroke-width="2"/>
+              <line x1="64" y1="94" x2="175" y2="134" stroke="#38bdf8" stroke-width="2"/>
+              <text x="115" y="52" fill="#38bdf8" font-family="Fira Code" font-size="12">+1</text>
+              <text x="115" y="126" fill="#38bdf8" font-family="Fira Code" font-size="12">+1</text>
+              <!-- T1, T2 -->
+              <circle cx="195" cy="38" r="20" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+              <text x="195" y="43" fill="#fff" font-family="Fira Code" font-size="13" text-anchor="middle">T₁</text>
+              <text x="195" y="12" fill="#94a3b8" font-size="10" text-anchor="middle">1[x &ge; T₁]</text>
+
+              <circle cx="195" cy="138" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+              <text x="195" y="143" fill="#fff" font-family="Fira Code" font-size="13" text-anchor="middle">T₂</text>
+              <text x="195" y="170" fill="#94a3b8" font-size="10" text-anchor="middle">1[x &ge; T₂]</text>
+
+              <!-- Edges to Sum -->
+              <line x1="215" y1="42" x2="335" y2="82" stroke="#22c55e" stroke-width="2"/>
+              <line x1="215" y1="134" x2="335" y2="94" stroke="#ef4444" stroke-width="2"/>
+              <text x="275" y="54" fill="#22c55e" font-family="Fira Code" font-size="12">+hᵢ</text>
+              <text x="275" y="128" fill="#ef4444" font-family="Fira Code" font-size="12">-hᵢ</text>
+
+              <!-- Sum node -->
+              <circle cx="355" cy="88" r="22" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5"/>
+              <text x="355" y="94" fill="#fff" font-family="Fira Code" font-size="16" text-anchor="middle">+</text>
+              <text x="355" y="55" fill="#f59e0b" font-size="10" text-anchor="middle">Suma lineal</text>
+              <text x="425" y="92" fill="#fff" font-family="Fira Code" font-size="13" text-anchor="middle">hᵢ·Pulso</text>
+            </svg>
+          </div>
+
+          <div class="edu-callout">
+            <strong>Tres verbos que NO dicen lo mismo (Diapositiva 52):</strong><br>
+            1. <strong>Representar (modelar exactamente):</strong> La red calcula $f$ y nada más que $f$. Con unidades de umbral eso solo ocurre si $f$ ya es escalonada.<br>
+            2. <strong>Aproximar:</strong> Fijado cualquier error $\varepsilon > 0$, existe una red <em>finita</em> cuyo error es menor que $\varepsilon$.<br>
+            3. <strong>El límite:</strong> Al hacer los pulsos más angostos, $\varepsilon \to 0$, pero para cualquier cantidad finita de neuronas la suma sigue siendo escalonada.
+          </div>
+
+          <div class="edu-callout warn">
+            <strong>Ojo con la capa de salida (Diapositiva 54):</strong> Si la neurona de salida tiene una activación (ej. sigmoide), el MLP es un aproximador universal hacia el <em>rango de esa activación</em>, como $(0, 1)$.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- MÓDULO 5: SUFICIENCIA DE LA ARQUITECTURA (ANCHO, PROFUNDIDAD, ACT)  -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-4">
+      <div class="grid-2">
+        <!-- Left: Strips vs Cells & Activation Functions -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🔬 Franjas vs. Celdas y Activación de Umbral vs. Graduada</div>
+            <span class="slide-ref">Diapositivas 7, 55–59</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Disposición de 8 neuronas en Capa 1:</span>
+            <button class="btn" id="btnGridParallel" onclick="setCellMode('parallel')">8 Paralelas → 9 Franjas</button>
+            <button class="btn active" id="btnGridCross" onclick="setCellMode('cross')">4 + 4 en Cruz → 25 Celdas</button>
+          </div>
+
+          <div class="grid-equal">
+            <div class="viz-box">
+              <canvas id="cellsCanvas" width="250" height="230"></canvas>
+              <p style="font-size:0.74rem; color:var(--text-muted); margin-top:0.35rem; text-align:center;" id="cellsCaption">
+                Dentro de una misma celda, el umbral entrega el mismo código binario: ¡se pierde la posición exacta!
+              </p>
+            </div>
+            <div class="viz-box">
+              <canvas id="actCanvas" width="260" height="230"></canvas>
+              <p style="font-size:0.74rem; color:var(--text-muted); margin-top:0.35rem; text-align:center;">
+                Escalón (rojo), Sigmoide (verde), Tanh (morado), ReLU (azul).
+              </p>
+            </div>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Explorar valor pre-activación (z = w·x + b):</span>
+                <span class="slider-val" id="zProbeVal">z = +1.20</span>
+              </div>
+              <input type="range" id="zProbeSlider" min="-3.5" max="3.5" step="0.1" value="1.2" oninput="updateActivationsView()">
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box"><span class="lbl">Escalón (Umbral)</span><span class="val danger" id="actStepVal">1</span></div>
+            <div class="stat-box"><span class="lbl">Sigmoide &sigma;(z)</span><span class="val success" id="actSigVal">0.7685</span></div>
+            <div class="stat-box"><span class="lbl">Tanh(z)</span><span class="val" id="actTanhVal">0.8337</span></div>
+            <div class="stat-box"><span class="lbl">ReLU max(0,z)</span><span class="val" id="actReluVal">1.2000</span></div>
+          </div>
+        </section>
+
+        <!-- Right: The 4 Statements Interactive Quiz (Slide 60) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Autoevaluación Interactiva: Las 4 Afirmaciones sobre las Compensaciones</div>
+            <span class="slide-ref">Diapositivas 59–61</span>
+          </div>
+
+          <p style="font-size:0.84rem; color:var(--text-muted);">
+            El diseño de una red es un <strong>triángulo de compensaciones (Ancho ↔ Profundidad ↔ Activaciones)</strong>. Pon a prueba los conceptos clave de la diapositiva 60 haciendo clic en Verdadero o Falso:
+          </p>
+
+          <div class="quiz-item" id="quiz-item-1">
+            <div class="quiz-q">1. «Con ancho de capa acotado basta profundizar para modelar cualquier función.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q1-btn-true" onclick="answerQuiz(1, true)">Verdadero</button>
+              <button class="btn" id="q1-btn-false" onclick="answerQuiz(1, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-1"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-2">
+            <div class="quiz-q">2. «Las activaciones graduadas compensan mejor la falta de ancho con profundidad que las de umbral o saturantes.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q2-btn-true" onclick="answerQuiz(2, true)">Verdadero</button>
+              <button class="btn" id="q2-btn-false" onclick="answerQuiz(2, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-2"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-3">
+            <div class="quiz-q">3. «Límites severos de ancho y profundidad siempre se compensan usando más gradación en la activación.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q3-btn-true" onclick="answerQuiz(3, true)">Verdadero</button>
+              <button class="btn" id="q3-btn-false" onclick="answerQuiz(3, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-3"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-4">
+            <div class="quiz-q">4. «A igual precisión, las redes con activaciones más graduadas suelen ser más pequeñas.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q4-btn-true" onclick="answerQuiz(4, true)">Verdadero</button>
+              <button class="btn" id="q4-btn-false" onclick="answerQuiz(4, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-4"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
   </main>
 
-  <!-- Script Logic -->
+  <footer>
+    Ciencia de Datos — Doctorado UCN • Implementación Educativa Interactiva de «Aproximación Universal con Redes Neuronales»
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT LOGIC FOR ALL 5 INTERACTIVE EDUCATIONAL MODULES            -->
+  <!-- ===================================================================== -->
   <script>
-    let currentX = 1;
-    let currentY = 0;
-    let autoInterval = null;
-
-    function setInput(varName, val) {
-      if (varName === 'x') currentX = val;
-      if (varName === 'y') currentY = val;
-      updateAll();
+    // Navigation
+    function switchTab(idx) {
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.module-panel').forEach((p, i) => {
+        p.classList.toggle('active', i === idx);
+      });
+      // Redraw active canvases
+      if (idx === 0) updateXorModule();
+      if (idx === 1) { renderKmap(); updateParityComparison(); }
+      if (idx === 2) updatePolygonClassifier();
+      if (idx === 3) updatePulseApproximator();
+      if (idx === 4) updateActivationsView();
     }
 
-    function setInputPair(x, y) {
-      currentX = x;
-      currentY = y;
-      updateAll();
+    // =========================================================================
+    // MODULE 1: XOR 3 NEURONS VS 2 NEURONS (FRIEDLAND)
+    // =========================================================================
+    let xorArch = 3;
+    let xorX = 1;
+    let xorY = 0;
+
+    function setXorArch(arch) {
+      xorArch = arch;
+      document.getElementById('btnArch3').classList.toggle('active', arch === 3);
+      document.getElementById('btnArch2').classList.toggle('active', arch === 2);
+      const expBox = document.getElementById('xorArchExplanation');
+      if (arch === 3) {
+        expBox.innerHTML = '<strong>MLP Clásico de 3 neuronas (Diapositiva 14):</strong> La oculta superior calcula <code>OR (X + Y &ge; 1)</code>; la oculta inferior calcula <code>NAND (-X - Y &ge; -1)</code>. La neurona de salida calcula el <code>AND (h₁ + h₂ &ge; 2)</code>. Total: 3 neuronas, 6 pesos y 3 umbrales.';
+      } else {
+        expBox.innerHTML = '<strong>Construcción de Friedland con solo 2 neuronas (Diapositiva 15):</strong> La única neurona oculta calcula <code>h = X &and; Y</code> (umbral 2). La salida recibe conexión directa de X e Y más la oculta con peso -2: evalúa <code>X + Y - 2(X &and; Y) &ge; 1</code>. ¡Solo 2 neuronas, 5 pesos y 2 umbrales!';
+      }
+      updateXorModule();
     }
 
-    function toggleInvert() {
-      currentX = currentX === 1 ? 0 : 1;
-      currentY = currentY === 1 ? 0 : 1;
-      updateAll();
+    function setXorInput(x, y) {
+      if (x !== null) xorX = x;
+      if (y !== null) xorY = y;
+      document.getElementById('xorX0').classList.toggle('active', xorX === 0);
+      document.getElementById('xorX1').classList.toggle('active', xorX === 1);
+      document.getElementById('xorY0').classList.toggle('active', xorY === 0);
+      document.getElementById('xorY1').classList.toggle('active', xorY === 1);
+      updateXorModule();
     }
 
-    function updateAll() {
-      // 1. Math
-      const z1 = 1.0 * currentX + 1.0 * currentY;
-      const h1 = z1 >= 1.0 ? 1 : 0;
+    function updateXorModule() {
+      const svg = document.getElementById('xorSvg');
+      const outExpected = xorX ^ xorY;
 
-      const z2 = -1.0 * currentX - 1.0 * currentY;
-      const h2 = z2 >= -1.0 ? 1 : 0;
+      document.getElementById('statXorIn').textContent = `(${xorX}, ${xorY})`;
+      document.getElementById('statXorCount').textContent = xorArch === 3 ? '3 neur / 6 pesos' : '2 neur / 5 pesos';
+      const outStat = document.getElementById('statXorOut');
+      outStat.textContent = `${outExpected} (${outExpected ? 'DISPARO' : 'APAGADO'})`;
+      outStat.className = `val ${outExpected ? 'success' : 'danger'}`;
 
-      const zOut = 1.0 * h1 + 1.0 * h2;
-      const out = zOut >= 2.0 ? 1 : 0;
-      const expected = currentX ^ currentY;
+      if (xorArch === 3) {
+        const z1 = xorX + xorY;
+        const h1 = z1 >= 1 ? 1 : 0;
+        const z2 = -xorX - xorY;
+        const h2 = z2 >= -1 ? 1 : 0;
+        const zOut = h1 + h2;
+        const out = zOut >= 2 ? 1 : 0;
 
-      // 2. Buttons
-      document.getElementById('btn_x_0').className = `toggle-btn ${currentX === 0 ? 'active' : ''}`;
-      document.getElementById('btn_x_1').className = `toggle-btn ${currentX === 1 ? 'active' : ''}`;
-      document.getElementById('btn_y_0').className = `toggle-btn ${currentY === 0 ? 'active' : ''}`;
-      document.getElementById('btn_y_1').className = `toggle-btn ${currentY === 1 ? 'active' : ''}`;
+        svg.innerHTML = `
+          <!-- Edges -->
+          <line x1="110" y1="95" x2="310" y2="80" stroke="${xorX ? '#38bdf8' : '#334155'}" stroke-width="${xorX ? 3 : 2}"/>
+          <line x1="110" y1="95" x2="310" y2="235" stroke="${xorX ? '#f59e0b' : '#334155'}" stroke-width="${xorX ? 3 : 2}"/>
+          <line x1="110" y1="225" x2="310" y2="80" stroke="${xorY ? '#38bdf8' : '#334155'}" stroke-width="${xorY ? 3 : 2}"/>
+          <line x1="110" y1="225" x2="310" y2="235" stroke="${xorY ? '#f59e0b' : '#334155'}" stroke-width="${xorY ? 3 : 2}"/>
 
-      // 3. SVG Nodes & Synapses
-      // Nodes
-      document.getElementById('node_x').className = `node-group ${currentX === 1 ? 'active' : ''}`;
-      document.getElementById('text_x_val').textContent = currentX;
+          <line x1="370" y1="80" x2="540" y2="158" stroke="${h1 ? '#22c55e' : '#334155'}" stroke-width="${h1 ? 3.5 : 2}"/>
+          <line x1="370" y1="235" x2="540" y2="158" stroke="${h2 ? '#22c55e' : '#334155'}" stroke-width="${h2 ? 3.5 : 2}"/>
 
-      document.getElementById('node_y').className = `node-group ${currentY === 1 ? 'active' : ''}`;
-      document.getElementById('text_y_val').textContent = currentY;
+          <!-- Weight labels -->
+          <text x="200" y="75" fill="#38bdf8" font-family="Fira Code" font-size="13">+1</text>
+          <text x="175" y="145" fill="#f59e0b" font-family="Fira Code" font-size="13">-1</text>
+          <text x="175" y="190" fill="#38bdf8" font-family="Fira Code" font-size="13">+1</text>
+          <text x="200" y="250" fill="#f59e0b" font-family="Fira Code" font-size="13">-1</text>
+          <text x="455" y="108" fill="#22c55e" font-family="Fira Code" font-size="13">+1</text>
+          <text x="455" y="215" fill="#22c55e" font-family="Fira Code" font-size="13">+1</text>
 
-      document.getElementById('node_h1').className = `node-group ${h1 === 1 ? 'active' : ''}`;
-      document.getElementById('text_h1_val').textContent = "1";
-      document.getElementById('sub_h1').textContent = `θ=1 | z=${z1 >= 0 ? '+' : ''}${z1.toFixed(0)} (${h1 ? 'SI' : 'NO'})`;
+          <!-- Input Nodes -->
+          <circle cx="85" cy="95" r="24" fill="${xorX ? 'rgba(56,189,248,0.2)' : '#1e293b'}" stroke="${xorX ? '#38bdf8' : '#475569'}" stroke-width="2.5"/>
+          <text x="85" y="101" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">X=${xorX}</text>
 
-      document.getElementById('node_h2').className = `node-group ${h2 === 1 ? 'active' : ''}`;
-      document.getElementById('text_h2_val').textContent = "-1";
-      document.getElementById('sub_h2').textContent = `θ=-1 | z=${z2 >= 0 ? '+' : ''}${z2.toFixed(0)} (${h2 ? 'SI' : 'NO'})`;
+          <circle cx="85" cy="225" r="24" fill="${xorY ? 'rgba(56,189,248,0.2)' : '#1e293b'}" stroke="${xorY ? '#38bdf8' : '#475569'}" stroke-width="2.5"/>
+          <text x="85" y="231" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">Y=${xorY}</text>
 
-      const outGroup = document.getElementById('node_out');
-      outGroup.className = `node-group ${out === 1 ? 'active active-output' : 'inactive-output'}`;
-      document.getElementById('text_out_val').textContent = "2";
-      document.getElementById('sub_out').textContent = `θ=2 | z=${zOut.toFixed(0)} (${out ? 'DISPARO' : 'APAGADO'})`;
+          <!-- Hidden Nodes -->
+          <circle cx="340" cy="80" r="30" fill="${h1 ? 'rgba(34,197,94,0.2)' : '#1e293b'}" stroke="${h1 ? '#22c55e' : '#475569'}" stroke-width="2.5"/>
+          <text x="340" y="86" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">θ=1</text>
+          <text x="340" y="38" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle">OR (X ∨ Y)</text>
+          <text x="340" y="126" fill="#cbd5e1" font-family="Fira Code" font-size="11" text-anchor="middle">z₁=${z1} → h₁=${h1}</text>
 
-      // Synapses
-      setSynapse('syn_x_h1', 'w_x_h1', currentX === 1);
-      setSynapse('syn_x_h2', 'w_x_h2', currentX === 1, true);
-      setSynapse('syn_y_h1', 'w_y_h1', currentY === 1);
-      setSynapse('syn_y_h2', 'w_y_h2', currentY === 1, true);
+          <circle cx="340" cy="235" r="30" fill="${h2 ? 'rgba(34,197,94,0.2)' : '#1e293b'}" stroke="${h2 ? '#22c55e' : '#475569'}" stroke-width="2.5"/>
+          <text x="340" y="241" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">θ=-1</text>
+          <text x="340" y="193" fill="#f59e0b" font-size="12" font-weight="bold" text-anchor="middle">NAND (X̄ ∨ Ȳ)</text>
+          <text x="340" y="282" fill="#cbd5e1" font-family="Fira Code" font-size="11" text-anchor="middle">z₂=${z2} → h₂=${h2}</text>
 
-      setSynapse('syn_h1_out', 'w_h1_out', h1 === 1);
-      setSynapse('syn_h2_out', 'w_h2_out', h2 === 1);
+          <!-- Output Node -->
+          <circle cx="570" cy="158" r="34" fill="${out ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.18)'}" stroke="${out ? '#22c55e' : '#ef4444'}" stroke-width="3"/>
+          <text x="570" y="164" fill="#fff" font-family="Fira Code" font-size="17" font-weight="bold" text-anchor="middle">θ=2</text>
+          <text x="570" y="112" fill="#fff" font-size="13" font-weight="bold" text-anchor="middle">AND Salida</text>
+          <text x="570" y="210" fill="#fff" font-family="Fira Code" font-size="12" text-anchor="middle">z=${zOut} ⇒ Y=${out}</text>
+        `;
+      } else {
+        // Friedland 2-neuron XOR
+        const zH = xorX + xorY;
+        const h = zH >= 2 ? 1 : 0;
+        const zOut = xorX + xorY - 2 * h;
+        const out = zOut >= 1 ? 1 : 0;
 
-      // 4. Output Banner
-      const banner = document.getElementById('outputBanner');
-      const badge = document.getElementById('outputBadge');
-      const subtitle = document.getElementById('outputSubtitle');
+        svg.innerHTML = `
+          <!-- Direct and hidden edges -->
+          <line x1="110" y1="95" x2="310" y2="75" stroke="${xorX ? '#38bdf8' : '#334155'}" stroke-width="${xorX ? 3 : 2}"/>
+          <line x1="110" y1="225" x2="310" y2="75" stroke="${xorY ? '#38bdf8' : '#334155'}" stroke-width="${xorY ? 3 : 2}"/>
 
-      banner.className = `output-banner state-${out}`;
-      badge.className = `output-badge state-${out}`;
-      badge.textContent = out;
-      subtitle.textContent = `XOR(${currentX}, ${currentY}) = ${out} • ${out === expected ? '✅ Verificación Correcta' : '❌ Error'}`;
+          <!-- Direct bypass connections to output -->
+          <line x1="110" y1="95" x2="535" y2="185" stroke="${xorX ? '#22c55e' : '#334155'}" stroke-width="${xorX ? 3 : 2}"/>
+          <line x1="110" y1="225" x2="535" y2="185" stroke="${xorY ? '#22c55e' : '#334155'}" stroke-width="${xorY ? 3 : 2}"/>
 
-      // 5. Math Inspector
-      document.getElementById('mathStepH1').innerHTML = 
-        `z₁ = 1(${currentX}) + 1(${currentY}) = ${z1.toFixed(1)} &ge; 1.0 &rarr; ` +
-        `<span class="${h1 ? 'math-highlight-green' : 'math-highlight-red'}">h₁ = ${h1}</span> (${h1 ? 'Dispara' : 'Inhibida'})`;
+          <!-- Inhibitory -2 connection from hidden AND to output -->
+          <line x1="370" y1="75" x2="535" y2="185" stroke="${h ? '#ef4444' : '#334155'}" stroke-width="${h ? 4 : 2}"/>
 
-      document.getElementById('mathStepH2').innerHTML = 
-        `z₂ = -1(${currentX}) - 1(${currentY}) = ${z2.toFixed(1)} &ge; -1.0 &rarr; ` +
-        `<span class="${h2 ? 'math-highlight-green' : 'math-highlight-red'}">h₂ = ${h2}</span> (${h2 ? 'Dispara' : 'Inhibida'})`;
+          <!-- Labels -->
+          <text x="205" y="72" fill="#38bdf8" font-family="Fira Code" font-size="13">+1</text>
+          <text x="195" y="138" fill="#38bdf8" font-family="Fira Code" font-size="13">+1</text>
+          <text x="320" y="162" fill="#22c55e" font-family="Fira Code" font-size="13">+1 (directo)</text>
+          <text x="320" y="226" fill="#22c55e" font-family="Fira Code" font-size="13">+1 (directo)</text>
+          <text x="462" y="122" fill="#ef4444" font-family="Fira Code" font-size="14" font-weight="bold">-2</text>
 
-      document.getElementById('mathStepOut').innerHTML = 
-        `z_out = 1(${h1}) + 1(${h2}) = ${zOut.toFixed(1)} &ge; 2.0 &rarr; ` +
-        `<span class="${out ? 'math-highlight-green' : 'math-highlight-red'}">Salida = ${out}</span> ` +
-        `(${out === expected ? 'Coincide con XOR' : 'Error'})`;
+          <!-- Input Nodes -->
+          <circle cx="85" cy="95" r="24" fill="${xorX ? 'rgba(56,189,248,0.2)' : '#1e293b'}" stroke="${xorX ? '#38bdf8' : '#475569'}" stroke-width="2.5"/>
+          <text x="85" y="101" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">X=${xorX}</text>
 
-      // 6. Table Highlight
-      const rows = document.querySelectorAll('#truthTable tbody tr');
-      rows.forEach(r => {
-        const rx = parseInt(r.getAttribute('data-x'));
-        const ry = parseInt(r.getAttribute('data-y'));
-        if (rx === currentX && ry === currentY) {
-          r.className = 'active-row';
+          <circle cx="85" cy="225" r="24" fill="${xorY ? 'rgba(56,189,248,0.2)' : '#1e293b'}" stroke="${xorY ? '#38bdf8' : '#475569'}" stroke-width="2.5"/>
+          <text x="85" y="231" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">Y=${xorY}</text>
+
+          <!-- Single Hidden Node (AND) -->
+          <circle cx="340" cy="75" r="30" fill="${h ? 'rgba(239,68,68,0.25)' : '#1e293b'}" stroke="${h ? '#ef4444' : '#475569'}" stroke-width="2.5"/>
+          <text x="340" y="81" fill="#fff" font-family="Fira Code" font-size="16" font-weight="bold" text-anchor="middle">θ=2</text>
+          <text x="340" y="33" fill="#f59e0b" font-size="12" font-weight="bold" text-anchor="middle">Oculta: X ∧ Y</text>
+          <text x="340" y="120" fill="#cbd5e1" font-family="Fira Code" font-size="11" text-anchor="middle">z_h=${zH} → h=${h}</text>
+
+          <!-- Output Node -->
+          <circle cx="570" cy="185" r="34" fill="${out ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.18)'}" stroke="${out ? '#22c55e' : '#ef4444'}" stroke-width="3"/>
+          <text x="570" y="191" fill="#fff" font-family="Fira Code" font-size="17" font-weight="bold" text-anchor="middle">θ=1</text>
+          <text x="570" y="138" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">X + Y - 2(X∧Y) &ge; 1</text>
+          <text x="570" y="238" fill="#fff" font-family="Fira Code" font-size="12" text-anchor="middle">z=${zOut} ⇒ Y=${out}</text>
+        `;
+      }
+
+      // Populate Truth Table
+      const tbody = document.getElementById('xorTableBody');
+      tbody.innerHTML = '';
+      [[0,0],[0,1],[1,0],[1,1]].forEach(([x, y]) => {
+        const tr = document.createElement('tr');
+        tr.className = `clickable ${(x === xorX && y === xorY) ? 'active-row' : ''}`;
+        tr.onclick = () => setXorInput(x, y);
+        if (xorArch === 3) {
+          const h1 = (x + y) >= 1 ? 1 : 0;
+          const h2 = (-x - y) >= -1 ? 1 : 0;
+          const out = (h1 + h2) >= 2 ? 1 : 0;
+          tr.innerHTML = `<td>${x}</td><td>${y}</td><td>h₁=${h1}, h₂=${h2}</td><td>${h1}+${h2}=${h1+h2} &ge; 2</td><td>${out}</td>`;
         } else {
-          r.className = '';
+          const h = (x + y) >= 2 ? 1 : 0;
+          const z = x + y - 2 * h;
+          const out = z >= 1 ? 1 : 0;
+          tr.innerHTML = `<td>${x}</td><td>${y}</td><td>h(AND)=${h}</td><td>${x}+${y}-2(${h})=${z} &ge; 1</td><td>${out}</td>`;
         }
+        tbody.appendChild(tr);
       });
 
-      // 7. Redraw 2D Canvas
-      draw2DPlot();
+      drawXor2DCanvas();
     }
 
-    function setSynapse(lineId, textId, active, isNegative = false) {
-      const line = document.getElementById(lineId);
-      const text = document.getElementById(textId);
-      if (active) {
-        line.setAttribute('class', `synapse-line active ${isNegative ? 'active-negative' : ''}`);
-        line.setAttribute('marker-end', 'url(#arrow-active)');
-        text.setAttribute('class', 'synapse-weight active');
-      } else {
-        line.setAttribute('class', 'synapse-line');
-        line.setAttribute('marker-end', 'url(#arrow)');
-        text.setAttribute('class', 'synapse-weight');
-      }
-    }
-
-    function draw2DPlot() {
-      const canvas = document.getElementById('decisionCanvas');
-      const ctx = canvas.getContext('2d');
-      const W = canvas.width;
-      const H = canvas.height;
-
+    function drawXor2DCanvas() {
+      const c = document.getElementById('xor2DCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
       ctx.clearRect(0, 0, W, H);
 
-      // Margin
-      const pad = 40;
-      const plotW = W - pad * 2;
-      const plotH = H - pad * 2;
+      const pad = 35;
+      const toX = x => pad + ((x + 0.25) / 1.5) * (W - 2*pad);
+      const toY = y => (H - pad) - ((y + 0.25) / 1.5) * (H - 2*pad);
 
-      function toScreen(px, py) {
-        // x in [-0.2, 1.2], y in [-0.2, 1.2]
-        const sx = pad + ((px - (-0.2)) / 1.4) * plotW;
-        const sy = (H - pad) - ((py - (-0.2)) / 1.4) * plotH;
-        return { x: sx, y: sy };
-      }
+      // Shaded XOR band between X + Y = 0.5 and X + Y = 1.5
+      ctx.fillStyle = 'rgba(34, 197, 94, 0.13)';
+      ctx.beginPath();
+      let p1 = {x: toX(-0.2), y: toY(0.7)};
+      let p2 = {x: toX(0.7), y: toY(-0.2)};
+      let p3 = {x: toX(1.2), y: toY(0.3)};
+      let p4 = {x: toX(0.3), y: toY(1.2)};
+      ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y); ctx.lineTo(p4.x, p4.y);
+      ctx.closePath();
+      ctx.fill();
 
-      // Grid
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      for (let i = 0; i <= 1; i += 0.5) {
-        let p1 = toScreen(i, -0.2);
-        let p2 = toScreen(i, 1.2);
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-
-        let q1 = toScreen(-0.2, i);
-        let q2 = toScreen(1.2, i);
-        ctx.moveTo(q1.x, q1.y);
-        ctx.lineTo(q2.x, q2.y);
-      }
+      ctx.moveTo(toX(-0.2), toY(0)); ctx.lineTo(toX(1.2), toY(0));
+      ctx.moveTo(toX(0), toY(-0.2)); ctx.lineTo(toX(0), toY(1.2));
       ctx.stroke();
 
-      // Decision boundary line: X + Y = 1 -> Y = 1 - X
-      ctx.strokeStyle = '#22c55e';
-      ctx.lineWidth = 2.5;
-      ctx.setLineDash([6, 4]);
+      // Boundary lines
+      ctx.setLineDash([5, 4]);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#38bdf8';
       ctx.beginPath();
-      let l1 = toScreen(-0.15, 1.15);
-      let l2 = toScreen(1.15, -0.15);
-      ctx.moveTo(l1.x, l1.y);
-      ctx.lineTo(l2.x, l2.y);
+      ctx.moveTo(toX(-0.2), toY(0.7)); ctx.lineTo(toX(0.7), toY(-0.2));
+      ctx.stroke();
+
+      ctx.strokeStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(toX(0.3), toY(1.2)); ctx.lineTo(toX(1.2), toY(0.3));
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Label on boundary
-      ctx.fillStyle = '#22c55e';
-      ctx.font = '10px Fira Code';
-      let lblPos = toScreen(0.5, 0.55);
-      ctx.fillText('X + Y = 1', lblPos.x, lblPos.y);
-
-      // Points (0,0), (0,1), (1,0), (1,1)
-      const points = [
-        { x: 0, y: 0, label: 0 },
-        { x: 0, y: 1, label: 1 },
-        { x: 1, y: 0, label: 1 },
-        { x: 1, y: 1, label: 0 }
-      ];
-
-      points.forEach(pt => {
-        const sc = toScreen(pt.x, pt.y);
-        const isSelected = (pt.x === currentX && pt.y === currentY);
-
-        // Halo if selected
-        if (isSelected) {
+      // Points
+      [[0,0,0],[0,1,1],[1,0,1],[1,1,0]].forEach(([px, py, val]) => {
+        const sx = toX(px), sy = toY(py);
+        if (px === xorX && py === xorY) {
           ctx.beginPath();
-          ctx.arc(sc.x, sc.y, 14, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+          ctx.arc(sx, sy, 13, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
           ctx.fill();
         }
-
         ctx.beginPath();
-        ctx.arc(sc.x, sc.y, 8, 0, Math.PI * 2);
-        ctx.fillStyle = pt.label === 1 ? '#22c55e' : '#ef4444';
+        ctx.arc(sx, sy, 7, 0, Math.PI * 2);
+        ctx.fillStyle = val ? '#22c55e' : '#ef4444';
         ctx.fill();
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Label
-        ctx.fillStyle = isSelected ? '#38bdf8' : '#94a3b8';
-        ctx.font = `${isSelected ? 'bold ' : ''}10px sans-serif`;
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '11px Fira Code';
         ctx.textAlign = 'center';
-        ctx.fillText(`(${pt.x},${pt.y})`, sc.x, sc.y + (pt.y === 0 ? 18 : -12));
+        ctx.fillText(`(${px},${py})`, sx, sy + (py === 0 ? 18 : -11));
       });
     }
 
-    function runAutoCycle() {
-      if (autoInterval) {
-        clearInterval(autoInterval);
-        autoInterval = null;
-        return;
+    // =========================================================================
+    // MODULE 2: KARNAUGH MAP, DNF SYNTHESIS & EXPONENTIAL VS DEEP PARITY
+    // =========================================================================
+    const grayCodes = [[0,0], [0,1], [1,1], [1,0]];
+    // Map keys "WXYZ" -> 0 or 1
+    let kmapState = {};
+
+    function loadKmapPreset(name) {
+      for (let b = 0; b < 16; b++) {
+        const key = b.toString(2).padStart(4, '0');
+        kmapState[key] = 0;
       }
-      const sequence = [
-        [0, 0],
-        [0, 1],
-        [1, 1],
-        [1, 0]
-      ];
-      let idx = 0;
-      autoInterval = setInterval(() => {
-        setInputPair(sequence[idx][0], sequence[idx][1]);
-        idx = (idx + 1) % sequence.length;
-      }, 1200);
+      if (name === 'slide19') {
+        ['0000','0010','0100','0101','1100','1000','1010'].forEach(k => kmapState[k] = 1);
+      } else if (name === 'chessboard') {
+        for (let b = 0; b < 16; b++) {
+          const w = (b>>3)&1, x = (b>>2)&1, y = (b>>1)&1, z = b&1;
+          if ((w ^ x ^ y ^ z) === 1) {
+            kmapState[b.toString(2).padStart(4, '0')] = 1;
+          }
+        }
+      }
+      renderKmap();
     }
 
-    // Initialize
-    updateAll();
+    function renderKmap() {
+      const grid = document.getElementById('kmapGrid');
+      grid.innerHTML = '';
+
+      // Top-left corner
+      const corner = document.createElement('div');
+      corner.className = 'kmap-header';
+      corner.textContent = 'WX\\YZ';
+      grid.appendChild(corner);
+
+      // Column headers
+      grayCodes.forEach(([y, z]) => {
+        const h = document.createElement('div');
+        h.className = 'kmap-header';
+        h.textContent = `${y}${z}`;
+        grid.appendChild(h);
+      });
+
+      // Rows
+      grayCodes.forEach(([w, x]) => {
+        const rh = document.createElement('div');
+        rh.className = 'kmap-header';
+        rh.textContent = `${w}${x}`;
+        grid.appendChild(rh);
+
+        grayCodes.forEach(([y, z]) => {
+          const key = `${w}${x}${y}${z}`;
+          const val = kmapState[key] || 0;
+          const cell = document.createElement('div');
+          cell.className = `kmap-cell ${val === 1 ? 'val-1' : ''}`;
+          cell.innerHTML = `<span>${val}</span><span class="coords">${key}</span>`;
+          cell.onclick = () => {
+            kmapState[key] = kmapState[key] ? 0 : 1;
+            renderKmap();
+          };
+          grid.appendChild(cell);
+        });
+      });
+
+      // Compute DNF terms
+      const activeKeys = Object.keys(kmapState).filter(k => kmapState[k] === 1);
+      document.getElementById('kmapRawCount').textContent = activeKeys.length;
+      document.getElementById('kmapRawNeurons').textContent = `${activeKeys.length} neuronas AND`;
+
+      const vars = ['W', 'X', 'Y', 'Z'];
+      const terms = activeKeys.map(k => {
+        return k.split('').map((bit, i) => bit === '1' ? vars[i] : `${vars[i]}̄`).join('');
+      });
+
+      const redInfo = document.getElementById('kmapReducedInfo');
+      const slide19Keys = ['0000','0010','0100','0101','1100','1000','1010'];
+      const isSlide19 = activeKeys.length === 7 && slide19Keys.every(k => kmapState[k] === 1);
+      const isChess = activeKeys.length === 8 && activeKeys.every(k => (parseInt(k[0])^parseInt(k[1])^parseInt(k[2])^parseInt(k[3])) === 1);
+
+      if (isSlide19) {
+        redInfo.textContent = '3 neuronas (ȲZ̄ + W̄XȲ + X̄Z̄)';
+        redInfo.className = 'val success';
+      } else if (isChess) {
+        redInfo.textContent = '¡Irreducible! (8 neuronas = 2⁴⁻¹)';
+        redInfo.className = 'val danger';
+      } else {
+        redInfo.textContent = `${activeKeys.length} minitérminos activos`;
+        redInfo.className = 'val';
+      }
+
+      const box = document.getElementById('dnfFormulaBox');
+      if (terms.length === 0) {
+        box.innerHTML = '<strong>DNF generada:</strong> Y = 0 (Ninguna neurona activa)';
+      } else {
+        box.innerHTML = `<strong>DNF Canónica (${terms.length} neuronas ocultas + 1 OR):</strong><br>Y = ${terms.join(' + ')}`;
+      }
+    }
+
+    function updateParityComparison() {
+      const N = parseInt(document.getElementById('parityNSlider').value);
+      document.getElementById('parityNVal').textContent = `N = ${N} entradas`;
+
+      const shallow = Math.pow(2, N - 1) + 1;
+      const deep3 = 3 * (N - 1);
+      const depth = 2 * Math.ceil(Math.log2(N));
+
+      document.getElementById('parityShallowVal').textContent = `${shallow.toLocaleString()} neuronas`;
+      document.getElementById('parityDeepVal').textContent = `${deep3} neuronas`;
+      document.getElementById('parityDepthVal').textContent = `${depth} capas`;
+
+      const c = document.getElementById('parityChartCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 55, padR = 25, padT = 25, padB = 35;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      // Log10 scale from 1 to 2^15 (~32769, log10 ~ 4.6)
+      const maxLog = Math.log10(40000);
+      const toX = n => padL + ((n - 2) / 14) * plotW;
+      const toY = val => padT + plotH - (Math.log10(Math.max(1, val)) / maxLog) * plotH;
+
+      // Grid lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px Fira Code';
+      [1, 10, 100, 1000, 10000].forEach(v => {
+        const y = toY(v);
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+        ctx.textAlign = 'right';
+        ctx.fillText(v.toLocaleString(), padL - 6, y + 3);
+      });
+
+      // Shallow curve (red)
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let n = 2; n <= 16; n++) {
+        const x = toX(n), y = toY(Math.pow(2, n - 1) + 1);
+        if (n === 2) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Deep curve (green)
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let n = 2; n <= 16; n++) {
+        const x = toX(n), y = toY(3 * (n - 1));
+        if (n === 2) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Highlight selected N
+      const sx = toX(N);
+      const syShallow = toY(shallow);
+      const syDeep = toY(deep3);
+
+      ctx.strokeStyle = 'rgba(56,189,248,0.4)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(sx, padT); ctx.lineTo(sx, H - padB); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath(); ctx.arc(sx, syShallow, 6, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(sx, syDeep, 6, 0, Math.PI * 2); ctx.fill();
+
+      // X axis labels
+      ctx.fillStyle = '#cbd5e1';
+      ctx.textAlign = 'center';
+      for (let n = 2; n <= 16; n += 2) {
+        ctx.fillText(`N=${n}`, toX(n), H - 10);
+      }
+    }
+
+    // =========================================================================
+    // MODULE 3: UNIVERSAL CLASSIFIER (POLYGONS, CIRCLES & N/2 FLOOR)
+    // =========================================================================
+    let polyBiasSubtract = false;
+    let hoverDist = 0.0;
+
+    function setPolyN(n) {
+      document.getElementById('polyNSlider').value = n;
+      updatePolygonClassifier();
+    }
+
+    function setPolyBias(sub) {
+      polyBiasSubtract = sub;
+      document.getElementById('btnPolyBiasOff').classList.toggle('active', !sub);
+      document.getElementById('btnPolyBiasOn').classList.toggle('active', sub);
+      updatePolygonClassifier();
+    }
+
+    function evalPolygonSum(x, y, N, R) {
+      let sum = 0;
+      for (let i = 0; i < N; i++) {
+        const ang = (2 * Math.PI * i) / N;
+        if (x * Math.cos(ang) + y * Math.sin(ang) <= R) {
+          sum += 1;
+        }
+      }
+      return polyBiasSubtract ? (sum - N / 2.0) : sum;
+    }
+
+    function updatePolygonClassifier() {
+      const N = parseInt(document.getElementById('polyNSlider').value);
+      const names = {3:'Triángulo', 4:'Cuadrado', 5:'Pentágono', 6:'Hexágono', 64:'Círculo aproximado'};
+      const shapeName = names[N] || `Polígono de ${N} lados`;
+      document.getElementById('polyNVal').textContent = `N = ${N} (${shapeName})`;
+
+      const inVal = polyBiasSubtract ? (N / 2.0).toFixed(1) : N;
+      const floorVal = polyBiasSubtract ? '0.0 (Con sesgo -N/2)' : `${(N / 2.0).toFixed(1)} (N/2)`;
+      document.getElementById('polyInsideSum').textContent = inVal;
+      document.getElementById('polyFloorSum').textContent = floorVal;
+
+      const c = document.getElementById('polyCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      const R = 1.0;
+      const range = 2.4;
+
+      // Render heatmap of halfplane sum
+      const step = 4;
+      for (let py = 0; py < H; py += step) {
+        for (let px = 0; px < W; px += step) {
+          const x = ((px / W) * 2 - 1) * range;
+          const y = (1 - (py / H) * 2) * (range * H / W);
+          let rawSum = 0;
+          for (let i = 0; i < N; i++) {
+            const ang = (2 * Math.PI * i) / N;
+            if (x * Math.cos(ang) + y * Math.sin(ang) <= R) rawSum++;
+          }
+          const isInside = rawSum === N;
+          const norm = Math.max(0, (rawSum - N * 0.45) / (N * 0.55));
+          if (isInside) {
+            ctx.fillStyle = 'rgba(34, 197, 94, 0.78)';
+          } else {
+            const rCol = Math.round(20 + 210 * norm);
+            const gCol = Math.round(28 + 90 * norm);
+            const bCol = Math.round(55 + 140 * (1 - norm));
+            ctx.fillStyle = `rgb(${rCol},${gCol},${bCol})`;
+          }
+          ctx.fillRect(px, py, step, step);
+        }
+      }
+
+      // Draw halfplane lines if N <= 16
+      if (N <= 16) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.lineWidth = 1.2;
+        for (let i = 0; i < N; i++) {
+          const ang = (2 * Math.PI * i) / N;
+          const ca = Math.cos(ang), sa = Math.sin(ang);
+          // Line: x*ca + y*sa = R
+          const p0x = R * ca, p0y = R * sa;
+          const tx = -sa, ty = ca;
+          const x1 = p0x - 4 * tx, y1 = p0y - 4 * ty;
+          const x2 = p0x + 4 * tx, y2 = p0y + 4 * ty;
+          const sx1 = ((x1 / range) + 1) * 0.5 * W;
+          const sy1 = (1 - (y1 / (range * H / W))) * 0.5 * H;
+          const sx2 = ((x2 / range) + 1) * 0.5 * W;
+          const sy2 = (1 - (y2 / (range * H / W))) * 0.5 * H;
+          ctx.beginPath(); ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2); ctx.stroke();
+        }
+      }
+
+      drawRadialProfile(N, R);
+    }
+
+    function drawRadialProfile(N, R) {
+      const c = document.getElementById('radialProfileCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 48, padR = 20, padT = 22, padB = 32;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const maxD = 3.5;
+      const minY = polyBiasSubtract ? -1 : 0;
+      const maxY = polyBiasSubtract ? (N / 2 + 1) : (N + 1);
+
+      const toX = d => padL + (d / maxD) * plotW;
+      const toY = val => padT + plotH - ((val - minY) / (maxY - minY)) * plotH;
+
+      // Floor dashed line
+      const floorVal = polyBiasSubtract ? 0 : (N / 2);
+      const yFloor = toY(floorVal);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(padL, yFloor); ctx.lineTo(W - padR, yFloor); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '10px Fira Code';
+      ctx.fillText(polyBiasSubtract ? 'Piso = 0 (con sesgo)' : `Piso = N/2 (${(N/2).toFixed(1)})`, W - padR - 135, yFloor - 6);
+
+      // Theoretical radial curve (Slide 38)
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 200; i++) {
+        const d = (i / 200) * maxD;
+        let s = d <= R ? N : N * (0.5 + (1 / Math.PI) * Math.asin(R / d));
+        if (polyBiasSubtract) s -= N / 2;
+        const x = toX(d), y = toY(s);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#cbd5e1';
+      ctx.textAlign = 'center';
+      ctx.fillText('Distancia al centro (d)', padL + plotW / 2, H - 6);
+      ctx.fillText('r=1.0', toX(R), H - 18);
+    }
+
+    // Mouse hover on Polygon Canvas
+    document.addEventListener('DOMContentLoaded', () => {
+      const pc = document.getElementById('polyCanvas');
+      pc.addEventListener('mousemove', e => {
+        const rect = pc.getBoundingClientRect();
+        const px = (e.clientX - rect.left) * (pc.width / rect.width);
+        const py = (e.clientY - rect.top) * (pc.height / rect.height);
+        const range = 2.4;
+        const x = ((px / pc.width) * 2 - 1) * range;
+        const y = (1 - (py / pc.height) * 2) * (range * pc.height / pc.width);
+        const N = parseInt(document.getElementById('polyNSlider').value);
+        const val = evalPolygonSum(x, y, N, 1.0);
+        document.getElementById('polyHoverStat').textContent = `Suma = ${val.toFixed(1)}`;
+      });
+    });
+
+    // =========================================================================
+    // MODULE 4: UNIVERSAL CONTINUOUS FUNCTION APPROXIMATOR (PULSES)
+    // =========================================================================
+    let targetFnIdx = 0;
+
+    function evalTargetFn(x) {
+      if (targetFnIdx === 0) return Math.sin(x) + 0.5 * Math.cos(2.2 * x) + 1.5;
+      if (targetFnIdx === 1) return 2.4 * Math.exp(-Math.pow(x - Math.PI, 2) / 1.5) + 0.3;
+      return 1.5 + 0.8 * Math.sin(1.8 * x) * Math.cos(0.7 * x) + 0.35 * Math.sin(4 * x);
+    }
+
+    function setTargetFn(idx) {
+      targetFnIdx = idx;
+      [0,1,2].forEach(i => document.getElementById(`fnBtn${i}`).classList.toggle('active', i === idx));
+      updatePulseApproximator();
+    }
+
+    function updatePulseApproximator() {
+      const P = parseInt(document.getElementById('pulseSlider').value);
+      document.getElementById('pulseCountVal').textContent = `${P} pulsos (${2 * P} neuronas ocultas)`;
+      document.getElementById('pulseNeuronsStat').textContent = 2 * P;
+
+      const c = document.getElementById('pulseCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 42, padR = 20, padT = 20, padB = 30;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const a = 0, b = 2 * Math.PI;
+      const maxY = 3.2;
+      const toX = x => padL + ((x - a) / (b - a)) * plotW;
+      const toY = y => padT + plotH - (y / maxY) * plotH;
+
+      // Build pulses
+      const dx = (b - a) / P;
+      const pulses = [];
+      for (let i = 0; i < P; i++) {
+        const t1 = a + i * dx;
+        const t2 = t1 + dx;
+        const h = evalTargetFn(0.5 * (t1 + t2));
+        pulses.push({ t1, t2, h });
+      }
+
+      // Draw pulses as rectangles
+      pulses.forEach(p => {
+        const x1 = toX(p.t1), x2 = toX(p.t2);
+        const yTop = toY(p.h), yBot = toY(0);
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+        ctx.fillRect(x1, yTop, x2 - x1, yBot - yTop);
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.85)';
+        ctx.lineWidth = 1.4;
+        ctx.strokeRect(x1, yTop, x2 - x1, yBot - yTop);
+      });
+
+      // Draw true continuous curve
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      let maxErr = 0, mse = 0;
+      const samples = 400;
+      for (let i = 0; i < samples; i++) {
+        const x = a + (b - a) * (i + 0.5) / samples;
+        const yt = evalTargetFn(x);
+        const idx = Math.min(P - 1, Math.floor((x - a) / dx));
+        const ya = pulses[idx].h;
+        const err = Math.abs(yt - ya);
+        if (err > maxErr) maxErr = err;
+        mse += err * err;
+
+        const sx = toX(x), sy = toY(yt);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      const rmse = Math.sqrt(mse / samples);
+      document.getElementById('pulseMaxErrStat').textContent = maxErr.toFixed(4);
+      document.getElementById('pulseRmseStat').textContent = rmse.toFixed(4);
+    }
+
+    // =========================================================================
+    // MODULE 5: STRIPS VS CELLS, GRADED ACTIVATIONS & QUIZ
+    // =========================================================================
+    let cellMode = 'cross';
+
+    function setCellMode(m) {
+      cellMode = m;
+      document.getElementById('btnGridParallel').classList.toggle('active', m === 'parallel');
+      document.getElementById('btnGridCross').classList.toggle('active', m === 'cross');
+      updateActivationsView();
+    }
+
+    function updateActivationsView() {
+      // 1. Draw Strips vs Cells
+      const cc = document.getElementById('cellsCanvas');
+      const ctxC = cc.getContext('2d');
+      const Wc = cc.width, Hc = cc.height;
+      ctxC.clearRect(0, 0, Wc, Hc);
+
+      ctxC.fillStyle = '#1e293b';
+      ctxC.fillRect(15, 15, Wc - 30, Hc - 30);
+
+      ctxC.strokeStyle = '#ef4444';
+      ctxC.lineWidth = 2;
+      if (cellMode === 'parallel') {
+        for (let i = 1; i <= 8; i++) {
+          const x = 15 + (i / 9) * (Wc - 30);
+          ctxC.beginPath(); ctxC.moveTo(x, 15); ctxC.lineTo(x, Hc - 15); ctxC.stroke();
+        }
+        document.getElementById('cellsCaption').textContent = '8 paralelas → 9 franjas verticales. La red no sabe a qué altura cayó el punto.';
+      } else {
+        for (let i = 1; i <= 4; i++) {
+          const x = 15 + (i / 5) * (Wc - 30);
+          const y = 15 + (i / 5) * (Hc - 30);
+          ctxC.beginPath(); ctxC.moveTo(x, 15); ctxC.lineTo(x, Hc - 15); ctxC.stroke();
+          ctxC.beginPath(); ctxC.moveTo(15, y); ctxC.lineTo(Wc - 15, y); ctxC.stroke();
+        }
+        document.getElementById('cellsCaption').textContent = '4 + 4 en cruz → 5×5 = 25 celdas. Con umbral, todo punto dentro de una celda se ve idéntico.';
+      }
+
+      // 2. Draw Activations
+      const zProbe = parseFloat(document.getElementById('zProbeSlider').value);
+      document.getElementById('zProbeVal').textContent = `z = ${zProbe >= 0 ? '+' : ''}${zProbe.toFixed(2)}`;
+
+      const vStep = zProbe >= 0 ? 1 : 0;
+      const vSig = 1 / (1 + Math.exp(-zProbe));
+      const vTanh = Math.tanh(zProbe);
+      const vRelu = Math.max(0, zProbe);
+
+      document.getElementById('actStepVal').textContent = vStep;
+      document.getElementById('actSigVal').textContent = vSig.toFixed(4);
+      document.getElementById('actTanhVal').textContent = vTanh.toFixed(4);
+      document.getElementById('actReluVal').textContent = vRelu.toFixed(4);
+
+      const ac = document.getElementById('actCanvas');
+      const ctxA = ac.getContext('2d');
+      const Wa = ac.width, Ha = ac.height;
+      ctxA.clearRect(0, 0, Wa, Ha);
+
+      const toX = z => ((z + 3.5) / 7.0) * (Wa - 30) + 15;
+      const toY = y => (Ha - 20) - ((y + 1.2) / 4.2) * (Ha - 35);
+
+      // Axes
+      ctxA.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctxA.lineWidth = 1;
+      ctxA.beginPath();
+      ctxA.moveTo(15, toY(0)); ctxA.lineTo(Wa - 15, toY(0));
+      ctxA.moveTo(toX(0), 15); ctxA.lineTo(toX(0), Ha - 15);
+      ctxA.stroke();
+
+      const plotCurve = (fn, col) => {
+        ctxA.strokeStyle = col;
+        ctxA.lineWidth = 2;
+        ctxA.beginPath();
+        for (let i = 0; i <= 140; i++) {
+          const z = -3.5 + (i / 140) * 7.0;
+          const x = toX(z), y = toY(fn(z));
+          if (i === 0) ctxA.moveTo(x, y); else ctxA.lineTo(x, y);
+        }
+        ctxA.stroke();
+      };
+
+      plotCurve(z => z >= 0 ? 1 : 0, '#ef4444');
+      plotCurve(z => 1 / (1 + Math.exp(-z)), '#22c55e');
+      plotCurve(z => Math.tanh(z), '#a855f7');
+      plotCurve(z => Math.max(0, z), '#38bdf8');
+
+      // Probe line
+      const px = toX(zProbe);
+      ctxA.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctxA.setLineDash([4, 3]);
+      ctxA.beginPath(); ctxA.moveTo(px, 15); ctxA.lineTo(px, Ha - 15); ctxA.stroke();
+      ctxA.setLineDash([]);
+    }
+
+    const quizData = {
+      1: {
+        correctAnswer: false,
+        explanation: 'En la Diapositiva 60 esta afirmación es <strong>FALSA</strong>: Si una capa angosta (especialmente con activación de umbral) ya perdió la información agrupando puntos distintos en la misma celda, ninguna cantidad de capas posteriores puede recuperarla.'
+      },
+      2: {
+        correctAnswer: true,
+        explanation: 'En la Diapositiva 60 esta afirmación es <strong>VERDADERA</strong>: Una activación graduada (como Sigmoide o ReLU) codifica <em>cuánto más allá</em> de la frontera cayó la entrada, traspasando información continua hacia las capas siguientes.'
+      },
+      3: {
+        correctAnswer: false,
+        explanation: 'En la Diapositiva 60 esta afirmación es <strong>FALSA</strong>: Ningún vértice del triángulo de compensaciones (Ancho, Profundidad, Activaciones) reemplaza por completo a los otros dos.'
+      },
+      4: {
+        correctAnswer: true,
+        explanation: 'En la Diapositiva 60 esta afirmación es <strong>VERDADERA</strong>: Al transmitir más información por neurona, las redes con activaciones más graduadas suelen requerir menos unidades a igual precisión.'
+      }
+    };
+
+    function answerQuiz(num, userChoseTrue) {
+      const q = quizData[num];
+      const isCorrect = (userChoseTrue === q.correctAnswer);
+      const ansBox = document.getElementById(`quiz-ans-${num}`);
+      const btnTrue = document.getElementById(`q${num}-btn-true`);
+      const btnFalse = document.getElementById(`q${num}-btn-false`);
+
+      // Highlight selected button
+      btnTrue.classList.toggle('active', userChoseTrue === true);
+      btnFalse.classList.toggle('active', userChoseTrue === false);
+
+      ansBox.className = `quiz-ans show ${isCorrect ? 'true-ans' : 'false-ans'}`;
+      const userText = userChoseTrue ? 'Verdadero' : 'Falso';
+      const rightText = q.correctAnswer ? 'Verdadero' : 'Falso';
+
+      if (isCorrect) {
+        ansBox.innerHTML = `✅ <strong>¡Respuesta Correcta! (Elegiste: ${userText})</strong><br>${q.explanation}`;
+      } else {
+        ansBox.innerHTML = `❌ <strong>Respuesta Incorrecta (Elegiste: ${userText}, pero la respuesta correcta es: ${rightText})</strong><br>${q.explanation}`;
+      }
+    }
+
+    // Initialize everything on load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadKmapPreset('slide19');
+      updateXorModule();
+      updateParityComparison();
+      updatePolygonClassifier();
+      updatePulseApproximator();
+      updateActivationsView();
+    });
   </script>
 </body>
 </html>
