@@ -297,13 +297,24 @@ def launch_web():
 
 def launch_universal_approx():
     """
-    Ejecuta el laboratorio interactivo de Aproximación Universal con Redes Neuronales.
+    Ejecuta el laboratorio interactivo de la Unidad I: Aproximación Universal con Redes Neuronales.
     """
     try:
         from aproximacion_universal import interactive_menu
         interactive_menu()
     except Exception as e:
         print(f"⚠️ Error al cargar el módulo de Aproximación Universal: {e}")
+
+
+def launch_learning_module():
+    """
+    Ejecuta el laboratorio interactivo de la Unidad II: Aprendizaje de Redes Neuronales.
+    """
+    try:
+        from aprendizaje_redes import interactive_learning_menu
+        interactive_learning_menu()
+    except Exception as e:
+        print(f"⚠️ Error al cargar el módulo de Aprendizaje de Redes Neuronales: {e}")
 
 
 def main():
@@ -330,6 +341,8 @@ def main():
             generate_plot()
             from aproximacion_universal import run_all_demos
             run_all_demos()
+            from aprendizaje_redes import run_all_learning_demos
+            run_all_learning_demos()
             return
         elif arg in ('--gui', '-g'):
             launch_gui()
@@ -340,25 +353,32 @@ def main():
         elif arg in ('--universal', '-u'):
             launch_universal_approx()
             return
+        elif arg in ('--learning', '-l', '--aprendizaje'):
+            launch_learning_module()
+            return
 
-    # Menú Interactivo en Consola
+    # Menú Interactivo en Consola Organizado por Unidades
     while True:
-        print("\n" + "=" * 70)
-        print(" PERCEPTRÓN MULTICAPA Y APROXIMACIÓN UNIVERSAL — UCN")
-        print(" Teoría: 'El perceptrón multicapa resuelve XOR y es Aproximador Universal'")
-        print("=" * 70)
+        print("\n" + "=" * 74)
+        print(" SUITE EDUCATIVA DE REDES NEURONALES — DOCTORADO UCN")
+        print(" Unidad I: Aproximación Universal  |  Unidad II: Aprendizaje de Redes")
+        print("=" * 74)
         print(" Seleccione una opción:")
-        print("   [1] Ingresar datos de manera manual para XOR (X e Y)")
+        print("   --- UNIDAD I: REPRESENTACIÓN Y APROXIMACIÓN UNIVERSAL ---")
+        print("   [1] Ingresar datos manuales para el Perceptrón Multicapa XOR (X e Y)")
         print("   [2] Ver comprobación completa de la tabla de verdad XOR")
-        print("   [3] Generar gráfico estático de frontera (.png)")
-        print("   [4] 🖥️  Abrir Interfaz Gráfica de Escritorio XOR (Tkinter)")
-        print("   [5] 🌐 Abrir Suite Educativa Web Interactiva (5 Laboratorios en Navegador)")
-        print("   [6] 🎓 Laboratorio en Consola: Aproximación Universal (DNF, Polígonos, Pulsos)")
-        print("   [7] Salir")
-        print("-" * 70)
+        print("   [3] Generar gráfico estático de frontera XOR (.png)")
+        print("   [4] 🎓 Laboratorio Consola Unidad I: Aproximación Universal (DNF, Polígonos, Pulsos)")
+        print("   --- UNIDAD II: APRENDIZAJE DE REDES NEURONALES ---")
+        print("   [5] ⚡ Laboratorio Consola Unidad II: Aprendizaje (Rosenblatt, ADALINE, Softmax, KL)")
+        print("   --- INTERFACES GRÁFICAS INTERACTIVAS ---")
+        print("   [6] 🌐 Abrir Suite Web Interactiva Completa (2 Unidades • 9 Laboratorios)")
+        print("   [7] 🖥️  Abrir Interfaz Gráfica de Escritorio XOR (Tkinter)")
+        print("   [8] Salir")
+        print("-" * 74)
         
         try:
-            opc = input("Ingrese opción [1-7]: ").strip()
+            opc = input("Ingrese opción [1-8]: ").strip()
             if opc == '1':
                 run_manual_mode(mlp)
             elif opc == '2':
@@ -366,16 +386,18 @@ def main():
             elif opc == '3':
                 generate_plot()
             elif opc == '4':
-                launch_gui()
-            elif opc == '5':
-                launch_web()
-            elif opc == '6':
                 launch_universal_approx()
-            elif opc in ('7', 'q', 'salir', 'exit'):
+            elif opc == '5':
+                launch_learning_module()
+            elif opc == '6':
+                launch_web()
+            elif opc == '7':
+                launch_gui()
+            elif opc in ('8', 'q', 'salir', 'exit'):
                 print("Saliendo. ¡Hasta luego!")
                 break
             else:
-                print("⚠️ Opción no válida. Por favor elija un número del 1 al 7.")
+                print("⚠️ Opción no válida. Por favor elija un número del 1 al 8.")
         except (KeyboardInterrupt, EOFError):
             print("\nSaliendo. ¡Hasta luego!")
             break

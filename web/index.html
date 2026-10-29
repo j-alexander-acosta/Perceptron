@@ -224,6 +224,29 @@
 
     .edu-callout strong { color: #fff; }
 
+    .edu-callout code, .edu-table code, p code {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      color: #bae6fd;
+      padding: 0.1rem 0.38rem;
+      border-radius: 5px;
+    }
+
+    .math-block {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: rgba(7, 11, 20, 0.82);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #f8fafc;
+      padding: 0.55rem 0.85rem;
+      border-radius: 8px;
+      margin: 0.45rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+
     /* Controls & Sliders */
     .control-bar {
       display: flex;
@@ -448,6 +471,126 @@
     .quiz-ans.true-ans { background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.35); color: #bbf7d0; }
     .quiz-ans.false-ans { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); color: #fecaca; }
 
+    /* Unit Organization & Thematic Switcher */
+    .unit-switcher {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 780px) {
+      .unit-switcher { grid-template-columns: 1fr; }
+    }
+
+    .unit-btn {
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      transition: all 0.2s ease;
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    .unit-btn:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    .unit-btn.active-unit-1 {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(17, 24, 39, 0.9));
+      border-color: var(--accent);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.18);
+    }
+
+    .unit-btn.active-unit-2 {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(17, 24, 39, 0.9));
+      border-color: var(--purple);
+      box-shadow: 0 0 18px rgba(168, 85, 247, 0.2);
+    }
+
+    .unit-btn .u-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .unit-btn.u1 .u-tag { color: var(--accent); }
+    .unit-btn.u2 .u-tag { color: var(--purple); }
+
+    .unit-btn .u-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .unit-btn .u-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    .tab-btn.unit2-tab.active {
+      color: #d8b4fe;
+      border-bottom-color: var(--purple);
+      background: rgba(168, 85, 247, 0.12);
+    }
+
+    .unit-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      background: rgba(17, 24, 39, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.75rem 1.1rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .unit-banner .ub-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .unit-pill {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+    }
+
+    .unit-pill.u1 {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .unit-pill.u2 {
+      background: rgba(168, 85, 247, 0.18);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+
     footer {
       text-align: center;
       padding: 1.2rem;
@@ -463,32 +606,79 @@
   <header>
     <div class="header-top">
       <div class="header-title">
-        <h1>Aproximación Universal con Redes Neuronales</h1>
-        <p>Suite Educativa Interactiva • Ciencia de Datos — UCN (Basado en CMU 11-785, B. Raj et al.)</p>
+        <h1>Redes Neuronales: Aproximación Universal y Aprendizaje</h1>
+        <p>Suite Educativa Interactiva Organizada por Unidades • Ciencia de Datos — Doctorado UCN (CMU 11-785 &amp; Stanford CS221)</p>
       </div>
-      <div class="badge-course">61 Diapositivas → 5 Laboratorios Interactivos</div>
+      <div class="badge-course">2 Unidades Académicas • 117 Diapositivas → 9 Laboratorios</div>
     </div>
 
-    <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab(0)">
-        <span>1. Compuertas y XOR (3 vs 2 Neuronas)</span>
+    <!-- Selector de Unidades Temáticas -->
+    <div class="unit-switcher">
+      <button class="unit-btn u1 active-unit-1" id="unitBtn1" onclick="selectUnit(1)">
+        <div>
+          <span class="u-tag">Unidad Temática I • Representación y Geometría</span>
+          <span class="u-name">Aproximación Universal con Redes Neuronales</span>
+        </div>
+        <span class="u-meta">Labs 1–5 (61 Diaps.)</span>
       </button>
-      <button class="tab-btn" onclick="switchTab(1)">
-        <span>2. Función Booleana Universal (DNF y Karnaugh)</span>
+      <button class="unit-btn u2" id="unitBtn2" onclick="selectUnit(2)">
+        <div>
+          <span class="u-tag">Unidad Temática II • Optimización y Pérdidas</span>
+          <span class="u-name">Aprendizaje de Redes Neuronales</span>
+        </div>
+        <span class="u-meta">Labs 6–9 (56 Diaps.)</span>
       </button>
-      <button class="tab-btn" onclick="switchTab(2)">
-        <span>3. Clasificador Universal (Polígonos y Círculos)</span>
+    </div>
+
+    <!-- Pestañas de la Unidad I (Labs 1 a 5) -->
+    <nav class="nav-tabs" id="unit1Tabs">
+      <button class="tab-btn active" data-tab="0" onclick="switchTab(0)">
+        <span>1.1 Compuertas y XOR (3 vs 2 Neuronas)</span>
       </button>
-      <button class="tab-btn" onclick="switchTab(3)">
-        <span>4. Aproximador Universal Continuo (Pulsos)</span>
+      <button class="tab-btn" data-tab="1" onclick="switchTab(1)">
+        <span>1.2 Booleana Universal (DNF y Karnaugh)</span>
       </button>
-      <button class="tab-btn" onclick="switchTab(4)">
-        <span>5. Ancho, Profundidad y Activaciones</span>
+      <button class="tab-btn" data-tab="2" onclick="switchTab(2)">
+        <span>1.3 Clasificador Universal (Polígonos/Círculos)</span>
+      </button>
+      <button class="tab-btn" data-tab="3" onclick="switchTab(3)">
+        <span>1.4 Aproximador Continuo (Pulsos)</span>
+      </button>
+      <button class="tab-btn" data-tab="4" onclick="switchTab(4)">
+        <span>1.5 Ancho, Profundidad y Autoevaluación I</span>
+      </button>
+    </nav>
+
+    <!-- Pestañas de la Unidad II (Labs 6 a 9) -->
+    <nav class="nav-tabs" id="unit2Tabs" style="display:none;">
+      <button class="tab-btn unit2-tab" data-tab="5" onclick="switchTab(5)">
+        <span>2.1 Riesgo Empírico y Perceptrón de Rosenblatt</span>
+      </button>
+      <button class="tab-btn unit2-tab" data-tab="6" onclick="switchTab(6)">
+        <span>2.2 Límite Multicapa, ADALINE y Señal Diferenciable</span>
+      </button>
+      <button class="tab-btn unit2-tab" data-tab="7" onclick="switchTab(7)">
+        <span>2.3 Softmax y Divergencias (L2 vs Entropía Cruzada / KL)</span>
+      </button>
+      <button class="tab-btn unit2-tab" data-tab="8" onclick="switchTab(8)">
+        <span>2.4 Síntesis Formal y Autoevaluación II</span>
       </button>
     </nav>
   </header>
 
   <main>
+    <!-- Banner informativo del módulo activo -->
+    <div class="unit-banner" id="activeTopicBanner">
+      <div class="ub-left">
+        <span class="unit-pill u1" id="bannerUnitPill">UNIDAD I • REPRESENTACIÓN</span>
+        <span style="font-size:0.88rem; font-weight:600; color:#f1f5f9;" id="bannerTopicTitle">
+          Módulo 1.1: Compuertas de Umbral, Perceptrón Multicapa y Reducción de Friedland
+        </span>
+      </div>
+      <div style="font-size:0.78rem; color:var(--text-muted);" id="bannerSlideMap">
+        Temario: Compuertas N entradas • XOR 3 neuronas vs 2 neuronas • Diapositivas 6–15
+      </div>
+    </div>
 
     <!-- =================================================================== -->
     <!-- MÓDULO 1: COMPUERTAS DE UMBRAL Y REDES XOR (3 NEURONAS VS 2 NEURONAS) -->
@@ -646,7 +836,7 @@
           </div>
 
           <div class="edu-callout warn">
-            <strong>¿Por qué importa la profundidad?</strong> En el tablero de ajedrez (paridad/XOR de $N$ variables), dos entradas que difieren en un solo bit siempre cambian la salida. Ninguna celda activa tiene vecinas activas: con <strong>una sola capa oculta</strong> hace falta $2^{N-1}$ neuronas AND. En cambio, componiendo bloques XOR en árbol logramos la misma función con solo <strong>$3(N-1)$ neuronas</strong> (o $2(N-1)$ con el bloque de Friedland).
+            <strong>¿Por qué importa la profundidad?</strong> En el tablero de ajedrez (paridad/XOR de <code>N</code> variables), dos entradas que difieren en un solo bit siempre cambian la salida. Ninguna celda activa tiene vecinas activas: con <strong>una sola capa oculta</strong> hace falta <code>2<sup>N-1</sup></code> neuronas AND. En cambio, componiendo bloques XOR en árbol logramos la misma función con solo <strong><code>3(N-1)</code> neuronas</strong> (o <code>2(N-1)</code> con el bloque de Friedland).
           </div>
         </section>
       </div>
@@ -722,10 +912,10 @@
 
           <div class="edu-callout">
             <strong>El fenómeno del cilindro (Diapositivas 37–40):</strong><br>
-            • Adentro del polígono de $N$ lados, el punto cumple las $N$ desigualdades: $\sum_{i=1}^N y_i = N$.<br>
-            • Afuera (a distancia $d > r$), el punto queda del lado «bueno» de aproximadamente la mitad de las rectas. En el límite $N \to \infty$:
-            $$\sum_{i=1}^N y_i = N\left(\frac{1}{2} + \frac{1}{\pi}\arcsin\frac{r}{d}\right) \xrightarrow{d \to \infty} \frac{N}{2}$$
-            • <strong>¿Por qué restar el sesgo $-N/2$?</strong> Porque si queremos unir varios círculos en una sola capa oculta para rellenar cualquier región (Diap. 41), los pisos de altura $N/2$ se sumarían falsamente afuera. Con el sesgo $-N/2$, el exterior vale $\approx 0$.
+            • Adentro del polígono de <code>N</code> lados, el punto cumple las <code>N</code> desigualdades: <code>&Sigma; y<sub>i</sub> = N</code>.<br>
+            • Afuera (a distancia <code>d &gt; r</code>), el punto queda del lado «bueno» de aproximadamente la mitad de las rectas. En el límite <code>N &rarr; &infin;</code>:
+            <div class="math-block">&Sigma;<sub>i=1..N</sub> y<sub>i</sub> = N · [ 1/2 + (1/&pi;) · arcsin(r / d) ] &rarr; N / 2</div>
+            • <strong>¿Por qué restar el sesgo <code>-N/2</code>?</strong> Porque si queremos unir varios círculos en una sola capa oculta para rellenar cualquier región (Diap. 41), los pisos de altura <code>N/2</code> se sumarían falsamente afuera. Con el sesgo <code>-N/2</code>, el exterior vale <code>&asymp; 0</code>.
           </div>
         </section>
       </div>
@@ -744,7 +934,7 @@
           </div>
 
           <div class="control-bar">
-            <span style="font-size:0.8rem; color:var(--text-muted);">Función objetivo $f(x)$:</span>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Función objetivo <code>f(x)</code>:</span>
             <button class="btn active" id="fnBtn0" onclick="setTargetFn(0)">Onda Compuesta (Diap. 50)</button>
             <button class="btn" id="fnBtn1" onclick="setTargetFn(1)">Campana Gaussiana</button>
             <button class="btn" id="fnBtn2" onclick="setTargetFn(2)">Polinomio Oscilante</button>
@@ -822,13 +1012,13 @@
 
           <div class="edu-callout">
             <strong>Tres verbos que NO dicen lo mismo (Diapositiva 52):</strong><br>
-            1. <strong>Representar (modelar exactamente):</strong> La red calcula $f$ y nada más que $f$. Con unidades de umbral eso solo ocurre si $f$ ya es escalonada.<br>
-            2. <strong>Aproximar:</strong> Fijado cualquier error $\varepsilon > 0$, existe una red <em>finita</em> cuyo error es menor que $\varepsilon$.<br>
-            3. <strong>El límite:</strong> Al hacer los pulsos más angostos, $\varepsilon \to 0$, pero para cualquier cantidad finita de neuronas la suma sigue siendo escalonada.
+            1. <strong>Representar (modelar exactamente):</strong> La red calcula <code>f</code> y nada más que <code>f</code>. Con unidades de umbral eso solo ocurre si <code>f</code> ya es escalonada.<br>
+            2. <strong>Aproximar:</strong> Fijado cualquier error <code>&epsilon; &gt; 0</code>, existe una red <em>finita</em> cuyo error es menor que <code>&epsilon;</code>.<br>
+            3. <strong>El límite:</strong> Al hacer los pulsos más angostos, <code>&epsilon; &rarr; 0</code>, pero para cualquier cantidad finita de neuronas la suma sigue siendo escalonada.
           </div>
 
           <div class="edu-callout warn">
-            <strong>Ojo con la capa de salida (Diapositiva 54):</strong> Si la neurona de salida tiene una activación (ej. sigmoide), el MLP es un aproximador universal hacia el <em>rango de esa activación</em>, como $(0, 1)$.
+            <strong>Ojo con la capa de salida (Diapositiva 54):</strong> Si la neurona de salida tiene una activación (ej. sigmoide), el MLP es un aproximador universal hacia el <em>rango de esa activación</em>, como <code>(0, 1)</code>.
           </div>
         </section>
       </div>
@@ -935,30 +1125,504 @@
       </div>
     </div>
 
+    <!-- =================================================================== -->
+    <!-- UNIDAD II — MÓDULO 2.1 (PANEL 5): RIESGO EMPÍRICO Y ROSENBLATT       -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-5">
+      <div class="grid-2">
+        <!-- Left: Interactive Rosenblatt 2D Simulator (Slide 22) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚡ Simulador Paso a Paso: Algoritmo del Perceptrón de Rosenblatt</div>
+            <span class="slide-ref">Unidad II • Diapositivas 15–22</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Conjunto de Datos:</span>
+            <button class="btn active" id="btnRosSlide22" onclick="loadRosenblattPreset('slide22')">Ejemplo Exacto Diap. 22 (8 puntos → 3 pasos)</button>
+            <button class="btn" id="btnRosNonSep" onclick="loadRosenblattPreset('nonsep')">No Separable (Cicla sin converger)</button>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Paso de actualización:</span>
+            <button class="btn" id="rosStep0" onclick="setRosenblattStep(0)">0: Inicial w=[0,0]</button>
+            <button class="btn" id="rosStep1" onclick="setRosenblattStep(1)">Paso 1</button>
+            <button class="btn" id="rosStep2" onclick="setRosenblattStep(2)">Paso 2</button>
+            <button class="btn active" id="rosStep3" onclick="setRosenblattStep(3)">Paso 3 (Final w=[3.25, 1.9])</button>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="rosenblattCanvas" width="520" height="330"></canvas>
+            <p style="font-size:0.76rem; color:var(--text-muted); margin-top:0.4rem; text-align:center;">
+              La flecha amarilla es el vector normal <code>w</code> (apunta al semiespacio <code>+1</code>). La recta verde <code>w · x = 0</code> es perpendicular a <code>w</code>.
+            </p>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Vector de Pesos w</span>
+              <span class="val" id="rosWStat">[3.25, 1.90]</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Radio R / Margen &gamma;</span>
+              <span class="val" id="rosMarginStat">R=3.40, &gamma;=0.42</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Cota Teórica (R/&gamma;)²</span>
+              <span class="val success" id="rosBoundStat">65.7 &ge; 3 pasos</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Empirical Risk, Absorbing Threshold & Step Table -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📐 Riesgo Empírico, Absorción del Umbral e Historial de Actualizaciones</div>
+            <span class="slide-ref">Unidad II • Diapositivas 5–22</span>
+          </div>
+
+          <div class="edu-callout">
+            <strong>¿Qué significa aprender una red? (Diaps. 5–13):</strong><br>
+            • Como la función real <code>g(X)</code> es desconocida, no podemos calcular <code>TotalErr(W) = &int; error(f(X; W), g(X)) dX</code>.<br>
+            • En su lugar minimizamos el <strong>Riesgo Empírico</strong> sobre <code>N</code> muestras <code>(X<sub>i</sub>, d<sub>i</sub>)</code>:
+            <div class="math-block">TrainLoss(W) = (1 / N) · &Sigma;<sub>i=1..N</sub> error( f(X<sub>i</sub>; W), d<sub>i</sub> )</div>
+            • <strong>Truco para absorber el umbral <code>T</code> (Diap. 16):</strong> Añadimos una entrada constante <code>x<sub>N+1</sub> = 1</code> con peso <code>w<sub>N+1</sub> = -T</code>. Así <code>&Sigma; w<sub>i</sub>x<sub>i</sub> &ge; T &hArr; w · x &ge; 0</code> (hiperplano que pasa por el origen).
+          </div>
+
+          <p style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">
+            Haz clic en cualquier fila para inspeccionar geométricamente esa actualización <code>w &larr; w + y<sub>i</sub>x<sub>i</sub></code>:
+          </p>
+
+          <table class="edu-table">
+            <thead>
+              <tr><th>Paso</th><th>Muestra <code>x<sub>i</sub></code></th><th><code>y<sub>i</sub></code></th><th><code>w</code> antes</th><th><code>w</code> después (<code>w + y<sub>i</sub>x<sub>i</sub></code>)</th></tr>
+            </thead>
+            <tbody id="rosTableBody"></tbody>
+          </table>
+
+          <div class="edu-callout warn" id="rosConvergenceBox">
+            <strong>Teorema de Convergencia (Diap. 20):</strong> Si los datos son linealmente separables con margen <code>&gamma; &gt; 0</code> y radio <code>R = max &Vert;x<sub>i</sub>&Vert;</code>, el perceptrón converge en a lo más <strong><code>(R / &gamma;)<sup>2</sup></code> actualizaciones</strong>. Si NO son separables (Diap. 21), entra en un ciclo infinito.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD II — MÓDULO 2.2 (PANEL 6): SEÑAL DIFERENCIABLE Y ADALINE      -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-6">
+      <div class="grid-2">
+        <!-- Left: Step Error Count vs Sigmoid Continuous Distance (Slides 30-38) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📉 Señal de Aprendizaje: Conteo de Errores (Escalón) vs. Sigmoide Continua</div>
+            <span class="slide-ref">Unidad II • Diapositivas 30–39</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Posición del Umbral (T):</span>
+                <span class="slider-val" id="sigThreshVal">T = +0.65</span>
+              </div>
+              <input type="range" id="sigThreshSlider" min="-2.5" max="2.5" step="0.05" value="0.65" oninput="updateSignalComparison()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Pendiente Sigmoide (k):</span>
+                <span class="slider-val" id="sigSteepVal">k = 2.0</span>
+              </div>
+              <input type="range" id="sigSteepSlider" min="0.8" max="6.0" step="0.2" value="2.0" oninput="updateSignalComparison()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="signalLossCanvas" width="540" height="310"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">N° Errores (Escalón)</span>
+              <span class="val danger" id="sigDiscreteErrStat">2 errores</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Derivada Conteo Errores</span>
+              <span class="val danger" id="sigDiscreteGradStat">0.000 (¡Ciega!)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Distancia Sigmoide &Sigma;|&sigma;-y|</span>
+              <span class="val success" id="sigContDistStat">2.410</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Pendiente Sigmoide dL/dT</span>
+              <span class="val success" id="sigContGradStat">+0.58 (Guía a T=0)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>¿Por qué el conteo de errores no sirve para optimizar redes? (Diaps. 31–34):</strong><br>
+            Al mover ligeramente <code>T</code> sin cruzar ninguna muestra (por ejemplo entre <code>T = 0.45</code> y <code>T = 1.05</code>), el número de errores permanece constante en 2: <strong>la derivada es exactamente 0</strong>. Con una activación <strong>sigmoide</strong> <code>&sigma;(z) = 1 / (1 + e<sup>-z</sup>)</code>, cada muestra aporta una distancia continua y la pendiente indica en todo momento hacia dónde mover <code>T</code>.
+          </div>
+        </section>
+
+        <!-- Right: Why Perceptron fails on MLPs + ADALINE (Slides 23-29) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧩 ¿Por qué no escala a Multicapa? + ADALINE (Regla Delta / LMS)</div>
+            <span class="slide-ref">Unidad II • Diapositivas 23–29</span>
+          </div>
+
+          <div class="edu-callout warn">
+            <strong>El problema del doble pentágono (Diaps. 23–27):</strong><br>
+            Incluso si conociéramos los pesos exactos de todas las neuronas de un MLP salvo <em>una sola neurona de primera capa</em>, los puntos positivos globales (adentro de cualquiera de los dos pentágonos) <strong>NO son linealmente separables</strong> para esa recta individual. Entrenar unidades de umbral en cascada exige adivinar las etiquetas booleanas intermedias de cada capa oculta: un problema combinatorio exponencial.
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Tasa de aprendizaje ADALINE (&eta;):</span>
+                <span class="slider-val" id="adalineLrVal">&eta; = 0.025</span>
+              </div>
+              <input type="range" id="adalineLrSlider" min="0.005" max="0.08" step="0.005" value="0.025" oninput="updateAdalineSimulation()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="adalineCanvas" width="480" height="215"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">MSE Época 1</span>
+              <span class="val danger" id="adalineMse1">0.2310</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">MSE Época 30</span>
+              <span class="val success" id="adalineMse30">0.1112</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Pesos ADALINE Aprendidos</span>
+              <span class="val" id="adalineWeights">[0.48, 0.17]</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>Paréntesis Histórico — ADALINE (Widrow y Hoff, 1960, Diap. 28):</strong><br>
+            La <strong>Regla Delta o LMS</strong> mueve la actualización <em>antes</em> del escalón, minimizando <code>&frac12;(d - z)<sup>2</sup></code> directamente sobre la pre-activación lineal <code>z = w · x</code>:
+            <div class="math-block">w<sub>i</sub> &larr; w<sub>i</sub> + &eta; · (d - z) · x<sub>i</sub></div>
+            Aun así, encadenar transformaciones puramente lineales colapsa a una sola capa lineal, y mantener el umbral frena el paso del gradiente entre capas (MADALINE, Diap. 29).
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD II — MÓDULO 2.3 (PANEL 7): SOFTMAX Y DIVERGENCIAS L2 VS KL    -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-7">
+      <div class="grid-2">
+        <!-- Left: L2 vs Binary Cross-Entropy on Sigmoid (Slides 45-48) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚖️ Divergencia L2 vs. Entropía Cruzada Binaria con Salida Sigmoide</div>
+            <span class="slide-ref">Unidad II • Diapositivas 45–48</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Etiqueta Real (d):</span>
+            <button class="btn active" id="btnBceD1" onclick="setBceTarget(1)">Objetivo d = 1</button>
+            <button class="btn" id="btnBceD0" onclick="setBceTarget(0)">Objetivo d = 0</button>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Pre-activación (logit z):</span>
+                <span class="slider-val" id="bceLogitVal">z = -3.00 (Y = 0.047)</span>
+              </div>
+              <input type="range" id="bceLogitSlider" min="-4.5" max="4.5" step="0.1" value="-3.0" oninput="updateDivergenceComparison()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="divergenceCanvas" width="520" height="250"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Pérdida L2 / BCE</span>
+              <span class="val" id="statLossCompare">L2=0.45 / BCE=3.05</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Gradiente L2 (&part;L2/&part;z)</span>
+              <span class="val danger" id="statGradL2">-0.043 (¡Saturado!)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Gradiente BCE (&part;BCE/&part;z = Y-d)</span>
+              <span class="val success" id="statGradBce">-0.953 (¡Fuerte!)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>¿Por qué preferimos Entropía Cruzada sobre L2 en clasificación? (Diaps. 47–48):</strong><br>
+            Cuando la neurona está muy equivocada (ej. <code>d = 1</code> pero <code>Y = &sigma;(z) &asymp; 0.05</code>), la sigmoide está en su zona plana (<code>&sigma;'(z) &asymp; 0</code>). Con <strong>L2</strong>, el gradiente respecto a <code>z</code> es <code>(Y - d)·&sigma;'(z) &asymp; 0</code> (aprendizaje lentísimo). Con <strong>Entropía Cruzada</strong>, la derivada <code>-1/Y</code> cancela exactamente la saturación de la sigmoide dejando <code>&part;div / &part;z = Y - d</code>.
+          </div>
+        </section>
+
+        <!-- Right: Interactive Softmax + Multiclass Cross-Entropy / KL (Slides 50-54) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📊 Clasificación Multiclase: Capa Softmax y Divergencia KL</div>
+            <span class="slide-ref">Unidad II • Diapositivas 50–54</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Clase Real (One-Hot d):</span>
+            <button class="btn active" id="btnClass0" onclick="setSoftmaxTarget(0)">Clase 1: [1, 0, 0]</button>
+            <button class="btn" id="btnClass1" onclick="setSoftmaxTarget(1)">Clase 2: [0, 1, 0]</button>
+            <button class="btn" id="btnClass2" onclick="setSoftmaxTarget(2)">Clase 3: [0, 0, 1]</button>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label"><span>Logit z₁:</span><span class="slider-val" id="smZ0Val">2.2</span></div>
+              <input type="range" id="smZ0" min="-3" max="4" step="0.1" value="2.2" oninput="updateSoftmaxLab()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>Logit z₂:</span><span class="slider-val" id="smZ1Val">0.6</span></div>
+              <input type="range" id="smZ1" min="-3" max="4" step="0.1" value="0.6" oninput="updateSoftmaxLab()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>Logit z₃:</span><span class="slider-val" id="smZ2Val">-1.0</span></div>
+              <input type="range" id="smZ2" min="-3" max="4" step="0.1" value="-1.0" oninput="updateSoftmaxLab()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="softmaxCanvas" width="480" height="190"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Probabilidad Clase Real (y_c)</span>
+              <span class="val success" id="smProbC">0.806</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Entropía Cruzada H(d,Y) = -log y_c</span>
+              <span class="val" id="smCeVal">0.215</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Divergencia KL(d || Y)</span>
+              <span class="val" id="smKlVal">0.215 (H(d)=0)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>Relación con Kullback-Leibler (Diaps. 52–53):</strong><br>
+            <div class="math-block">H(p, q) = -&Sigma;<sub>i</sub> p<sub>i</sub> log(q<sub>i</sub>) = H(p) + KL(p &Vert; q)</div>
+            Como el objetivo <code>d</code> es <em>one-hot</em>, su entropía es <code>H(d) = 0</code>, por lo que minimizar la <strong>entropía cruzada <code>-log(y<sub>c</sub>)</code></strong> es idéntico a minimizar la <strong>divergencia KL</strong> entre la distribución real y el vector Softmax <code>y<sub>i</sub> = e<sup>z<sub>i</sub></sup> / &Sigma;<sub>k</sub> e<sup>z<sub>k</sub></sup></code>.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD II — MÓDULO 2.4 (PANEL 8): TABLA FORMAL Y AUTOEVALUACIÓN II   -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-8">
+      <div class="grid-2">
+        <!-- Left: Formal Synthesis & Summary Table (Slides 40-56) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🏛️ El Planteamiento Formal: Red, Representaciones y Pérdidas</div>
+            <span class="slide-ref">Unidad II • Diapositivas 40–56</span>
+          </div>
+
+          <div class="edu-callout">
+            <strong>El problema matemático completo (Diaps. 41–43):</strong><br>
+            Dado un conjunto de entrenamiento <code>{(X<sub>1</sub>, d<sub>1</sub>), &hellip;, (X<sub>N</sub>, d<sub>N</sub>)}</code>, definimos una arquitectura diferenciable donde cada neurona calcula <code>z = &Sigma;<sub>i</sub> w<sub>i</sub>x<sub>i</sub> + b</code> e <code>y = &sigma;(z)</code>, y buscamos:
+            <div class="math-block">min<sub>W</sub> TrainLoss(W) = (1 / N) · &Sigma;<sub>i=1..N</sub> div( f(X<sub>i</sub>; W), d<sub>i</sub> )</div>
+          </div>
+
+          <p style="font-size:0.84rem; color:#fff; font-weight:700;">
+            📋 Tabla Resumen de Representaciones y Divergencias (Diapositiva 54):
+          </p>
+
+          <table class="edu-table">
+            <thead>
+              <tr>
+                <th>Tipo de Problema</th>
+                <th>Objetivo <code>d</code></th>
+                <th>Activación de Salida</th>
+                <th>Divergencia <code>div(Y, d)</code></th>
+                <th>Gradiente <code>&part;div/&part;z</code></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Regresión</strong></td>
+                <td>Real / Vector <code>&#8477;<sup>K</sup></code></td>
+                <td>Lineal (<code>Y = z</code>)</td>
+                <td><strong>L2:</strong> <code>&frac12;&Vert;Y - d&Vert;<sup>2</sup></code></td>
+                <td><code>Y - d</code></td>
+              </tr>
+              <tr>
+                <td><strong>Clasificación Binaria</strong></td>
+                <td>Escalar <code>{0, 1}</code></td>
+                <td>Sigmoide <code>&sigma;(z) &isin; (0, 1)</code></td>
+                <td><strong>BCE:</strong> <code>-d log(Y) - (1-d) log(1-Y)</code></td>
+                <td><code>Y - d</code></td>
+              </tr>
+              <tr>
+                <td><strong>Clasificación Multiclase</strong></td>
+                <td>Vector <em>One-Hot</em></td>
+                <td><strong>Softmax</strong> <code>e<sup>z<sub>i</sub></sup> / &Sigma;<sub>k</sub> e<sup>z<sub>k</sub></sup></code></td>
+                <td><strong>Entropía Cruzada / KL:</strong> <code>-log(y<sub>c</sub>)</code></td>
+                <td><code>y<sub>i</sub> - d<sub>i</sub></code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="edu-callout warn">
+            <strong>Dos malentendidos frecuentes sobre Aproximación Universal y Aprendizaje (Diap. 14):</strong><br>
+            1. <em>«Cualquier red neuronal puede aproximar cualquier función»</em> → <strong>Falso:</strong> La arquitectura debe tener suficiente capacidad (ancho, profundidad y activaciones adecuadas).<br>
+            2. <em>«Basta con unos pocos datos para aprender los parámetros»</em> → <strong>Falso:</strong> Minimizar el error en pocas muestras no garantiza generalizar bien a todo el espacio de entrada.
+          </div>
+        </section>
+
+        <!-- Right: Interactive Quiz for Unit II (Slides 14, 34, 54) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Autoevaluación Interactiva II: Aprendizaje de Redes Neuronales</div>
+            <span class="slide-ref">Unidad II • Diapositivas 14, 34 y 54</span>
+          </div>
+
+          <p style="font-size:0.84rem; color:var(--text-muted);">
+            Verifica tu dominio de los conceptos clave de la Unidad II seleccionando <strong>Verdadero</strong> o <strong>Falso</strong>:
+          </p>
+
+          <div class="quiz-item" id="quiz-item-5">
+            <div class="quiz-q">1 (Diap. 34). «Con una función de umbral (escalón), mover el umbral no cambia el conteo de errores a menos que cruce una muestra.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q5-btn-true" onclick="answerQuiz(5, true)">Verdadero</button>
+              <button class="btn" id="q5-btn-false" onclick="answerQuiz(5, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-5"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-6">
+            <div class="quiz-q">2 (Diap. 34). «La derivada de la función de conteo de errores indica en qué dirección mover el umbral.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q6-btn-true" onclick="answerQuiz(6, true)">Verdadero</button>
+              <button class="btn" id="q6-btn-false" onclick="answerQuiz(6, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-6"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-7">
+            <div class="quiz-q">3 (Diap. 34). «Con una función sigmoide, desplazar la curva cambia la distancia total a las etiquetas aunque no cambie el conteo de errores.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q7-btn-true" onclick="answerQuiz(7, true)">Verdadero</button>
+              <button class="btn" id="q7-btn-false" onclick="answerQuiz(7, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-7"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-8">
+            <div class="quiz-q">4 (Diap. 14). «Por el teorema de aproximación universal, cualquier arquitectura de red puede aprender cualquier función a partir de unas pocas muestras.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q8-btn-true" onclick="answerQuiz(8, true)">Verdadero</button>
+              <button class="btn" id="q8-btn-false" onclick="answerQuiz(8, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-8"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
   </main>
 
   <footer>
-    Ciencia de Datos — Doctorado UCN • Implementación Educativa Interactiva de «Aproximación Universal con Redes Neuronales»
+    Ciencia de Datos — Doctorado UCN • Suite Educativa Interactiva: Unidad I (Aproximación Universal) &amp; Unidad II (Aprendizaje de Redes Neuronales)
   </footer>
 
   <!-- ===================================================================== -->
-  <!-- JAVASCRIPT LOGIC FOR ALL 5 INTERACTIVE EDUCATIONAL MODULES            -->
+  <!-- JAVASCRIPT LOGIC FOR ALL 9 INTERACTIVE EDUCATIONAL MODULES (2 UNITS)  -->
   <!-- ===================================================================== -->
   <script>
-    // Navigation
+    const topicMetadata = [
+      { unit: 1, pill: 'UNIDAD I • REPRESENTACIÓN', title: 'Módulo 1.1: Compuertas de Umbral, Perceptrón Multicapa y Reducción de Friedland', slides: 'Temario: Compuertas N entradas • XOR 3 neuronas vs 2 neuronas • Diaps. 6–15' },
+      { unit: 1, pill: 'UNIDAD I • REPRESENTACIÓN', title: 'Módulo 1.2: El MLP como Función Booleana Universal (DNF, Karnaugh y Paridad N-aria)', slides: 'Temario: Forma Normal Disyuntiva • Mapas de Karnaugh • Explosión Exponencial vs Profundidad • Diaps. 16–30' },
+      { unit: 1, pill: 'UNIDAD I • REPRESENTACIÓN', title: 'Módulo 1.3: El MLP como Clasificador Universal (Polígonos, Cilindros y Sesgo -N/2)', slides: 'Temario: Semiplanos en R² • Piso exterior N/2 • Fórmula del Arco • Diaps. 31–48' },
+      { unit: 1, pill: 'UNIDAD I • REPRESENTACIÓN', title: 'Módulo 1.4: El MLP como Aproximador Universal de Funciones Continuas (Pulsos)', slides: 'Temario: Pulsos con 2 umbrales • Representar vs Aproximar vs Límite • Diaps. 49–54' },
+      { unit: 1, pill: 'UNIDAD I • REPRESENTACIÓN', title: 'Módulo 1.5: Suficiencia de la Arquitectura (Ancho, Profundidad y Activaciones Graduadas)', slides: 'Temario: Franjas vs Celdas • Triángulo de Compensaciones • Autoevaluación I • Diaps. 55–61' },
+      { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.1: Riesgo Empírico y Algoritmo de Aprendizaje del Perceptrón de Rosenblatt', slides: 'Temario: TrainLoss(W) • Absorción del umbral • Convergencia (R/γ)² y Ejemplo Diap. 22 • Diaps. 5–22' },
+      { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.2: ¿Por qué no escala a Multicapa?, ADALINE (LMS) y Señal Diferenciable', slides: 'Temario: Doble pentágono • Regla Delta Widrow-Hoff • Conteo de errores vs Sigmoide • Diaps. 23–39' },
+      { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.3: Regresión Logística, Capa Softmax y Divergencias (L2 vs Entropía Cruzada / KL)', slides: 'Temario: Saturación con L2 • Entropía Cruzada Binaria • Softmax y Divergencia KL • Diaps. 40–54' },
+      { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.4: Síntesis Formal de Representaciones, Pérdidas y Autoevaluación II', slides: 'Temario: Tabla Resumen (Diap. 54) • Malentendidos (Diap. 14) • Autoevaluación II (Diap. 34)' }
+    ];
+
+    function selectUnit(unitNum) {
+      const u1Btn = document.getElementById('unitBtn1');
+      const u2Btn = document.getElementById('unitBtn2');
+      const u1Tabs = document.getElementById('unit1Tabs');
+      const u2Tabs = document.getElementById('unit2Tabs');
+
+      if (unitNum === 1) {
+        u1Btn.classList.add('active-unit-1');
+        u2Btn.classList.remove('active-unit-2');
+        u1Tabs.style.display = 'flex';
+        u2Tabs.style.display = 'none';
+        switchTab(0);
+      } else {
+        u1Btn.classList.remove('active-unit-1');
+        u2Btn.classList.add('active-unit-2');
+        u1Tabs.style.display = 'none';
+        u2Tabs.style.display = 'flex';
+        switchTab(5);
+      }
+    }
+
+    // Navigation across all 9 tabs
     function switchTab(idx) {
-      document.querySelectorAll('.tab-btn').forEach((b, i) => {
-        b.classList.toggle('active', i === idx);
+      const meta = topicMetadata[idx];
+      const u1Btn = document.getElementById('unitBtn1');
+      const u2Btn = document.getElementById('unitBtn2');
+      const u1Tabs = document.getElementById('unit1Tabs');
+      const u2Tabs = document.getElementById('unit2Tabs');
+
+      if (meta.unit === 1) {
+        u1Btn.classList.add('active-unit-1');
+        u2Btn.classList.remove('active-unit-2');
+        u1Tabs.style.display = 'flex';
+        u2Tabs.style.display = 'none';
+      } else {
+        u1Btn.classList.remove('active-unit-1');
+        u2Btn.classList.add('active-unit-2');
+        u1Tabs.style.display = 'none';
+        u2Tabs.style.display = 'flex';
+      }
+
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.getAttribute('data-tab')) === idx);
       });
       document.querySelectorAll('.module-panel').forEach((p, i) => {
         p.classList.toggle('active', i === idx);
       });
+
+      // Update Banner
+      const pill = document.getElementById('bannerUnitPill');
+      pill.textContent = meta.pill;
+      pill.className = `unit-pill ${meta.unit === 1 ? 'u1' : 'u2'}`;
+      document.getElementById('bannerTopicTitle').textContent = meta.title;
+      document.getElementById('bannerSlideMap').textContent = meta.slides;
+
       // Redraw active canvases
       if (idx === 0) updateXorModule();
       if (idx === 1) { renderKmap(); updateParityComparison(); }
       if (idx === 2) updatePolygonClassifier();
       if (idx === 3) updatePulseApproximator();
       if (idx === 4) updateActivationsView();
+      if (idx === 5) renderRosenblattLab();
+      if (idx === 6) { updateSignalComparison(); updateAdalineSimulation(); }
+      if (idx === 7) { updateDivergenceComparison(); updateSoftmaxLab(); }
     }
 
     // =========================================================================
@@ -1706,19 +2370,35 @@
     const quizData = {
       1: {
         correctAnswer: false,
-        explanation: 'En la Diapositiva 60 esta afirmación es <strong>FALSA</strong>: Si una capa angosta (especialmente con activación de umbral) ya perdió la información agrupando puntos distintos en la misma celda, ninguna cantidad de capas posteriores puede recuperarla.'
+        explanation: 'En la Diapositiva 60 (Unidad I) esta afirmación es <strong>FALSA</strong>: Si una capa angosta (especialmente con activación de umbral) ya perdió la información agrupando puntos distintos en la misma celda, ninguna cantidad de capas posteriores puede recuperarla.'
       },
       2: {
         correctAnswer: true,
-        explanation: 'En la Diapositiva 60 esta afirmación es <strong>VERDADERA</strong>: Una activación graduada (como Sigmoide o ReLU) codifica <em>cuánto más allá</em> de la frontera cayó la entrada, traspasando información continua hacia las capas siguientes.'
+        explanation: 'En la Diapositiva 60 (Unidad I) esta afirmación es <strong>VERDADERA</strong>: Una activación graduada (como Sigmoide o ReLU) codifica <em>cuánto más allá</em> de la frontera cayó la entrada, traspasando información continua hacia las capas siguientes.'
       },
       3: {
         correctAnswer: false,
-        explanation: 'En la Diapositiva 60 esta afirmación es <strong>FALSA</strong>: Ningún vértice del triángulo de compensaciones (Ancho, Profundidad, Activaciones) reemplaza por completo a los otros dos.'
+        explanation: 'En la Diapositiva 60 (Unidad I) esta afirmación es <strong>FALSA</strong>: Ningún vértice del triángulo de compensaciones (Ancho, Profundidad, Activaciones) reemplaza por completo a los otros dos.'
       },
       4: {
         correctAnswer: true,
-        explanation: 'En la Diapositiva 60 esta afirmación es <strong>VERDADERA</strong>: Al transmitir más información por neurona, las redes con activaciones más graduadas suelen requerir menos unidades a igual precisión.'
+        explanation: 'En la Diapositiva 60 (Unidad I) esta afirmación es <strong>VERDADERA</strong>: Al transmitir más información por neurona, las redes con activaciones más graduadas suelen requerir menos unidades a igual precisión.'
+      },
+      5: {
+        correctAnswer: true,
+        explanation: 'En la Diapositiva 34 (Unidad II) esta afirmación es <strong>VERDADERA</strong>: Con una función de umbral, desplazamientos pequeños del umbral que no cruzan ninguna muestra dejan intacto el conteo de errores.'
+      },
+      6: {
+        correctAnswer: false,
+        explanation: 'En la Diapositiva 34 (Unidad II) esta afirmación es <strong>FALSA</strong>: El conteo de errores es escalonado (plano a trozos); su derivada vale 0 en casi todas partes y no está definida en los saltos, por lo que no indica hacia dónde mover el umbral.'
+      },
+      7: {
+        correctAnswer: true,
+        explanation: 'En la Diapositiva 34 (Unidad II) esta afirmación es <strong>VERDADERA</strong>: Con la sigmoide, todas las muestras cambian continuamente su salida al mover el umbral, entregando una derivada no nula que guía el aprendizaje.'
+      },
+      8: {
+        correctAnswer: false,
+        explanation: 'En la Diapositiva 14 (Unidad II) esta afirmación es <strong>FALSA</strong>: Son los dos malentendidos clásicos. Primero, la arquitectura debe tener capacidad suficiente; segundo, unas pocas muestras no bastan para garantizar generalización.'
       }
     };
 
@@ -1744,6 +2424,582 @@
       }
     }
 
+    // =========================================================================
+    // UNIDAD II — MODULE 2.1: ROSENBLATT PERCEPTRON LEARNING (SLIDES 15-22)
+    // =========================================================================
+    const slide22Points = [
+      { x: [-2.8, 1.6], y: -1 }, { x: [-2.2, 0.6], y: -1 },
+      { x: [-1.3, 0.7], y: -1 }, { x: [-1.5, -0.9], y: -1 },
+      { x: [0.9, 1.9],  y: +1 }, { x: [2.3, 2.5],  y: +1 },
+      { x: [1.3, -0.9], y: +1 }, { x: [-0.45, 1.6], y: +1 }
+    ];
+
+    const nonSepPoints = [
+      { x: [-2.2, 1.4], y: -1 }, { x: [-1.6, -1.1], y: -1 },
+      { x: [1.8, 1.2],  y: -1 }, { x: [1.5, 2.0],   y: +1 },
+      { x: [1.4, -1.2], y: +1 }, { x: [-1.8, 1.1],  y: +1 }
+    ];
+
+    let rosPreset = 'slide22';
+    let rosStepIdx = 3;
+    let rosHistory = [];
+    let rosActivePoints = slide22Points;
+
+    function computeRosenblattHistory(pts, maxEpochs = 6) {
+      let w = [0.0, 0.0];
+      const hist = [{
+        step: 0, sampleIdx: -1, x: [0, 0], y: 0,
+        wBefore: [0, 0], wAfter: [0, 0]
+      }];
+      let converged = false;
+      for (let ep = 1; ep <= maxEpochs; ep++) {
+        let errs = 0;
+        for (let i = 0; i < pts.length; i++) {
+          const p = pts[i];
+          const dot = w[0] * p.x[0] + w[1] * p.x[1];
+          if (p.y * dot <= 0) {
+            const wb = [w[0], w[1]];
+            w = [
+              Math.round((w[0] + p.y * p.x[0]) * 1000) / 1000,
+              Math.round((w[1] + p.y * p.x[1]) * 1000) / 1000
+            ];
+            errs++;
+            hist.push({
+              step: hist.length,
+              sampleIdx: i,
+              x: p.x,
+              y: p.y,
+              wBefore: wb,
+              wAfter: [w[0], w[1]]
+            });
+          }
+        }
+        if (errs === 0) { converged = true; break; }
+      }
+      return { hist, converged };
+    }
+
+    function loadRosenblattPreset(name) {
+      rosPreset = name;
+      document.getElementById('btnRosSlide22').classList.toggle('active', name === 'slide22');
+      document.getElementById('btnRosNonSep').classList.toggle('active', name === 'nonsep');
+      rosActivePoints = (name === 'slide22') ? slide22Points : nonSepPoints;
+      const res = computeRosenblattHistory(rosActivePoints, name === 'slide22' ? 10 : 2);
+      rosHistory = res.hist;
+      rosStepIdx = Math.min(3, rosHistory.length - 1);
+      setRosenblattStep(rosStepIdx);
+    }
+
+    function setRosenblattStep(s) {
+      rosStepIdx = Math.min(s, rosHistory.length - 1);
+      [0, 1, 2, 3].forEach(k => {
+        const b = document.getElementById(`rosStep${k}`);
+        if (b) b.classList.toggle('active', k === rosStepIdx);
+      });
+      renderRosenblattLab();
+    }
+
+    function renderRosenblattLab() {
+      if (rosHistory.length === 0) {
+        const res = computeRosenblattHistory(rosActivePoints);
+        rosHistory = res.hist;
+      }
+      const cur = rosHistory[rosStepIdx] || rosHistory[rosHistory.length - 1];
+      const w = cur.wAfter;
+
+      document.getElementById('rosWStat').textContent = `[${w[0].toFixed(2)}, ${w[1].toFixed(2)}]`;
+
+      // Compute R and gamma
+      let R = 0;
+      rosActivePoints.forEach(p => {
+        const norm = Math.hypot(p.x[0], p.x[1]);
+        if (norm > R) R = norm;
+      });
+      const wNorm = Math.hypot(w[0], w[1]);
+      let minMargin = Infinity;
+      if (wNorm > 0) {
+        rosActivePoints.forEach(p => {
+          const m = (p.y * (w[0] * p.x[0] + w[1] * p.x[1])) / wNorm;
+          if (m < minMargin) minMargin = m;
+        });
+      } else {
+        minMargin = 0;
+      }
+
+      const boundEl = document.getElementById('rosBoundStat');
+      if (rosPreset === 'slide22' && minMargin > 0) {
+        const bound = Math.pow(R / minMargin, 2);
+        document.getElementById('rosMarginStat').textContent = `R=${R.toFixed(2)}, γ=${minMargin.toFixed(2)}`;
+        boundEl.textContent = `${bound.toFixed(1)} ≥ 3 pasos`;
+        boundEl.className = 'val success';
+      } else if (rosPreset === 'nonsep') {
+        document.getElementById('rosMarginStat').textContent = `R=${R.toFixed(2)}, γ ≤ 0`;
+        boundEl.textContent = 'No separable (Cicla)';
+        boundEl.className = 'val danger';
+      } else {
+        document.getElementById('rosMarginStat').textContent = `R=${R.toFixed(2)}, Paso ${rosStepIdx}`;
+        boundEl.textContent = 'En progreso...';
+        boundEl.className = 'val';
+      }
+
+      // Populate table
+      const tbody = document.getElementById('rosTableBody');
+      tbody.innerHTML = '';
+      rosHistory.slice(0, 6).forEach((h, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = `clickable ${idx === rosStepIdx ? 'active-row' : ''}`;
+        tr.onclick = () => setRosenblattStep(idx);
+        if (h.step === 0) {
+          tr.innerHTML = `<td>0 (Inicio)</td><td>—</td><td>—</td><td>—</td><td>[0.00, 0.00]</td>`;
+        } else {
+          tr.innerHTML = `<td>Paso ${h.step}</td><td>[${h.x[0]}, ${h.x[1]}]</td><td>${h.y > 0 ? '+1' : '-1'}</td><td>[${h.wBefore[0].toFixed(2)}, ${h.wBefore[1].toFixed(2)}]</td><td>[${h.wAfter[0].toFixed(2)}, ${h.wAfter[1].toFixed(2)}]</td>`;
+        }
+        tbody.appendChild(tr);
+      });
+
+      // Draw 2D space on rosenblattCanvas
+      const c = document.getElementById('rosenblattCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const rangeX = 3.6, rangeY = 3.0;
+      const toX = x => ((x + rangeX) / (2 * rangeX)) * W;
+      const toY = y => (1 - (y + rangeY) / (2 * rangeY)) * H;
+
+      // Shade positive half-space w·x >= 0 if w != 0
+      if (wNorm > 0.001) {
+        const step = 6;
+        for (let py = 0; py < H; py += step) {
+          for (let px = 0; px < W; px += step) {
+            const x = (px / W) * (2 * rangeX) - rangeX;
+            const y = (1 - py / H) * (2 * rangeY) - rangeY;
+            const dot = w[0] * x + w[1] * y;
+            ctx.fillStyle = dot >= 0 ? 'rgba(34, 197, 94, 0.09)' : 'rgba(239, 68, 68, 0.07)';
+            ctx.fillRect(px, py, step, step);
+          }
+        }
+      }
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, toY(0)); ctx.lineTo(W, toY(0));
+      ctx.moveTo(toX(0), 0); ctx.lineTo(toX(0), H);
+      ctx.stroke();
+
+      // Hyperplane line w[0]*x + w[1]*y = 0
+      if (wNorm > 0.001) {
+        const tx = -w[1] / wNorm, ty = w[0] / wNorm;
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(toX(-5 * tx), toY(-5 * ty));
+        ctx.lineTo(toX(5 * tx), toY(5 * ty));
+        ctx.stroke();
+
+        // Draw normal vector w from origin (scaled for visibility)
+        const scaleW = 0.55;
+        const wx = w[0] * scaleW, wy = w[1] * scaleW;
+        const ox = toX(0), oy = toY(0);
+        const ex = toX(wx), ey = toY(wy);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+
+        // Arrowhead
+        const ang = Math.atan2(ey - oy, ex - ox);
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 10 * Math.cos(ang - 0.4), ey - 10 * Math.sin(ang - 0.4));
+        ctx.lineTo(ex - 10 * Math.cos(ang + 0.4), ey - 10 * Math.sin(ang + 0.4));
+        ctx.closePath();
+        ctx.fill();
+        ctx.font = 'bold 11px Fira Code';
+        ctx.fillText(`w=[${w[0]},${w[1]}]`, ex + 8, ey - 6);
+      }
+
+      // Draw data points
+      rosActivePoints.forEach((p, idx) => {
+        const sx = toX(p.x[0]), sy = toY(p.x[1]);
+        if (idx === cur.sampleIdx) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, 14, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(sx, sy, 7, 0, Math.PI * 2);
+        ctx.fillStyle = p.y > 0 ? '#22c55e' : '#ef4444';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '10px Fira Code';
+        ctx.textAlign = 'center';
+        ctx.fillText(`(${p.x[0]},${p.x[1]})`, sx, sy - 10);
+      });
+    }
+
+    // =========================================================================
+    // UNIDAD II — MODULE 2.2: SIGNAL COMPARISON (STEP VS SIGMOID) & ADALINE
+    // =========================================================================
+    const samples1D = [
+      { x: -2.2, y: 0 }, { x: -1.6, y: 0 }, { x: -1.0, y: 0 }, { x: -0.45, y: 0 }, { x: 0.25, y: 0 },
+      { x: -0.25, y: 1 }, { x: 0.40, y: 1 }, { x: 1.05, y: 1 }, { x: 1.65, y: 1 }, { x: 2.20, y: 1 }
+    ];
+
+    function eval1DSignalAt(T, k) {
+      let errs = 0;
+      let contDist = 0;
+      samples1D.forEach(s => {
+        const stepPred = s.x >= T ? 1 : 0;
+        if (stepPred !== s.y) errs++;
+        const sigPred = 1 / (1 + Math.exp(-k * (s.x - T)));
+        contDist += Math.abs(sigPred - s.y);
+      });
+      return { errs, contDist };
+    }
+
+    function updateSignalComparison() {
+      const T = parseFloat(document.getElementById('sigThreshSlider').value);
+      const k = parseFloat(document.getElementById('sigSteepSlider').value);
+      document.getElementById('sigThreshVal').textContent = `T = ${T >= 0 ? '+' : ''}${T.toFixed(2)}`;
+      document.getElementById('sigSteepVal').textContent = `k = ${k.toFixed(1)}`;
+
+      const cur = eval1DSignalAt(T, k);
+      const eps = 0.02;
+      const right = eval1DSignalAt(T + eps, k);
+      const left = eval1DSignalAt(T - eps, k);
+      const dCont = (right.contDist - left.contDist) / (2 * eps);
+
+      document.getElementById('sigDiscreteErrStat').textContent = `${cur.errs} errores`;
+      document.getElementById('sigDiscreteGradStat').textContent = '0.000 (¡Plana!)';
+      document.getElementById('sigContDistStat').textContent = cur.contDist.toFixed(3);
+      document.getElementById('sigContGradStat').textContent = `${dCont >= 0 ? '+' : ''}${dCont.toFixed(3)} ${Math.abs(dCont) < 0.03 ? '(Óptimo)' : (dCont > 0 ? '← Mover izq' : '→ Mover der')}`;
+
+      const c = document.getElementById('signalLossCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 48, padR = 20, padT = 18, padB = 28;
+      const plotW = W - padL - padR;
+      const topH = 115;
+      const botTop = 155;
+      const botH = H - botTop - padB;
+
+      const toX = x => padL + ((x + 2.5) / 5.0) * plotW;
+
+      // --- TOP SUBPLOT: 1D Samples + Step vs Sigmoid ---
+      const toTopY = y => padT + topH - y * (topH - 15);
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.beginPath();
+      ctx.moveTo(padL, toTopY(0)); ctx.lineTo(W - padR, toTopY(0));
+      ctx.moveTo(padL, toTopY(1)); ctx.lineTo(W - padR, toTopY(1));
+      ctx.stroke();
+
+      // Step function at T
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toX(-2.5), toTopY(0));
+      ctx.lineTo(toX(T), toTopY(0));
+      ctx.lineTo(toX(T), toTopY(1));
+      ctx.lineTo(toX(2.5), toTopY(1));
+      ctx.stroke();
+
+      // Sigmoid curve centered at T
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 150; i++) {
+        const xv = -2.5 + (i / 150) * 5.0;
+        const yv = 1 / (1 + Math.exp(-k * (xv - T)));
+        if (i === 0) ctx.moveTo(toX(xv), toTopY(yv));
+        else ctx.lineTo(toX(xv), toTopY(yv));
+      }
+      ctx.stroke();
+
+      // Samples
+      samples1D.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(toX(s.x), toTopY(s.y), 5.5, 0, Math.PI * 2);
+        ctx.fillStyle = s.y === 1 ? '#38bdf8' : '#f59e0b';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      });
+
+      // --- BOTTOM SUBPLOT: Loss Landscape vs Threshold T ---
+      const maxLoss = 6.5;
+      const toBotY = l => botTop + botH - (l / maxLoss) * botH;
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.beginPath();
+      ctx.moveTo(padL, botTop + botH); ctx.lineTo(W - padR, botTop + botH);
+      ctx.stroke();
+
+      // Plot Discrete Error Count curve (red step-wise flat)
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      for (let i = 0; i <= 250; i++) {
+        const tv = -2.5 + (i / 250) * 5.0;
+        const r = eval1DSignalAt(tv, k);
+        const sx = toX(tv), sy = toBotY(r.errs);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Plot Continuous Sigmoid Distance curve (green smooth)
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 200; i++) {
+        const tv = -2.5 + (i / 200) * 5.0;
+        const r = eval1DSignalAt(tv, k);
+        const sx = toX(tv), sy = toBotY(r.contDist);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+
+      // Vertical marker at current T
+      const tx = toX(T);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(tx, padT); ctx.lineTo(tx, botTop + botH); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath(); ctx.arc(tx, toBotY(cur.errs), 5.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(tx, toBotY(cur.contDist), 5.5, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '10px Fira Code';
+      ctx.textAlign = 'left';
+      ctx.fillText('Arriba: Datos 1D + Escalón (rojo) vs Sigmoide (verde)', padL + 4, padT + 10);
+      ctx.fillText('Abajo: Paisaje de Error según T (Rojo=Conteo plano, Verde=Distancia continua)', padL + 4, botTop + 10);
+    }
+
+    function updateAdalineSimulation() {
+      const lr = parseFloat(document.getElementById('adalineLrSlider').value);
+      document.getElementById('adalineLrVal').textContent = `η = ${lr.toFixed(3)}`;
+
+      let w = [0.0, 0.0];
+      const epochs = 30;
+      const mseHist = [];
+      for (let ep = 0; ep < epochs; ep++) {
+        slide22Points.forEach(p => {
+          const z = w[0] * p.x[0] + w[1] * p.x[1];
+          const err = p.y - z;
+          w[0] += lr * err * p.x[0];
+          w[1] += lr * err * p.x[1];
+        });
+        let mse = 0;
+        slide22Points.forEach(p => {
+          const z = w[0] * p.x[0] + w[1] * p.x[1];
+          mse += 0.5 * Math.pow(p.y - z, 2);
+        });
+        mseHist.push(mse / slide22Points.length);
+      }
+
+      document.getElementById('adalineMse1').textContent = mseHist[0].toFixed(4);
+      document.getElementById('adalineMse30').textContent = mseHist[mseHist.length - 1].toFixed(4);
+      document.getElementById('adalineWeights').textContent = `[${w[0].toFixed(2)}, ${w[1].toFixed(2)}]`;
+
+      const c = document.getElementById('adalineCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 48, padR = 20, padT = 22, padB = 30;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const maxMse = Math.max(0.45, ...mseHist);
+
+      const toX = ep => padL + (ep / (epochs - 1)) * plotW;
+      const toY = m => padT + plotH - (m / maxMse) * plotH;
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.beginPath();
+      ctx.moveTo(padL, padT + plotH); ctx.lineTo(W - padR, padT + plotH);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      mseHist.forEach((m, i) => {
+        const sx = toX(i), sy = toY(m);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '10px Fira Code';
+      ctx.fillText('Convergencia del Error Cuadrático Medio ½(d - z)² en ADALINE (30 épocas)', padL + 4, padT + 10);
+    }
+
+    // =========================================================================
+    // UNIDAD II — MODULE 2.3: L2 VS BINARY CROSS-ENTROPY & SOFTMAX / KL
+    // =========================================================================
+    let bceTargetD = 1;
+    let softmaxTargetClass = 0;
+
+    function setBceTarget(d) {
+      bceTargetD = d;
+      document.getElementById('btnBceD1').classList.toggle('active', d === 1);
+      document.getElementById('btnBceD0').classList.toggle('active', d === 0);
+      updateDivergenceComparison();
+    }
+
+    function updateDivergenceComparison() {
+      const z = parseFloat(document.getElementById('bceLogitSlider').value);
+      const y = 1 / (1 + Math.exp(-z));
+      document.getElementById('bceLogitVal').textContent = `z = ${z >= 0 ? '+' : ''}${z.toFixed(2)} (Y = ${y.toFixed(3)})`;
+
+      const d = bceTargetD;
+      const l2Loss = 0.5 * Math.pow(y - d, 2);
+      const eps = 1e-9;
+      const bceLoss = -(d * Math.log(y + eps) + (1 - d) * Math.log(1 - y + eps));
+
+      const sigPrime = y * (1 - y);
+      const gradL2Z = (y - d) * sigPrime;
+      const gradBceZ = y - d;
+
+      document.getElementById('statLossCompare').textContent = `L2=${l2Loss.toFixed(2)} / BCE=${bceLoss.toFixed(2)}`;
+      document.getElementById('statGradL2').textContent = `${gradL2Z >= 0 ? '+' : ''}${gradL2Z.toFixed(3)}`;
+      document.getElementById('statGradBce').textContent = `${gradBceZ >= 0 ? '+' : ''}${gradBceZ.toFixed(3)}`;
+
+      const c = document.getElementById('divergenceCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 45, padR = 20, padT = 20, padB = 30;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const maxLoss = 4.5;
+
+      const toX = zv => padL + ((zv + 4.5) / 9.0) * plotW;
+      const toY = lv => padT + plotH - (Math.min(maxLoss, lv) / maxLoss) * plotH;
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.beginPath();
+      ctx.moveTo(padL, padT + plotH); ctx.lineTo(W - padR, padT + plotH);
+      ctx.stroke();
+
+      // L2 curve vs z (amber)
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 180; i++) {
+        const zv = -4.5 + (i / 180) * 9.0;
+        const yv = 1 / (1 + Math.exp(-zv));
+        const l2 = 0.5 * Math.pow(yv - d, 2);
+        if (i === 0) ctx.moveTo(toX(zv), toY(l2)); else ctx.lineTo(toX(zv), toY(l2));
+      }
+      ctx.stroke();
+
+      // BCE curve vs z (green)
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 180; i++) {
+        const zv = -4.5 + (i / 180) * 9.0;
+        const yv = 1 / (1 + Math.exp(-zv));
+        const bce = -(d * Math.log(yv + eps) + (1 - d) * Math.log(1 - yv + eps));
+        if (i === 0) ctx.moveTo(toX(zv), toY(bce)); else ctx.lineTo(toX(zv), toY(bce));
+      }
+      ctx.stroke();
+
+      // Probe marker
+      const px = toX(z);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(px, padT); ctx.lineTo(px, padT + plotH); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.arc(px, toY(l2Loss), 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(px, toY(bceLoss), 6, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '10px Fira Code';
+      ctx.fillText('Verde: Entropía Cruzada (pendiente constante al equivocarse) • Ámbar: L2 (se aplana por saturación)', padL + 4, padT + 12);
+    }
+
+    function setSoftmaxTarget(cIdx) {
+      softmaxTargetClass = cIdx;
+      [0, 1, 2].forEach(i => document.getElementById(`btnClass${i}`).classList.toggle('active', i === cIdx));
+      updateSoftmaxLab();
+    }
+
+    function updateSoftmaxLab() {
+      const z0 = parseFloat(document.getElementById('smZ0').value);
+      const z1 = parseFloat(document.getElementById('smZ1').value);
+      const z2 = parseFloat(document.getElementById('smZ2').value);
+      document.getElementById('smZ0Val').textContent = z0.toFixed(1);
+      document.getElementById('smZ1Val').textContent = z1.toFixed(1);
+      document.getElementById('smZ2Val').textContent = z2.toFixed(1);
+
+      const logits = [z0, z1, z2];
+      const m = Math.max(...logits);
+      const exps = logits.map(z => Math.exp(z - m));
+      const sumExp = exps[0] + exps[1] + exps[2];
+      const probs = exps.map(e => e / sumExp);
+
+      const yc = probs[softmaxTargetClass];
+      const ce = -Math.log(Math.max(1e-12, yc));
+
+      document.getElementById('smProbC').textContent = yc.toFixed(4);
+      document.getElementById('smCeVal').textContent = ce.toFixed(4);
+      document.getElementById('smKlVal').textContent = `${ce.toFixed(4)} (H(d)=0)`;
+
+      const c = document.getElementById('softmaxCanvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const padL = 50, padR = 30, padT = 28, padB = 32;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const barW = 75;
+
+      probs.forEach((p, i) => {
+        const cx = padL + (i + 0.5) * (plotW / 3);
+        const bh = p * plotH;
+        const bx = cx - barW / 2;
+        const by = padT + plotH - bh;
+        const isTarget = (i === softmaxTargetClass);
+
+        ctx.fillStyle = isTarget ? 'rgba(34, 197, 94, 0.78)' : 'rgba(56, 189, 248, 0.45)';
+        ctx.fillRect(bx, by, barW, bh);
+        ctx.strokeStyle = isTarget ? '#22c55e' : '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(bx, by, barW, bh);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px Fira Code';
+        ctx.textAlign = 'center';
+        ctx.fillText(`y_${i+1}=${(p*100).toFixed(1)}%`, cx, by - 7);
+        ctx.fillStyle = isTarget ? '#86efac' : '#cbd5e1';
+        ctx.font = '11px Fira Code';
+        ctx.fillText(`Clase ${i+1}${isTarget ? ' (Real d=1)' : ''}`, cx, H - 10);
+      });
+    }
+
     // Initialize everything on load
     window.addEventListener('DOMContentLoaded', () => {
       loadKmapPreset('slide19');
@@ -1752,6 +3008,11 @@
       updatePolygonClassifier();
       updatePulseApproximator();
       updateActivationsView();
+      loadRosenblattPreset('slide22');
+      updateSignalComparison();
+      updateAdalineSimulation();
+      updateDivergenceComparison();
+      updateSoftmaxLab();
     });
   </script>
 </body>
