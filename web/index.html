@@ -474,12 +474,12 @@
     /* Unit Organization & Thematic Switcher */
     .unit-switcher {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.75rem;
       margin-bottom: 0.75rem;
     }
 
-    @media (max-width: 780px) {
+    @media (max-width: 980px) {
       .unit-switcher { grid-template-columns: 1fr; }
     }
 
@@ -515,6 +515,12 @@
       box-shadow: 0 0 18px rgba(168, 85, 247, 0.2);
     }
 
+    .unit-btn.active-unit-3 {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(17, 24, 39, 0.9));
+      border-color: var(--amber);
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.2);
+    }
+
     .unit-btn .u-tag {
       font-family: var(--font-mono);
       font-size: 0.7rem;
@@ -527,6 +533,7 @@
 
     .unit-btn.u1 .u-tag { color: var(--accent); }
     .unit-btn.u2 .u-tag { color: var(--purple); }
+    .unit-btn.u3 .u-tag { color: var(--amber); }
 
     .unit-btn .u-name {
       font-size: 0.95rem;
@@ -549,6 +556,12 @@
       color: #d8b4fe;
       border-bottom-color: var(--purple);
       background: rgba(168, 85, 247, 0.12);
+    }
+
+    .tab-btn.unit3-tab.active {
+      color: #fde68a;
+      border-bottom-color: var(--amber);
+      background: rgba(245, 158, 11, 0.14);
     }
 
     .unit-banner {
@@ -591,6 +604,12 @@
       border: 1px solid rgba(168, 85, 247, 0.4);
     }
 
+    .unit-pill.u3 {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
     footer {
       text-align: center;
       padding: 1.2rem;
@@ -606,10 +625,10 @@
   <header>
     <div class="header-top">
       <div class="header-title">
-        <h1>Redes Neuronales: Aproximación Universal y Aprendizaje</h1>
+        <h1>Redes Neuronales: Aproximación Universal, Aprendizaje y Descenso por Gradiente</h1>
         <p>Suite Educativa Interactiva Organizada por Unidades • Ciencia de Datos — Doctorado UCN (CMU 11-785 &amp; Stanford CS221)</p>
       </div>
-      <div class="badge-course">2 Unidades Académicas • 117 Diapositivas → 9 Laboratorios</div>
+      <div class="badge-course">3 Unidades Académicas • 164 Diapositivas → 13 Laboratorios</div>
     </div>
 
     <!-- Selector de Unidades Temáticas -->
@@ -623,10 +642,17 @@
       </button>
       <button class="unit-btn u2" id="unitBtn2" onclick="selectUnit(2)">
         <div>
-          <span class="u-tag">Unidad Temática II • Optimización y Pérdidas</span>
+          <span class="u-tag">Unidad Temática II • Señal Diferenciable y Pérdidas</span>
           <span class="u-name">Aprendizaje de Redes Neuronales</span>
         </div>
         <span class="u-meta">Labs 6–9 (56 Diaps.)</span>
+      </button>
+      <button class="unit-btn u3" id="unitBtn3" onclick="selectUnit(3)">
+        <div>
+          <span class="u-tag">Unidad Temática III • Optimización Continua</span>
+          <span class="u-name">Descenso por Gradiente y Convergencia</span>
+        </div>
+        <span class="u-meta">Labs 10–13 (47 Diaps.)</span>
       </button>
     </div>
 
@@ -662,6 +688,22 @@
       </button>
       <button class="tab-btn unit2-tab" data-tab="8" onclick="switchTab(8)">
         <span>2.4 Síntesis Formal y Autoevaluación II</span>
+      </button>
+    </nav>
+
+    <!-- Pestañas de la Unidad III (Labs 10 a 13) -->
+    <nav class="nav-tabs" id="unit3Tabs" style="display:none;">
+      <button class="tab-btn unit3-tab" data-tab="9" onclick="switchTab(9)">
+        <span>3.1 Derivadas, Gradiente y Curvas de Nivel</span>
+      </button>
+      <button class="tab-btn unit3-tab" data-tab="10" onclick="switchTab(10)">
+        <span>3.2 Segunda Derivada y Matriz Hessiana (3×3)</span>
+      </button>
+      <button class="tab-btn unit3-tab" data-tab="11" onclick="switchTab(11)">
+        <span>3.3 Algoritmo Iterativo y Regresión (200 Épocas)</span>
+      </button>
+      <button class="tab-btn unit3-tab" data-tab="12" onclick="switchTab(12)">
+        <span>3.4 Los 4 Regímenes de Paso, Curvatura 2D y Autoevaluación III</span>
       </button>
     </nav>
   </header>
@@ -1537,14 +1579,425 @@
       </div>
     </div>
 
+    <!-- =================================================================== -->
+    <!-- UNIDAD III — MÓDULO 3.1 (PANEL 9): DERIVADAS, GRADIENTE Y NIVEL      -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-9">
+      <div class="grid-2">
+        <!-- Left: 2D Gradient, Dot Product & Level Curves Explorer -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧭 El Gradiente: Dirección de Máximo Crecimiento y Curvas de Nivel</div>
+            <span class="slide-ref">Unidad III • Diapositivas 6, 11–16</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Punto de evaluación <code>(x₁, x₂)</code> (ángulo sobre elipse)</span>
+                <span class="slider-val" id="gradPtLabel">x = [1.50, 1.00]</span>
+              </div>
+              <input type="range" id="gradPtAngleSlider" min="0" max="360" step="5" value="34" oninput="updateGradientGeometryLab()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Ángulo <code>θ</code> del paso <code>Δx</code> respecto a <code>+∇f</code></span>
+                <span class="slider-val" id="gradStepThetaLabel">θ = 0° (Alineado)</span>
+              </div>
+              <input type="range" id="gradStepThetaSlider" min="0" max="180" step="5" value="0" oninput="updateGradientGeometryLab()">
+            </div>
+            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+              <button class="btn" onclick="setGradStepTheta(0)">θ=0° (+∇f)</button>
+              <button class="btn" onclick="setGradStepTheta(90)">θ=90° (Curva nivel)</button>
+              <button class="btn" onclick="setGradStepTheta(180)">θ=180° (-∇f)</button>
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="gradLevelCanvas" width="600" height="310"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Gradiente ∇_x f(x)</span>
+              <span class="val" id="gradVecStat">[+1.50, +2.00]</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Producto Punto ∇f · Δx</span>
+              <span class="val success" id="gradDotStat">+0.0250 (Máximo)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Ortogonalidad ∇f · t_nivel</span>
+              <span class="val" id="gradPerpStat">0.0000 (90°)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>Dos Propiedades Geométricas Clave (Diaps. 12–15):</strong><br>
+            <div class="math-block">&nabla;<sub>x</sub>f = [ &part;f/&part;x<sub>1</sub>, &hellip;, &part;f/&part;x<sub>d</sub> ]<sup>&top;</sup> &nbsp;&nbsp;&rArr;&nbsp;&nbsp; &Delta;y &approx; &nabla;<sub>x</sub>f &middot; &Delta;x = |&nabla;f| |&Delta;x| cos(&theta;)</div>
+            • <strong>Propiedad 1 (Diap. 14):</strong> Con largo de paso fijo <code>|&Delta;x|</code>, <code>&Delta;y</code> es <strong>máximo</strong> en <code>&theta; = 0&deg;</code> (alineado con <code>+&nabla;f</code>) y <strong>mínimo</strong> (baja más rápido) en <code>&theta; = 180&deg;</code> (en contra: <code>-&nabla;f</code>).<br>
+            • <strong>Propiedad 2 (Diap. 15):</strong> Moverse a lo largo de una curva de nivel no cambia <code>f</code> (<code>&Delta;y = 0 &rArr; cos(&theta;) = 0</code>), por lo que <strong>el gradiente es siempre perpendicular a las curvas de nivel</strong>.
+          </div>
+        </section>
+
+        <!-- Right: 1D Local Linear Approximation & Terrain Map -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⛰️ El Mapa del Terreno y la Derivada como Aproximación Lineal Local</div>
+            <span class="slide-ref">Unidad III • Diapositivas 7–10</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Explorar posición <code>x</code> en el terreno</span>
+                <span class="slider-val" id="terrainXVal">x = -1.65 (Mínimo Global)</span>
+              </div>
+              <input type="range" id="terrainXSlider" min="-2.3" max="2.3" step="0.02" value="-1.65" oninput="updateTerrain1DLab()">
+            </div>
+            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+              <button class="btn" onclick="setTerrainProbe(-1.65)">Mín. Global</button>
+              <button class="btn" onclick="setTerrainProbe(-0.30)">Inflexión (Impostor)</button>
+              <button class="btn" onclick="setTerrainProbe(0.75)">Máx. Global</button>
+              <button class="btn" onclick="setTerrainProbe(1.75)">Mín. Local</button>
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="terrain1DCanvas" width="520" height="270"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Altura f(x)</span>
+              <span class="val" id="terrainFStat">0.42</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Pendiente Local f'(x)</span>
+              <span class="val" id="terrainDfStat">0.00 (Plana)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Clasificación del Punto</span>
+              <span class="val success" id="terrainTypeStat">Mínimo Global</span>
+            </div>
+          </div>
+
+          <div class="edu-callout warn">
+            <strong>La derivada como multiplicador local y los «impostores» (Diaps. 8–10):</strong><br>
+            A resolución suficientemente fina, toda función suave es localmente lineal: <code>&Delta;y &approx; f'(x)&Delta;x</code>. En los mínimos y máximos la curva es localmente plana (<code>f'(x) = 0</code>), pero <strong>ojo con los puntos de inflexión con derivada nula</strong>: también tienen <code>f'(x) = 0</code> sin ser ni mínimos ni máximos.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD III — MÓDULO 3.2 (PANEL 10): SEGUNDA DERIVADA Y HESSIANO     -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-10">
+      <div class="grid-2">
+        <!-- Left: 1st & 2nd Derivative Distinguisher (Slides 17-21) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚖️ ¿Es de Verdad un Mínimo? Primera y Segunda Derivada en 1D</div>
+            <span class="slide-ref">Unidad III • Diapositivas 17–21</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Función:</span>
+            <button class="btn active" id="btnD2Wave" onclick="setD2Mode('wave')">Ondulatoria f, f', f'' (Diap. 19)</button>
+            <button class="btn" id="btnD2Quad" onclick="setD2Mode('quad')">f(x) = x² - 4x + 5 (Diap. 20)</button>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Sonda <code>x</code></span>
+                <span class="slider-val" id="d2ProbeVal">x = 1.57</span>
+              </div>
+              <input type="range" id="d2ProbeSlider" min="0" max="6.28" step="0.03" value="1.57" oninput="updateSecondDerivLab()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="secondDerivCanvas" width="580" height="275"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Valor f(x) (Azul)</span>
+              <span class="val" id="d2ValF">+1.000</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">1ª Derivada f'(x) (Rojo)</span>
+              <span class="val" id="d2ValDf">0.000</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">2ª Derivada f''(x) (Verde)</span>
+              <span class="val danger" id="d2ValD2f">-1.000 (&lt;0 ⇒ Máximo)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>Condición de mínimo en una variable (Diaps. 19–21):</strong><br>
+            Resolver <code>f'(x) = 0</code> encuentra los <em>puntos críticos</em> (puntos de giro), pero no distingue entre subir y bajar. La segunda derivada <code>f''(x)</code> los delata:<br>
+            • <code>f'(x) = 0</code> y <code>f''(x) &gt; 0</code> &rArr; <strong>Mínimo local</strong> (en <code>x<sup>2</sup> - 4x + 5</code>: <code>2x - 4 = 0 &rArr; x = 2</code>, <code>f''(2) = 2 &gt; 0</code>, mínimo global con <code>f(2) = 1</code>).<br>
+            • <code>f'(x) = 0</code> y <code>f''(x) &lt; 0</code> &rArr; <strong>Máximo local</strong>.<br>
+            • <code>f'(x) = 0</code> y <code>f''(x) = 0</code> &rArr; Puede ser <strong>punto de inflexión</strong>.
+          </div>
+        </section>
+
+        <!-- Right: Multivariate Hessian & Slide 24-25 3D Example -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧮 El Hessiano ∇²f en Varias Variables y Ejemplo 3×3 Resuelto</div>
+            <span class="slide-ref">Unidad III • Diapositivas 22–25</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Geometría de ∇²f:</span>
+            <button class="btn active" id="btnHessPos" onclick="setHessianPreset('slide25')">Ejemplo 3×3 (Diaps. 24–25: Def. Positivo)</button>
+            <button class="btn" id="btnHessSaddle" onclick="setHessianPreset('saddle')">Punto de Silla (λ₁&gt;0, λ₂&lt;0)</button>
+            <button class="btn" id="btnHessNeg" onclick="setHessianPreset('neg')">Máximo Local (Def. Negativo)</button>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="hessianSurfaceCanvas" width="520" height="215"></canvas>
+          </div>
+
+          <div class="edu-callout" id="hessianExampleBox">
+            <strong>Ejemplo Resuelto de las Diapositivas 24–25:</strong><br>
+            Minimizar <code>f(x₁, x₂, x₃) = x₁² + x₁(1 - x₂) + x₂² - x₂x₃ + x₃² + x₃</code>
+            <div class="math-block">
+              &nabla;<sub>x</sub>f = [ 2x₁ + 1 - x₂, &nbsp;-x₁ + 2x₂ - x₃, &nbsp;-x₂ + 2x₃ + 1 ]<sup>&top;</sup> = [0, 0, 0]<sup>&top;</sup> &nbsp;&rArr;&nbsp; x* = (-1, -1, -1)
+            </div>
+            Evaluando el <strong>Hessiano 3&times;3</strong> (simétrico y constante en todo punto):
+            <div class="math-block">
+              &nabla;<sup>2</sup><sub>x</sub>f = [ [2, -1, 0], [-1, 2, -1], [0, -1, 2] ] &nbsp;&rArr;&nbsp; &lambda;<sub>1</sub> = 3.414, &nbsp;&lambda;<sub>2</sub> = 0.586, &nbsp;&lambda;<sub>3</sub> = 2.0
+            </div>
+            Como <strong>todos los valores propios son positivos (&lambda;<sub>i</sub> &gt; 0)</strong>, el Hessiano es <strong>definido positivo</strong> (cuenco en toda dirección) y <code>x* = (-1, -1, -1)</code> es un <strong>mínimo</strong> con <code>f(-1,-1,-1) = -1</code>.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD III — MÓDULO 3.3 (PANEL 11): ALGORITMO Y 200 ÉPOCAS          -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-11">
+      <div class="grid-2">
+        <!-- Left: 200 Epochs Linear Regression Simulator (Slides 34-35) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📉 El Ejemplo de las 200 Épocas en Regresión Lineal</div>
+            <span class="slide-ref">Unidad III • Diapositivas 34–35</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Época <code>t</code> (Iteración del descenso)</span>
+                <span class="slider-val" id="regEpochVal">t = 2</span>
+              </div>
+              <input type="range" id="regEpochSlider" min="0" max="200" step="1" value="2" oninput="updateLinearReg200Lab()">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Tasa de aprendizaje <code>η</code></span>
+                <span class="slider-val" id="regLrVal">η = 0.10 (Diap. 35)</span>
+              </div>
+              <input type="range" id="regLrSlider" min="0.01" max="0.18" step="0.01" value="0.10" oninput="updateLinearReg200Lab()">
+            </div>
+            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+              <button class="btn" onclick="setRegEpoch(0)">t=0</button>
+              <button class="btn" onclick="setRegEpoch(1)">t=1</button>
+              <button class="btn" onclick="setRegEpoch(2)">t=2</button>
+              <button class="btn" onclick="setRegEpoch(200)">t=200 (Óptimo)</button>
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="linReg200Canvas" width="600" height="275"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Pesos w^(t) = [w₀, w₁]</span>
+              <span class="val" id="regWStat">[0.25, 0.54]</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Gradiente ∇_w TrainLoss</span>
+              <span class="val" id="regGradStat">[+2.18, +7.24]</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">TrainLoss(w^(t))</span>
+              <span class="val success" id="regLossStat">1.0535</span>
+            </div>
+          </div>
+
+          <table class="edu-table">
+            <thead>
+              <tr>
+                <th>Época <code>t</code></th>
+                <th><code>&nabla;<sub>w</sub>TrainLoss(w)</code></th>
+                <th>Vector <code>w</code></th>
+                <th><code>TrainLoss(w)</code></th>
+              </tr>
+            </thead>
+            <tbody id="reg200TableBody"></tbody>
+          </table>
+        </section>
+
+        <!-- Right: Sign-Guided vs Full Gradient & Stopping Criteria (Slides 26-33) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🏃 Soluciones Iterativas: Guiado por Signo vs. Magnitud del Gradiente</div>
+            <span class="slide-ref">Unidad III • Diapositivas 26–33</span>
+          </div>
+
+          <div class="edu-callout">
+            <strong>¿Por qué usar la magnitud de la derivada y no solo su signo? (Diaps. 29–31):</strong><br>
+            • <strong>Algoritmo trivial guiado por el signo (Diap. 29):</strong> <code>x<sup>(k+1)</sup> = x<sup>(k)</sup> - sign(f'(x<sup>(k)</sup>)) &middot; paso</code>. Desperdicia la magnitud: da pasos del mismo tamaño lejos y cerca del mínimo, oscilando sin frenar.<br>
+            • <strong>Descenso por gradiente (Diaps. 30–31):</strong>
+            <div class="math-block">x<sup>(k+1)</sup> = x<sup>(k)</sup> - &eta;<sup>(k)</sup> &nabla;<sub>x</sub>f(x<sup>(k)</sup>)</div>
+            El paso efectivo es <code>&eta; &middot; |f'|</code>: avanza rápido en zonas empinadas y <strong>frena solo</strong> al acercarse a un punto crítico donde <code>&nabla;f &rarr; 0</code>.
+          </div>
+
+          <div class="viz-box">
+            <canvas id="signVsGradCanvas" width="520" height="215"></canvas>
+          </div>
+
+          <div class="edu-callout warn">
+            <strong>¿Cuándo parar? Criterios prácticos de convergencia (Diaps. 32–33):</strong><br>
+            En aritmética de punto flotante los ceros exactos no existen; se detiene la iteración cuando:<br>
+            1. <strong>La función deja de bajar:</strong> <code>|f(x<sup>(k+1)</sup>) - f(x<sup>(k)</sup>)| &lt; &varepsilon;<sub>1</sub></code><br>
+            2. <strong>El gradiente es casi nulo:</strong> <code>&Vert;&nabla;<sub>x</sub>f(x<sup>(k)</sup>)&Vert; &lt; &varepsilon;<sub>2</sub></code>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD III — MÓDULO 3.4 (PANEL 12): 4 REGÍMENES, 2D Y QUIZ III      -->
+    <!-- =================================================================== -->
+    <div class="module-panel" id="panel-12">
+      <div class="grid-2">
+        <!-- Left: 4 Step-Size Regimes (Slides 37-38, 44-45) & 2D Anisotropic Curvature (Slides 41-43) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">👣 Los 4 Regímenes del Tamaño de Paso y Curvatura por Dirección</div>
+            <span class="slide-ref">Unidad III • Diapositivas 36–45</span>
+          </div>
+
+          <div class="control-bar">
+            <span style="font-size:0.78rem; font-weight:600; color:var(--text-muted);">Presets Diaps. 44–45 (<code>E(w)=w², η_opt=0.5</code>):</span>
+            <button class="btn" id="btnReg01" onclick="setStepRegimeEta(0.10)">η=0.1 (Monótono)</button>
+            <button class="btn active" id="btnReg05" onclick="setStepRegimeEta(0.50)">η=0.5 (1 Paso)</button>
+            <button class="btn" id="btnReg075" onclick="setStepRegimeEta(0.75)">η=0.75 (Oscila)</button>
+            <button class="btn" id="btnReg11" onclick="setStepRegimeEta(1.10)">η=1.1 (Diverge)</button>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Ajuste continuo de <code>η</code> en <code>E(w)=w²</code> y en 2D <code>½(w₁² + 3w₂²)</code></span>
+                <span class="slider-val" id="regimeEtaVal">η = 0.50</span>
+              </div>
+              <input type="range" id="regimeEtaSlider" min="0.05" max="1.15" step="0.01" value="0.50" oninput="updateStepRegimesLab()">
+            </div>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="stepRegimesCanvas" width="600" height="310"></canvas>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="lbl">Paso Óptimo η_opt = 1/E''</span>
+              <span class="val" id="regimeOptStat">0.50 (1D) / 0.33 (2D w₂)</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">w^(20) en E(w)=w² (Diap. 45)</span>
+              <span class="val success" id="regimeW20Stat">0.000000</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Régimen en E(w)=w²</span>
+              <span class="val success" id="regimeNameStat">Un solo paso (η = η_opt)</span>
+            </div>
+          </div>
+
+          <div class="edu-callout">
+            <strong>Paso óptimo e inverso de la curvatura (Diaps. 37–38, 41–45):</strong><br>
+            • En <code>E(w) = &frac12;aw<sup>2</sup> + bw + c</code>, el paso óptimo es <code>&eta;<sub>opt</sub> = (E'')<sup>-1</sup> = 1/a</code>. Converge si y solo si <code>0 &lt; &eta; &lt; 2&eta;<sub>opt</sub></code>.<br>
+            • En varias dimensiones <code>E(w) = &frac12;(w<sub>1</sub><sup>2</sup> + 3w<sub>2</sub><sup>2</sup>)</code> (Diap. 42), cada eje tiene su propio óptimo (<code>&eta;<sub>1,opt</sub>=1, &eta;<sub>2,opt</sub>=1/3</code>). Para converger en todas las direcciones se requiere:
+            <div class="math-block">&eta; &lt; 2 min<sub>i</sub> &eta;<sub>i,opt</sub> = 2 / a<sub>máx</sub></div>
+            La dirección más empinada (<code>w<sub>2</sub></code>) oscila primero y explota primero, limitando el paso de todas las demás.
+          </div>
+        </section>
+
+        <!-- Right: Convexity vs Non-Convexity (Slides 39-40) & Quiz III -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Convexidad, Inicialización y Autoevaluación III</div>
+            <span class="slide-ref">Unidad III • Diapositivas 16, 39–47</span>
+          </div>
+
+          <div class="control-bar">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Punto de partida <code>x⁽⁰⁾</code> en superficie NO convexa (Diap. 40)</span>
+                <span class="slider-val" id="nonConvexX0Val">x⁽⁰⁾ = -1.80 → Mínimo Local</span>
+              </div>
+              <input type="range" id="nonConvexX0Slider" min="-2.1" max="2.1" step="0.05" value="-1.80" oninput="updateNonConvexInitLab()">
+            </div>
+            <button class="btn" onclick="setNonConvexX0(-1.80)">Partir Izq (Mín. Local)</button>
+            <button class="btn" onclick="setNonConvexX0(0.35)">Partir Der (Mín. Global)</button>
+          </div>
+
+          <div class="viz-box">
+            <canvas id="nonConvexInitCanvas" width="520" height="165"></canvas>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-9">
+            <div class="quiz-q">1 (Diap. 16). «En un punto x puede haber muchas direcciones en las que f crece, pero la dirección del gradiente ∇f es aquella en la que f crece más rápido.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q9-btn-true" onclick="answerQuiz(9, true)">Verdadero</button>
+              <button class="btn" id="q9-btn-false" onclick="answerQuiz(9, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-9"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-10">
+            <div class="quiz-q">2 (Diap. 16). «Si el gradiente se anula en un punto (∇_x f = 0), entonces ese punto x es necesariamente un mínimo de la función.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q10-btn-true" onclick="answerQuiz(10, true)">Verdadero</button>
+              <button class="btn" id="q10-btn-false" onclick="answerQuiz(10, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-10"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-11">
+            <div class="quiz-q">3 (Diaps. 38 y 44). «En una función cuadrática convexa, si el tamaño de paso cumple η_opt &lt; η &lt; 2η_opt, el algoritmo oscila cruzando el valle pero igualmente converge al mínimo.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q11-btn-true" onclick="answerQuiz(11, true)">Verdadero</button>
+              <button class="btn" id="q11-btn-false" onclick="answerQuiz(11, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-11"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-12">
+            <div class="quiz-q">4 (Diaps. 39–40). «La función de pérdida de una red neuronal profunda es convexa, por lo que el descenso por gradiente siempre encuentra el mínimo global sin importar la inicialización.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q12-btn-true" onclick="answerQuiz(12, true)">Verdadero</button>
+              <button class="btn" id="q12-btn-false" onclick="answerQuiz(12, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-12"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
   </main>
 
   <footer>
-    Ciencia de Datos — Doctorado UCN • Suite Educativa Interactiva: Unidad I (Aproximación Universal) &amp; Unidad II (Aprendizaje de Redes Neuronales)
+    Ciencia de Datos — Doctorado UCN • Suite Educativa Interactiva: Unidad I (Aproximación Universal) • Unidad II (Aprendizaje de Redes) • Unidad III (Descenso por Gradiente)
   </footer>
 
   <!-- ===================================================================== -->
-  <!-- JAVASCRIPT LOGIC FOR ALL 9 INTERACTIVE EDUCATIONAL MODULES (2 UNITS)  -->
+  <!-- JAVASCRIPT LOGIC FOR ALL 13 INTERACTIVE EDUCATIONAL MODULES (3 UNITS) -->
   <!-- ===================================================================== -->
   <script>
     const topicMetadata = [
@@ -1556,49 +2009,36 @@
       { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.1: Riesgo Empírico y Algoritmo de Aprendizaje del Perceptrón de Rosenblatt', slides: 'Temario: TrainLoss(W) • Absorción del umbral • Convergencia (R/γ)² y Ejemplo Diap. 22 • Diaps. 5–22' },
       { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.2: ¿Por qué no escala a Multicapa?, ADALINE (LMS) y Señal Diferenciable', slides: 'Temario: Doble pentágono • Regla Delta Widrow-Hoff • Conteo de errores vs Sigmoide • Diaps. 23–39' },
       { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.3: Regresión Logística, Capa Softmax y Divergencias (L2 vs Entropía Cruzada / KL)', slides: 'Temario: Saturación con L2 • Entropía Cruzada Binaria • Softmax y Divergencia KL • Diaps. 40–54' },
-      { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.4: Síntesis Formal de Representaciones, Pérdidas y Autoevaluación II', slides: 'Temario: Tabla Resumen (Diap. 54) • Malentendidos (Diap. 14) • Autoevaluación II (Diap. 34)' }
+      { unit: 2, pill: 'UNIDAD II • APRENDIZAJE', title: 'Módulo 2.4: Síntesis Formal de Representaciones, Pérdidas y Autoevaluación II', slides: 'Temario: Tabla Resumen (Diap. 54) • Malentendidos (Diap. 14) • Autoevaluación II (Diap. 34)' },
+      { unit: 3, pill: 'UNIDAD III • DESCENSO POR GRADIENTE', title: 'Módulo 3.1: Derivadas, Gradiente, Producto Punto y Perpendicularidad a Curvas de Nivel', slides: 'Temario: Aproximación lineal local • Dirección de máximo crecimiento • Ortogonalidad • Diaps. 1–16' },
+      { unit: 3, pill: 'UNIDAD III • DESCENSO POR GRADIENTE', title: 'Módulo 3.2: ¿Es de Verdad un Mínimo? Segunda Derivada y Matriz Hessiana en Varias Variables', slides: 'Temario: Puntos críticos • Curvatura f\'\'(x) • Hessiano 3×3 y valores propios • Diaps. 17–25' },
+      { unit: 3, pill: 'UNIDAD III • DESCENSO POR GRADIENTE', title: 'Módulo 3.3: Soluciones Iterativas, Algoritmo de Descenso por Gradiente y las 200 Épocas', slides: 'Temario: Signo vs Magnitud • Criterios de parada • Regresión lineal en 200 épocas • Diaps. 26–35' },
+      { unit: 3, pill: 'UNIDAD III • DESCENSO POR GRADIENTE', title: 'Módulo 3.4: Los 4 Regímenes del Tamaño de Paso, Curvatura por Dirección, Convexidad y Quiz III', slides: 'Temario: η_opt = 1/curvatura • Verificación Python (Diap. 45) • Cota 2D y Convexidad • Diaps. 36–47' }
     ];
 
     function selectUnit(unitNum) {
-      const u1Btn = document.getElementById('unitBtn1');
-      const u2Btn = document.getElementById('unitBtn2');
-      const u1Tabs = document.getElementById('unit1Tabs');
-      const u2Tabs = document.getElementById('unit2Tabs');
-
-      if (unitNum === 1) {
-        u1Btn.classList.add('active-unit-1');
-        u2Btn.classList.remove('active-unit-2');
-        u1Tabs.style.display = 'flex';
-        u2Tabs.style.display = 'none';
-        switchTab(0);
-      } else {
-        u1Btn.classList.remove('active-unit-1');
-        u2Btn.classList.add('active-unit-2');
-        u1Tabs.style.display = 'none';
-        u2Tabs.style.display = 'flex';
-        switchTab(5);
-      }
+      if (unitNum === 1) switchTab(0);
+      else if (unitNum === 2) switchTab(5);
+      else switchTab(9);
     }
 
-    // Navigation across all 9 tabs
+    // Navigation across all 13 tabs (3 Units)
     function switchTab(idx) {
       const meta = topicMetadata[idx];
       const u1Btn = document.getElementById('unitBtn1');
       const u2Btn = document.getElementById('unitBtn2');
+      const u3Btn = document.getElementById('unitBtn3');
       const u1Tabs = document.getElementById('unit1Tabs');
       const u2Tabs = document.getElementById('unit2Tabs');
+      const u3Tabs = document.getElementById('unit3Tabs');
 
-      if (meta.unit === 1) {
-        u1Btn.classList.add('active-unit-1');
-        u2Btn.classList.remove('active-unit-2');
-        u1Tabs.style.display = 'flex';
-        u2Tabs.style.display = 'none';
-      } else {
-        u1Btn.classList.remove('active-unit-1');
-        u2Btn.classList.add('active-unit-2');
-        u1Tabs.style.display = 'none';
-        u2Tabs.style.display = 'flex';
-      }
+      u1Btn.classList.toggle('active-unit-1', meta.unit === 1);
+      u2Btn.classList.toggle('active-unit-2', meta.unit === 2);
+      u3Btn.classList.toggle('active-unit-3', meta.unit === 3);
+
+      u1Tabs.style.display = meta.unit === 1 ? 'flex' : 'none';
+      u2Tabs.style.display = meta.unit === 2 ? 'flex' : 'none';
+      u3Tabs.style.display = meta.unit === 3 ? 'flex' : 'none';
 
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.toggle('active', parseInt(b.getAttribute('data-tab')) === idx);
@@ -1610,7 +2050,7 @@
       // Update Banner
       const pill = document.getElementById('bannerUnitPill');
       pill.textContent = meta.pill;
-      pill.className = `unit-pill ${meta.unit === 1 ? 'u1' : 'u2'}`;
+      pill.className = `unit-pill ${meta.unit === 1 ? 'u1' : (meta.unit === 2 ? 'u2' : 'u3')}`;
       document.getElementById('bannerTopicTitle').textContent = meta.title;
       document.getElementById('bannerSlideMap').textContent = meta.slides;
 
@@ -1623,6 +2063,10 @@
       if (idx === 5) renderRosenblattLab();
       if (idx === 6) { updateSignalComparison(); updateAdalineSimulation(); }
       if (idx === 7) { updateDivergenceComparison(); updateSoftmaxLab(); }
+      if (idx === 9) { updateGradientGeometryLab(); updateTerrain1DLab(); }
+      if (idx === 10) { updateSecondDerivLab(); updateHessianLab(); }
+      if (idx === 11) { updateLinearReg200Lab(); drawSignVsGradCanvas(); }
+      if (idx === 12) { updateStepRegimesLab(); updateNonConvexInitLab(); }
     }
 
     // =========================================================================
@@ -2399,6 +2843,22 @@
       8: {
         correctAnswer: false,
         explanation: 'En la Diapositiva 14 (Unidad II) esta afirmación es <strong>FALSA</strong>: Son los dos malentendidos clásicos. Primero, la arquitectura debe tener capacidad suficiente; segundo, unas pocas muestras no bastan para garantizar generalización.'
+      },
+      9: {
+        correctAnswer: true,
+        explanation: 'En la Diapositiva 16 (Unidad III) ambas afirmaciones son <strong>VERDADERAS</strong>: Existen infinitas direcciones de crecimiento (todo el semiespacio donde ∇f · Δx > 0), y la dirección del gradiente (θ = 0) maximiza el producto punto ||∇f|| ||Δx|| cos θ, siendo el máximo ascenso.'
+      },
+      10: {
+        correctAnswer: false,
+        explanation: 'En la Diapositiva 16 (Unidad III) esta afirmación es <strong>FALSA</strong>: La condición ∇f = 0 define un punto crítico (estacionario), que puede ser un mínimo, un máximo o un punto silla (punto de inflexión). Se requiere analizar la Hessiana ∇²f > 0 para confirmar un mínimo.'
+      },
+      11: {
+        correctAnswer: true,
+        explanation: 'En la Diapositiva 38 (Unidad III) esta afirmación es <strong>VERDADERA</strong>: Usar paso fijo guiado solo por el signo rebota perpetuamente alrededor del mínimo. Al hacer Δx = -η∇f, el tamaño del paso se encoge automáticamente conforme ∇f → 0 cerca del óptimo.'
+      },
+      12: {
+        correctAnswer: false,
+        explanation: 'En las Diapositivas 39–40 y 44 (Unidad III) esta afirmación es <strong>FALSA</strong>: En superficies no convexas la inicialización x^(0) determina en qué mínimo local cae el algoritmo, y en problemas cuadráticos la estabilidad exige η < 2/E\'\' (por ejemplo, para E(w)=w², η_opt=0.5 y η > 1.0 diverge).'
       }
     };
 
@@ -3000,6 +3460,887 @@
       });
     }
 
+    /* =========================================================================
+       UNIDAD III: DESCENSO POR GRADIENTE (MÓDULOS 3.1 A 3.4)
+       ========================================================================= */
+
+    // --- Módulo 3.1: Geometría del Gradiente y Curvas de Nivel ---
+    function setGradStepTheta(deg) {
+      document.getElementById('gradStepTheta').value = deg;
+      updateGradientGeometryLab();
+    }
+
+    function drawArrow(ctx, x1, y1, x2, y2, color, lineWidth = 2.5, label = '') {
+      const headLen = 9;
+      const dx = x2 - x1, dy = y2 - y1;
+      const len = Math.hypot(dx, dy);
+      if (len < 1e-3) return;
+      const ang = Math.atan2(dy, dx);
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - headLen * Math.cos(ang - Math.PI / 6), y2 - headLen * Math.sin(ang - Math.PI / 6));
+      ctx.lineTo(x2 - headLen * Math.cos(ang + Math.PI / 6), y2 - headLen * Math.sin(ang + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+      if (label) {
+        ctx.font = 'bold 11px Fira Code';
+        ctx.fillText(label, x2 + 8 * Math.cos(ang), y2 + 8 * Math.sin(ang));
+      }
+      ctx.restore();
+    }
+
+    function updateGradientGeometryLab() {
+      const x1 = parseFloat(document.getElementById('gradX1').value);
+      const x2 = parseFloat(document.getElementById('gradX2').value);
+      const thetaDeg = parseFloat(document.getElementById('gradStepTheta').value);
+
+      document.getElementById('gradX1Val').textContent = x1.toFixed(2);
+      document.getElementById('gradX2Val').textContent = x2.toFixed(2);
+      document.getElementById('gradStepThetaVal').textContent = `${thetaDeg}°`;
+
+      // f(x1,x2) = 0.5*(x1^2 + 2.5*x2^2) => grad = [x1, 2.5*x2]
+      const g1 = x1;
+      const g2 = 2.5 * x2;
+      const gNorm = Math.hypot(g1, g2);
+      const stepNorm = 0.5;
+      const thetaRad = (thetaDeg * Math.PI) / 180;
+      const cosTheta = Math.cos(thetaRad);
+      const dy = gNorm * stepNorm * cosTheta;
+
+      document.getElementById('gradVecText').textContent = `[${g1.toFixed(2)}, ${g2.toFixed(2)}]`;
+      document.getElementById('gradNormText').textContent = gNorm.toFixed(3);
+      document.getElementById('gradCosText').textContent = cosTheta.toFixed(3);
+      const dyEl = document.getElementById('gradDyText');
+      dyEl.textContent = (dy >= 0 ? '+' : '') + dy.toFixed(3);
+      dyEl.style.color = dy > 1e-4 ? '#ef4444' : (dy < -1e-4 ? '#22c55e' : '#eab308');
+
+      const c = document.getElementById('gradLevelCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const cx = W / 2, cy = H / 2;
+      const scale = 68; // pixels per unit
+
+      // Draw level curves 0.5*(x1^2 + 2.5*x2^2) = cVal
+      const levels = [0.25, 0.6, 1.1, 1.8, 2.7, 3.8, 5.2];
+      levels.forEach(lv => {
+        const rx = Math.sqrt(2 * lv) * scale;
+        const ry = Math.sqrt((2 * lv) / 2.5) * scale;
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.22)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Highlight current point's level curve
+      const fCur = 0.5 * (x1 * x1 + 2.5 * x2 * x2);
+      if (fCur > 0.01) {
+        const rx = Math.sqrt(2 * fCur) * scale;
+        const ry = Math.sqrt((2 * fCur) / 2.5) * scale;
+        ctx.strokeStyle = 'rgba(234, 179, 8, 0.65)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+      ctx.stroke();
+
+      // Minimum at (0,0)
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.font = '10px Fira Code';
+      ctx.fillText('Mín (0,0)', cx + 6, cy + 12);
+
+      const px = cx + x1 * scale;
+      const py = cy - x2 * scale;
+
+      if (gNorm > 1e-4) {
+        const ux = g1 / gNorm;
+        const uy = g2 / gNorm; // math y-up
+        const vecLen = 58;
+
+        // Tangent line (orthogonal to gradient: [-uy, ux])
+        const tx = -uy, ty = ux;
+        ctx.strokeStyle = 'rgba(234, 179, 8, 0.85)';
+        ctx.setLineDash([4, 3]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(px - tx * 55, py + ty * 55);
+        ctx.lineTo(px + tx * 55, py - ty * 55);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // +Grad f (red)
+        drawArrow(ctx, px, py, px + ux * vecLen, py - uy * vecLen, '#ef4444', 2.5, '+∇f');
+        // -Grad f (green)
+        drawArrow(ctx, px, py, px - ux * vecLen, py + uy * vecLen, '#22c55e', 2.5, '-∇f');
+
+        // Step vector Δx rotated by thetaRad relative to +Grad f
+        const sx = ux * Math.cos(thetaRad) - uy * Math.sin(thetaRad);
+        const sy = ux * Math.sin(thetaRad) + uy * Math.cos(thetaRad);
+        drawArrow(ctx, px, py, px + sx * (vecLen * 0.9), py - sy * (vecLen * 0.9), '#38bdf8', 2.5, 'Δx');
+      }
+
+      // Point x
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    function setTerrainProbe(xVal) {
+      document.getElementById('terrainProbeX').value = xVal;
+      updateTerrain1DLab();
+    }
+
+    function terrainFn(x) {
+      // Crafted function with Global Min (-2.1), Inflection (0.0), Global Max (1.25), Local Min (2.45)
+      // Derivative f'(x) = 0.25 * (x + 2.1) * x^2 * (x - 1.25) * (x - 2.45)
+      // Wait: let's integrate polynomial f'(x) = 0.18 * x^2 * (x + 2.1) * (x - 1.25) * (x - 2.45)
+      // Let's expand (x + 2.1)(x - 1.25)(x - 2.45):
+      // (x + 2.1)(x^2 - 3.7x + 3.0625) = x^3 - 1.6x^2 - 4.7075x + 6.43125
+      // Multiply by x^2: x^5 - 1.6x^4 - 4.7075x^3 + 6.43125x^2
+      // Integrate: x^6/6 - 1.6 x^5/5 - 4.7075 x^4/4 + 6.43125 x^3/3
+      const s = 0.16;
+      return 1.8 + s * (
+        (Math.pow(x, 6) / 6) -
+        (1.6 * Math.pow(x, 5) / 5) -
+        (4.7075 * Math.pow(x, 4) / 4) +
+        (6.43125 * Math.pow(x, 3) / 3)
+      );
+    }
+
+    function terrainD1(x) {
+      const s = 0.16;
+      return s * x * x * (x + 2.1) * (x - 1.25) * (x - 2.45);
+    }
+
+    function terrainD2(x) {
+      const eps = 1e-4;
+      return (terrainD1(x + eps) - terrainD1(x - eps)) / (2 * eps);
+    }
+
+    function updateTerrain1DLab() {
+      const x0 = parseFloat(document.getElementById('terrainProbeX').value);
+      document.getElementById('terrainProbeXVal').textContent = x0.toFixed(2);
+
+      const y0 = terrainFn(x0);
+      const d1 = terrainD1(x0);
+      const d2 = terrainD2(x0);
+
+      document.getElementById('terrainFxVal').textContent = y0.toFixed(3);
+      document.getElementById('terrainD1Val').textContent = d1.toFixed(3);
+      document.getElementById('terrainD2Val').textContent = d2.toFixed(3);
+
+      const typeEl = document.getElementById('terrainTypeVal');
+      if (Math.abs(x0 - (-2.1)) < 0.08) {
+        typeEl.textContent = 'Mínimo Global (f\'=0, f\'\'>0)';
+        typeEl.style.color = '#22c55e';
+      } else if (Math.abs(x0 - 0.0) < 0.08) {
+        typeEl.textContent = 'Pto. Inflexión / Silla (f\'=0, f\'\'=0)';
+        typeEl.style.color = '#eab308';
+      } else if (Math.abs(x0 - 1.25) < 0.08) {
+        typeEl.textContent = 'Máximo Global (f\'=0, f\'\'<0)';
+        typeEl.style.color = '#ef4444';
+      } else if (Math.abs(x0 - 2.45) < 0.08) {
+        typeEl.textContent = 'Mínimo Local (f\'=0, f\'\'>0)';
+        typeEl.style.color = '#38bdf8';
+      } else {
+        typeEl.textContent = d1 > 0 ? 'Pendiente Positiva (Crece →)' : 'Pendiente Negativa (Decrece →)';
+        typeEl.style.color = '#cbd5e1';
+      }
+
+      const c = document.getElementById('terrain1DCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const xMin = -3.0, xMax = 3.1;
+      const yMin = -0.3, yMax = 3.4;
+      const toX = x => 35 + ((x - xMin) / (xMax - xMin)) * (W - 60);
+      const toY = y => (H - 28) - ((y - yMin) / (yMax - yMin)) * (H - 50);
+
+      // Grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, toY(0)); ctx.lineTo(W - 25, toY(0));
+      ctx.stroke();
+
+      // Plot curve
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 200; i++) {
+        const x = xMin + (i / 200) * (xMax - xMin);
+        const px = toX(x), py = toY(terrainFn(x));
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Special landmarks
+      const landmarks = [
+        { x: -2.1, col: '#22c55e', lbl: 'Mín Global' },
+        { x: 0.0, col: '#eab308', lbl: 'Inflexión (f\'=0)' },
+        { x: 1.25, col: '#ef4444', lbl: 'Máx Global' },
+        { x: 2.45, col: '#a855f7', lbl: 'Mín Local' }
+      ];
+      landmarks.forEach(lm => {
+        const lx = toX(lm.x), ly = toY(terrainFn(lm.x));
+        ctx.fillStyle = lm.col;
+        ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.font = '10px Fira Code';
+        ctx.textAlign = 'center';
+        ctx.fillText(lm.lbl, lx, ly - 9);
+      });
+
+      // Tangent line at x0
+      const dxTan = 0.65;
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toX(x0 - dxTan), toY(y0 - d1 * dxTan));
+      ctx.lineTo(toX(x0 + dxTan), toY(y0 + d1 * dxTan));
+      ctx.stroke();
+
+      // Current point
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(toX(x0), toY(y0), 5.5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // --- Módulo 3.2: Segunda Derivada y Matriz Hessiana ---
+    let currentD2Mode = 'wave';
+    function setD2Mode(mode) {
+      currentD2Mode = mode;
+      document.getElementById('btnD2Wave').classList.toggle('active', mode === 'wave');
+      document.getElementById('btnD2Quad').classList.toggle('active', mode === 'quad');
+      updateSecondDerivLab();
+    }
+
+    function updateSecondDerivLab() {
+      const xProbe = parseFloat(document.getElementById('d2ProbeX').value);
+      document.getElementById('d2ProbeXVal').textContent = xProbe.toFixed(2);
+
+      let fVal, d1Val, d2Val;
+      if (currentD2Mode === 'quad') {
+        // Slide 20: f(x) = x^2 - 4x + 5
+        fVal = xProbe * xProbe - 4 * xProbe + 5;
+        d1Val = 2 * xProbe - 4;
+        d2Val = 2.0;
+      } else {
+        // Slide 19: wave with local max, inflection, local min
+        fVal = Math.sin(xProbe) + 0.35 * Math.cos(2 * xProbe);
+        d1Val = Math.cos(xProbe) - 0.7 * Math.sin(2 * xProbe);
+        d2Val = -Math.sin(xProbe) - 1.4 * Math.cos(2 * xProbe);
+      }
+
+      document.getElementById('d2FVal').textContent = fVal.toFixed(3);
+      document.getElementById('d2FpVal').textContent = d1Val.toFixed(3);
+      document.getElementById('d2FppVal').textContent = d2Val.toFixed(3);
+
+      const diagEl = document.getElementById('d2DiagVal');
+      if (Math.abs(d1Val) < 0.18) {
+        if (d2Val > 0.15) {
+          diagEl.textContent = 'Mínimo Local (f\'≈0, f\'\'>0)';
+          diagEl.style.color = '#22c55e';
+        } else if (d2Val < -0.15) {
+          diagEl.textContent = 'Máximo Local (f\'≈0, f\'\'<0)';
+          diagEl.style.color = '#ef4444';
+        } else {
+          diagEl.textContent = 'Pto. Inflexión (f\'\'≈0)';
+          diagEl.style.color = '#eab308';
+        }
+      } else {
+        diagEl.textContent = d2Val >= 0 ? 'Convexa local (f\'\'>0)' : 'Cóncava local (f\'\'<0)';
+        diagEl.style.color = d2Val >= 0 ? '#86efac' : '#fca5a5';
+      }
+
+      const c = document.getElementById('secondDerivCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const xMin = -0.5, xMax = 4.5;
+      const yMin = currentD2Mode === 'quad' ? -5.2 : -2.6;
+      const yMax = currentD2Mode === 'quad' ? 8.5 : 2.6;
+      const toX = x => 35 + ((x - xMin) / (xMax - xMin)) * (W - 55);
+      const toY = y => (H - 24) - ((y - yMin) / (yMax - yMin)) * (H - 44);
+
+      // Zero axis
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, toY(0)); ctx.lineTo(W - 20, toY(0));
+      ctx.stroke();
+
+      const evalFns = x => {
+        if (currentD2Mode === 'quad') {
+          return [x * x - 4 * x + 5, 2 * x - 4, 2.0];
+        }
+        return [
+          Math.sin(x) + 0.35 * Math.cos(2 * x),
+          Math.cos(x) - 0.7 * Math.sin(2 * x),
+          -Math.sin(x) - 1.4 * Math.cos(2 * x)
+        ];
+      };
+
+      const colors = ['#38bdf8', '#eab308', '#a855f7'];
+      const labels = ['f(x)', 'f\'(x)', 'f\'\'(x)'];
+
+      [0, 1, 2].forEach(idx => {
+        ctx.strokeStyle = colors[idx];
+        ctx.lineWidth = idx === 0 ? 2.6 : 1.9;
+        ctx.beginPath();
+        for (let i = 0; i <= 160; i++) {
+          const x = xMin + (i / 160) * (xMax - xMin);
+          const vals = evalFns(x);
+          const px = toX(x), py = toY(vals[idx]);
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      });
+
+      // Probe vertical line
+      const px = toX(xProbe);
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(px, 15); ctx.lineTo(px, H - 20); ctx.stroke();
+      ctx.setLineDash([]);
+
+      [fVal, d1Val, d2Val].forEach((v, idx) => {
+        ctx.fillStyle = colors[idx];
+        ctx.beginPath(); ctx.arc(px, toY(v), 4.5, 0, Math.PI * 2); ctx.fill();
+      });
+
+      // Legend
+      labels.forEach((lbl, idx) => {
+        ctx.fillStyle = colors[idx];
+        ctx.font = 'bold 11px Fira Code';
+        ctx.fillText(`● ${lbl}`, 48 + idx * 75, 18);
+      });
+    }
+
+    let currentHessianPreset = 'slide24';
+    function setHessianPreset(preset) {
+      currentHessianPreset = preset;
+      document.getElementById('btnHessSlide24').classList.toggle('active', preset === 'slide24');
+      document.getElementById('btnHessSaddle').classList.toggle('active', preset === 'saddle');
+      document.getElementById('btnHessMax').classList.toggle('active', preset === 'max');
+      updateHessianLab();
+    }
+
+    function updateHessianLab() {
+      const box = document.getElementById('hessianExampleBox');
+      const c = document.getElementById('hessianSurfaceCanvas');
+      if (!box || !c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      let l1, l2, titleTxt, colorTheme;
+      if (currentHessianPreset === 'slide24') {
+        l1 = 2.0; l2 = 1.2;
+        colorTheme = '#22c55e';
+        titleTxt = 'Mínimo Local: wᵀHw > 0 (Curvatura positiva en toda dirección)';
+        box.innerHTML = `
+          <div><strong>Función 3D (Diap. 24):</strong> $f(x_1,x_2,x_3) = x_1^2 + x_1(1-x_2) + x_2^2 - x_2x_3 + x_3^2 + x_3$</div>
+          <div><strong>Gradiente $\\nabla_{\\mathbf{x}} f = \\mathbf{0}$:</strong> $[2x_1+1-x_2,\\; -x_1+2x_2-x_3,\\; -x_2+2x_3+1]^T = [0,0,0]^T \\implies \\mathbf{x}^* = (-1, -1, -1)$</div>
+          <div><strong>Hessiana $\\nabla_{\\mathbf{x}}^2 f$:</strong> $\\begin{bmatrix} 2 & -1 & 0 \\\\ -1 & 2 & -1 \\\\ 0 & -1 & 2 \\end{bmatrix} \\implies$ Autovalores: $\\lambda_1 = 3.414, \\lambda_2 = 2.000, \\lambda_3 = 0.586 > 0$</div>
+          <div style="color: #86efac;"><strong>Conclusión (Diap. 25):</strong> Matriz <strong>Definida Positiva</strong> ($\\mathbf{w}^T \\nabla^2 f \\, \\mathbf{w} > 0$) $\\implies$ <strong>Mínimo Global</strong> con $f(-1,-1,-1) = -1$.</div>
+        `;
+      } else if (currentHessianPreset === 'saddle') {
+        l1 = 1.8; l2 = -1.5;
+        colorTheme = '#eab308';
+        titleTxt = 'Punto Silla (Inflexión): λ₁ > 0 (sube en u₁) y λ₂ < 0 (baja en u₂)';
+        box.innerHTML = `
+          <div><strong>Forma Cuadrática Indefinida (Diap. 22–23):</strong> $f(x_1,x_2) = x_1^2 - x_2^2$ en torno a $\\mathbf{x}^* = (0,0)$</div>
+          <div><strong>Gradiente:</strong> $\\nabla f(0,0) = [2x_1, -2x_2]^T = [0,0]^T$ (Punto crítico estacionario)</div>
+          <div><strong>Hessiana $\\nabla^2 f$:</strong> $\\begin{bmatrix} 2 & 0 \\\\ 0 & -2 \\end{bmatrix} \\implies$ Autovalores de signos opuestos: $\\lambda_1 = +2 > 0,\\; \\lambda_2 = -2 < 0$</div>
+          <div style="color: #fde047;"><strong>Conclusión:</strong> Matriz <strong>Indefinida</strong> $\\implies$ <strong>Punto Silla</strong> (mínimo a lo largo de $x_1$, pero máximo a lo largo de $x_2$).</div>
+        `;
+      } else {
+        l1 = -2.0; l2 = -1.2;
+        colorTheme = '#ef4444';
+        titleTxt = 'Máximo Local: wᵀHw < 0 (Curvatura negativa en toda dirección)';
+        box.innerHTML = `
+          <div><strong>Forma Cuadrática Concava (Diap. 23):</strong> $f(x_1,x_2) = -x_1^2 - 0.6x_2^2$ en torno a $\\mathbf{x}^* = (0,0)$</div>
+          <div><strong>Gradiente:</strong> $\\nabla f(0,0) = [-2x_1, -1.2x_2]^T = [0,0]^T$ (Punto crítico estacionario)</div>
+          <div><strong>Hessiana $\\nabla^2 f$:</strong> $\\begin{bmatrix} -2 & 0 \\\\ 0 & -1.2 \\end{bmatrix} \\implies$ Todos los autovalores negativos: $\\lambda_1 = -2 < 0,\\; \\lambda_2 = -1.2 < 0$</div>
+          <div style="color: #fca5a5;"><strong>Conclusión:</strong> Matriz <strong>Definida Negativa</strong> ($\\mathbf{w}^T \\nabla^2 f \\, \\mathbf{w} < 0$) $\\implies$ <strong>Máximo Local</strong>.</div>
+        `;
+      }
+
+      if (window.renderMathInElement) {
+        renderMathInElement(box, {
+          delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]
+        });
+      }
+
+      // Draw 3D Isometric surface projection of z = 0.5*(l1*u^2 + l2*v^2)
+      const cx = W / 2, cy = H / 2 + (l1 > 0 && l2 > 0 ? 32 : (l1 < 0 && l2 < 0 ? -32 : 5));
+      const proj = (u, v, z) => {
+        const angle = 0.62;
+        const px = cx + (u - v) * Math.cos(angle) * 44;
+        const py = cy + (u + v) * Math.sin(angle) * 22 - z * 28;
+        return [px, py];
+      };
+
+      const steps = 16;
+      ctx.lineWidth = 1.15;
+      for (let i = -steps; i <= steps; i += 2) {
+        const u = (i / steps) * 1.6;
+        ctx.strokeStyle = colorTheme + '88';
+        ctx.beginPath();
+        for (let j = -steps; j <= steps; j++) {
+          const v = (j / steps) * 1.6;
+          const z = 0.5 * (l1 * u * u + l2 * v * v);
+          const [px, py] = proj(u, v, z);
+          if (j === -steps) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      }
+      for (let j = -steps; j <= steps; j += 2) {
+        const v = (j / steps) * 1.6;
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+        ctx.beginPath();
+        for (let i = -steps; i <= steps; i++) {
+          const u = (i / steps) * 1.6;
+          const z = 0.5 * (l1 * u * u + l2 * v * v);
+          const [px, py] = proj(u, v, z);
+          if (i === -steps) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      }
+
+      // Critical point x* at (0,0,0)
+      const [ox, oy] = proj(0, 0, 0);
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(ox, oy, 5, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = colorTheme;
+      ctx.font = 'bold 11px Fira Code';
+      ctx.textAlign = 'center';
+      ctx.fillText(titleTxt, W / 2, 18);
+    }
+
+    // --- Módulo 3.3: 200 Épocas de Regresión Lineal (Diap. 34-35) ---
+    let reg200History = [];
+    function computeReg200History() {
+      if (reg200History.length > 0) return reg200History;
+      const pts = [[1, 1], [2, 3], [4, 3]];
+      const eta = 0.1;
+      let w0 = 0.0, w1 = 0.0;
+      for (let t = 0; t <= 200; t++) {
+        let loss = 0, g0 = 0, g1 = 0;
+        for (const [x, y] of pts) {
+          const r = (w0 + w1 * x) - y;
+          loss += r * r;
+          g0 += 2 * r * 1.0;
+          g1 += 2 * r * x;
+        }
+        loss /= pts.length;
+        g0 /= pts.length;
+        g1 /= pts.length;
+        reg200History.push({ t, w0, w1, g0, g1, loss });
+        w0 = w0 - eta * g0;
+        w1 = w1 - eta * g1;
+      }
+      return reg200History;
+    }
+
+    function setRegEpoch(t) {
+      document.getElementById('regEpochSlider').value = t;
+      updateLinearReg200Lab();
+    }
+
+    function updateLinearReg200Lab() {
+      const hist = computeReg200History();
+      const tSel = parseInt(document.getElementById('regEpochSlider').value, 10);
+      document.getElementById('regEpochVal').textContent = tSel;
+
+      // Populate Slide 35 canonical table
+      const tbody = document.getElementById('reg200TableBody');
+      if (tbody) {
+        const keyEpochs = [0, 1, 2, 3, 10, 50, 200];
+        if (!keyEpochs.includes(tSel)) keyEpochs.push(tSel);
+        keyEpochs.sort((a, b) => a - b);
+
+        tbody.innerHTML = keyEpochs.map(k => {
+          const row = hist[k];
+          // Slide 35 displays at row t>=1 the gradient from step t-1 that produced w^(t)
+          const gDisp = k === 0 ? { g0: 0, g1: 0 } : (k === 200 ? { g0: row.g0, g1: row.g1 } : { g0: hist[k - 1].g0, g1: hist[k - 1].g1 });
+          const isCur = k === tSel;
+          const bg = isCur ? 'background: rgba(168, 85, 247, 0.22); font-weight: bold;' : '';
+          const gStr = k === 0 ? '—' : `[${gDisp.g0.toFixed(2)}, ${gDisp.g1.toFixed(2)}]`;
+          return `<tr style="${bg}">
+            <td>t = ${k}${isCur ? ' ★' : ''}</td>
+            <td>${gStr}</td>
+            <td>[${row.w0.toFixed(2)}, ${row.w1.toFixed(2)}]</td>
+            <td>${row.loss.toFixed(4)}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      const cur = hist[tSel];
+      const c = document.getElementById('linReg200Canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // Left half: Data + Fitted Line
+      const midX = W / 2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.beginPath(); ctx.moveTo(midX, 10); ctx.lineTo(midX, H - 10); ctx.stroke();
+
+      const toLX = x => 30 + (x / 5.0) * (midX - 50);
+      const toLY = y => (H - 28) - (y / 4.5) * (H - 52);
+
+      // Axes Left
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(30, toLY(0)); ctx.lineTo(midX - 20, toLY(0));
+      ctx.moveTo(toLX(0), 20); ctx.moveTo(toLX(0), H - 28);
+      ctx.stroke();
+
+      // Optimal line (t=200) dashed
+      const opt = hist[200];
+      ctx.strokeStyle = 'rgba(34, 197, 94, 0.45)';
+      ctx.setLineDash([4, 3]);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(toLX(0), toLY(opt.w0));
+      ctx.lineTo(toLX(4.8), toLY(opt.w0 + opt.w1 * 4.8));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Current fitted line w^(t)
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(toLX(0), toLY(cur.w0));
+      ctx.lineTo(toLX(4.8), toLY(cur.w0 + cur.w1 * 4.8));
+      ctx.stroke();
+
+      // Points (1,1), (2,3), (4,3)
+      [[1, 1], [2, 3], [4, 3]].forEach(([x, y]) => {
+        const px = toLX(x), py = toLY(y);
+        const pyHat = toLY(cur.w0 + cur.w1 * x);
+        // Residual segment
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.65)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, pyHat); ctx.stroke();
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath(); ctx.arc(px, py, 4.5, 0, Math.PI * 2); ctx.fill();
+      });
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 11px Fira Code';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Recta t=${tSel}: y = ${cur.w0.toFixed(2)} + ${cur.w1.toFixed(2)}x`, 32, 18);
+
+      // Right half: Parameter space (w0, w1) trajectory
+      const toRX = w0 => midX + 28 + ((w0 + 0.2) / 1.5) * (midX - 48);
+      const toRY = w1 => (H - 28) - ((w1 + 0.1) / 1.55) * (H - 52);
+
+      // Draw trajectory up to tSel
+      ctx.strokeStyle = '#eab308';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= tSel; i++) {
+        const rx = toRX(hist[i].w0), ry = toRY(hist[i].w1);
+        if (i === 0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry);
+      }
+      ctx.stroke();
+
+      // Target w* = [1, 0.57]
+      ctx.fillStyle = '#22c55e';
+      ctx.beginPath(); ctx.arc(toRX(opt.w0), toRY(opt.w1), 5, 0, Math.PI * 2); ctx.fill();
+      ctx.font = '10px Fira Code';
+      ctx.fillText('w*=[1, 0.57]', toRX(opt.w0) - 35, toRY(opt.w1) - 8);
+
+      // Current w^(t)
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(toRX(cur.w0), toRY(cur.w1), 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 11px Fira Code';
+      ctx.fillText('Espacio de Pesos (w₀, w₁)', midX + 28, 18);
+
+      drawSignVsGradCanvas();
+    }
+
+    function drawSignVsGradCanvas() {
+      const c = document.getElementById('signVsGradCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const toX = k => 38 + (k / 16) * (W - 58);
+      const toY = x => (H - 22) - ((x + 0.35) / 1.55) * (H - 40);
+
+      // Zero line (optimum x* = 0)
+      ctx.strokeStyle = 'rgba(34, 197, 94, 0.45)';
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(38, toY(0)); ctx.lineTo(W - 20, toY(0)); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 1) Sign-only step: x_{k+1} = x_k - 0.28 * sign(2*x_k) starting at x0 = 1.0
+      let xsSign = [1.0];
+      for (let k = 0; k < 16; k++) {
+        const cur = xsSign[xsSign.length - 1];
+        xsSign.push(cur - 0.28 * (cur >= 0 ? 1 : -1));
+      }
+
+      // 2) Gradient step: x_{k+1} = x_k - 0.18 * (2*x_k)
+      let xsGrad = [1.0];
+      for (let k = 0; k < 16; k++) {
+        const cur = xsGrad[xsGrad.length - 1];
+        xsGrad.push(cur - 0.18 * (2 * cur));
+      }
+
+      // Plot Sign-only (orange)
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      xsSign.forEach((v, k) => {
+        if (k === 0) ctx.moveTo(toX(k), toY(v)); else ctx.lineTo(toX(k), toY(v));
+      });
+      ctx.stroke();
+
+      // Plot Gradient-proportional (green)
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      xsGrad.forEach((v, k) => {
+        if (k === 0) ctx.moveTo(toX(k), toY(v)); else ctx.lineTo(toX(k), toY(v));
+      });
+      ctx.stroke();
+
+      ctx.font = 'bold 10px Fira Code';
+      ctx.fillStyle = '#f97316';
+      ctx.fillText('● Paso fijo por signo (oscila en torno a x*=0)', 45, 15);
+      ctx.fillStyle = '#22c55e';
+      ctx.fillText('● Paso -η∇f (se amortigua suavemente → 0)', 315, 15);
+    }
+
+    // --- Módulo 3.4: 4 Regímenes de Step Size e Inicialización No Convexa ---
+    function setStepRegimeEta(eta) {
+      document.getElementById('stepRegimeEta').value = eta;
+      updateStepRegimesLab();
+    }
+
+    function updateStepRegimesLab() {
+      const eta = parseFloat(document.getElementById('stepRegimeEta').value);
+      document.getElementById('stepRegimeEtaVal').textContent = eta.toFixed(2);
+      document.getElementById('regFactorVal').textContent = (1 - 2 * eta).toFixed(2);
+
+      // Run 20 iterations as in Slide 45 Python code: w = w - eta * (2*w)
+      let w = 1.0;
+      const traj1D = [w];
+      for (let t = 0; t < 20; t++) {
+        w = w - eta * (2 * w);
+        traj1D.push(w);
+      }
+
+      const w20El = document.getElementById('regW20Val');
+      w20El.textContent = Math.abs(w) < 1e-4 && w !== 0 ? w.toExponential(2) : w.toFixed(5);
+
+      const diagEl = document.getElementById('regDiagText');
+      if (Math.abs(eta - 0.5) < 0.015) {
+        diagEl.textContent = 'Óptimo Exacto (1 paso a w*=0)';
+        diagEl.style.color = '#38bdf8';
+      } else if (eta < 0.5) {
+        diagEl.textContent = 'Convergencia Monótona (sin sobrepaso)';
+        diagEl.style.color = '#22c55e';
+      } else if (eta < 1.0) {
+        diagEl.textContent = 'Oscilante Amortiguado (converge)';
+        diagEl.style.color = '#eab308';
+      } else if (Math.abs(eta - 1.0) < 0.015) {
+        diagEl.textContent = 'Oscilación Perpetua (|1-2η|=1)';
+        diagEl.style.color = '#f97316';
+      } else {
+        diagEl.textContent = '¡DIVERGE! (η > 2·η_opt = 1.0)';
+        diagEl.style.color = '#ef4444';
+      }
+
+      const c = document.getElementById('stepRegimesCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const midX = W / 2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.beginPath(); ctx.moveTo(midX, 10); ctx.lineTo(midX, H - 10); ctx.stroke();
+
+      // Left half: 1D Parabola E(w) = w^2 (Slides 37 & 44)
+      const toLX = wVal => (midX / 2) + (wVal / 1.65) * (midX / 2 - 24);
+      const toLY = eVal => (H - 24) - (eVal / 2.2) * (H - 48);
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = -80; i <= 80; i++) {
+        const wv = (i / 80) * 1.5;
+        const px = toLX(wv), py = toLY(wv * wv);
+        if (i === -80) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Bounce trajectory on parabola
+      ctx.strokeStyle = eta > 1.0 ? '#ef4444' : '#eab308';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let i = 0; i < Math.min(10, traj1D.length); i++) {
+        const wv = Math.max(-1.6, Math.min(1.6, traj1D[i]));
+        const px = toLX(wv), py = toLY(wv * wv);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      for (let i = 0; i < Math.min(8, traj1D.length); i++) {
+        const wv = Math.max(-1.6, Math.min(1.6, traj1D[i]));
+        ctx.fillStyle = i === 0 ? '#ffffff' : (eta > 1.0 ? '#ef4444' : '#22c55e');
+        ctx.beginPath(); ctx.arc(toLX(wv), toLY(wv * wv), 4, 0, Math.PI * 2); ctx.fill();
+      }
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 11px Fira Code';
+      ctx.textAlign = 'left';
+      ctx.fillText('1D: E(w) = w² (η_opt = 0.5)', 18, 18);
+
+      // Right half: 2D Anisotropic E(w1,w2) = 0.5*(w1^2 + 3*w2^2) (Slide 42)
+      // Scale eta_2D = eta * (2/3) so eta=0.75 corresponds to 0.50 (1.5*eta2_opt) and eta=1.1 corresponds to 0.73 (> 2*eta2_opt)
+      const eta2D = eta * (2.0 / 3.0);
+      const rcx = midX + midX / 2, rcy = H / 2 + 6;
+      const rScale = 58;
+
+      [0.2, 0.5, 1.0, 1.7].forEach(lv => {
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.24)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(rcx, rcy, Math.sqrt(2 * lv) * rScale, Math.sqrt((2 * lv) / 3) * rScale, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      let w1 = 1.4, w2 = 0.85;
+      ctx.strokeStyle = eta2D >= 2 / 3 ? '#ef4444' : '#a855f7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let k = 0; k <= 14; k++) {
+        const cw1 = Math.max(-1.8, Math.min(1.8, w1));
+        const cw2 = Math.max(-1.2, Math.min(1.2, w2));
+        const px = rcx + cw1 * rScale, py = rcy - cw2 * rScale;
+        if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        w1 = w1 - eta2D * w1;
+        w2 = w2 - eta2D * (3 * w2);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillText(`2D (Diap. 42): η_2D=${eta2D.toFixed(2)} (lím 0.67)`, midX + 16, 18);
+    }
+
+    function setNonConvexX0(x0) {
+      document.getElementById('nonConvexX0').value = x0;
+      updateNonConvexInitLab();
+    }
+
+    function nonConvexFn(x) {
+      // Double-well with local min at x ≈ -1.42 and deeper global min at x ≈ +1.55, peak near x ≈ 0.08
+      return 0.12 * Math.pow(x, 4) - 0.05 * Math.pow(x, 3) - 0.55 * Math.pow(x, 2) + 0.08 * x + 1.2;
+    }
+
+    function nonConvexGrad(x) {
+      return 0.48 * Math.pow(x, 3) - 0.15 * Math.pow(x, 2) - 1.10 * x + 0.08;
+    }
+
+    function updateNonConvexInitLab() {
+      const x0 = parseFloat(document.getElementById('nonConvexX0').value);
+      document.getElementById('nonConvexX0Val').textContent = x0.toFixed(2);
+
+      let x = x0;
+      const traj = [x];
+      const eta = 0.18;
+      for (let k = 0; k < 35; k++) {
+        x = x - eta * nonConvexGrad(x);
+        traj.push(x);
+      }
+      const xFinal = traj[traj.length - 1];
+      const fFinal = nonConvexFn(xFinal);
+
+      document.getElementById('ncXFinalVal').textContent = xFinal.toFixed(3);
+      document.getElementById('ncFFinalVal').textContent = fFinal.toFixed(3);
+
+      const basinEl = document.getElementById('ncBasinVal');
+      if (xFinal > 0.5) {
+        basinEl.textContent = 'Mínimo Global (Pozo Derecho)';
+        basinEl.style.color = '#22c55e';
+      } else if (xFinal < -0.5) {
+        basinEl.textContent = 'Mínimo Local Subóptimo (Pozo Izq.)';
+        basinEl.style.color = '#eab308';
+      } else {
+        basinEl.textContent = 'Cima Inestable (∇f ≈ 0)';
+        basinEl.style.color = '#ef4444';
+      }
+
+      const c = document.getElementById('nonConvexInitCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const xMin = -2.6, xMax = 2.6;
+      const yMin = 0.2, yMax = 2.2;
+      const toX = xv => 35 + ((xv - xMin) / (xMax - xMin)) * (W - 55);
+      const toY = yv => (H - 24) - ((yv - yMin) / (yMax - yMin)) * (H - 44);
+
+      // Curve
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 180; i++) {
+        const xv = xMin + (i / 180) * (xMax - xMin);
+        const px = toX(xv), py = toY(nonConvexFn(xv));
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Trajectory dots
+      traj.slice(0, 15).forEach((xv, idx) => {
+        ctx.fillStyle = idx === 0 ? '#ffffff' : (xFinal > 0.5 ? '#22c55e' : '#eab308');
+        ctx.beginPath();
+        ctx.arc(toX(xv), toY(nonConvexFn(xv)), idx === 0 ? 5.5 : 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.font = '10px Fira Code';
+      ctx.fillStyle = '#eab308';
+      ctx.fillText('Mín Local (-1.45)', toX(-1.45) - 35, toY(nonConvexFn(-1.45)) + 16);
+      ctx.fillStyle = '#22c55e';
+      ctx.fillText('Mín Global (+1.57)', toX(1.57) - 38, toY(nonConvexFn(1.57)) + 16);
+    }
+
     // Initialize everything on load
     window.addEventListener('DOMContentLoaded', () => {
       loadKmapPreset('slide19');
@@ -3013,6 +4354,14 @@
       updateAdalineSimulation();
       updateDivergenceComparison();
       updateSoftmaxLab();
+      // Unidad III
+      updateGradientGeometryLab();
+      updateTerrain1DLab();
+      updateSecondDerivLab();
+      updateHessianLab();
+      updateLinearReg200Lab();
+      updateStepRegimesLab();
+      updateNonConvexInitLab();
     });
   </script>
 </body>

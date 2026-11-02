@@ -278,20 +278,74 @@ $$\min_W \; \text{TrainLoss}(W) = \frac{1}{N}\sum_{i=1}^N \text{error}\big(f(X_i
 
 ---
 
-## 8. Conclusiones
+## 8. Unidad III: Descenso por Gradiente y Convergencia (CMU 11-785 & Stanford CS221)
 
-1. **Comprobación de la teoría (Unidad I):** Se demostró de manera analítica y computacional que el MLP de 3 neuronas y la variante compacta de 2 neuronas de Friedland resuelven de forma exacta el operador lógico XOR, y que un MLP de una sola capa oculta es un aproximador universal booleano, geométrico y continuo cuyo ancho puede crecer como $2^{N-1}$ si no se emplea profundidad ($3(N-1)$).
-2. **Aprendizaje y diferenciabilidad (Unidad II):** Se comprobó empíricamente la convergencia del perceptrón de Rosenblatt en 3 pasos sobre el conjunto de la Diapositiva 22 ($\mathbf{w} = [3.25, 1.9]$), la regla Delta de ADALINE, la diferencia entre el paisaje plano del conteo de errores y la señal continua de la sigmoide, y la superioridad del par Sigmoide/Softmax + Entropía Cruzada (KL) frente a L2 en problemas de clasificación.
-3. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra.
+El módulo [`descenso_gradiente.py`](descenso_gradiente.py) y los Laboratorios 3.1 a 3.4 de [`web/index.html`](web/index.html) implementan formal y numéricamente las 47 diapositivas de la tercera unidad del curso: la optimización de funciones diferenciables no lineales mediante cálculo diferencial multivariable, la Matriz Hessiana y el algoritmo de Descenso por Gradiente.
+
+### 8.1. Optimización de Funciones, Geometría del Gradiente y Curvas de Nivel (Diapositivas 1–16)
+* **Puntos críticos en 1D:** Una derivada nula $df(x)/dx = 0$ caracteriza todos los puntos estacionarios del terreno: mínimos locales, mínimos globales, máximos y **puntos de inflexión** (puntos silla).
+* **Diferencial multivariable y el Gradiente:** Para $y = f(x_1, x_2, \dots, x_n)$, la expansión de primer orden es:
+  $$\Delta y \approx \sum_{i=1}^n \frac{\partial f}{\partial x_i}\Delta x_i = \nabla_{\mathbf{x}} f(\mathbf{x})\,\Delta\mathbf{x} = \|\nabla_{\mathbf{x}} f(\mathbf{x})\|\,\|\Delta\mathbf{x}\|\cos\theta$$
+  * El cambio $\Delta y$ es máximo cuando $\cos\theta = +1$ ($\theta = 0^\circ$, dirección de $+\nabla f$) y mínimo (máximo descenso) cuando $\cos\theta = -1$ ($\theta = 180^\circ$, dirección de $-\nabla f$).
+  * A lo largo de cualquier **curva de nivel** $f(\mathbf{x}) = c$, la función permanece constante ($\Delta y = 0$), por lo que todo vector tangente $\mathbf{t}$ cumple $\nabla_{\mathbf{x}} f(\mathbf{x})\cdot \mathbf{t} = 0$ ($\theta = 90^\circ$): **el gradiente es siempre ortogonal a las curvas de nivel**.
+* **Las 3 afirmaciones de la Diapositiva 16:**
+  1. *«Hay muchas direcciones en las que podemos movernos para que la función crezca»* $\to$ **VERDADERO** (todo el semiespacio donde $\nabla f \cdot \Delta\mathbf{x} > 0$, es decir, $|\theta| < 90^\circ$).
+  2. *«La dirección del gradiente es la dirección de máximo crecimiento»* $\to$ **VERDADERO** ($\theta = 0$ maximiza $\cos\theta$).
+  3. *«Si $\nabla_{\mathbf{x}} f(\mathbf{x}) = \mathbf{0}$, entonces $\mathbf{x}$ es un mínimo»* $\to$ **FALSO** (también puede ser un máximo o un punto silla).
+
+### 8.2. Segunda Derivada, Matriz Hessiana y Ejemplo 3D Resuelto (Diapositivas 17–25)
+* **Caso 1D (Diapositiva 20):** Para $f(x) = x^2 - 4x + 5$, la condición estacionaria $f'(x) = 2x - 4 = 0$ entrega $x^* = 2$. Dado que $f''(2) = 2 > 0$, la parábola es estrictamente convexa y alcanza su mínimo global en $f(2) = 1$.
+* **Serie de Taylor de segundo orden y Matriz Hessiana:** Alrededor de un punto crítico $\mathbf{x}^*$ donde $\nabla_{\mathbf{x}} f(\mathbf{x}^*) = \mathbf{0}$:
+  $$f(\mathbf{x}^* + \mathbf{w}) \approx f(\mathbf{x}^*) + \frac{1}{2}\mathbf{w}^T \nabla_{\mathbf{x}}^2 f(\mathbf{x}^*)\,\mathbf{w}$$
+  * Si $\mathbf{w}^T \nabla_{\mathbf{x}}^2 f(\mathbf{x}^*)\,\mathbf{w} > 0$ para todo $\mathbf{w} \neq \mathbf{0}$ (**Hessiana definida positiva**, todos los autovalores $\lambda_i > 0$), $\mathbf{x}^*$ es un **mínimo local**.
+  * Si $\mathbf{w}^T \nabla_{\mathbf{x}}^2 f(\mathbf{x}^*)\,\mathbf{w} < 0$ (**Hessiana definida negativa**, todos los $\lambda_i < 0$), $\mathbf{x}^*$ es un **máximo local**.
+  * Si tiene autovalores de signos opuestos (**Hessiana indefinida**), $\mathbf{x}^*$ es un **punto silla**.
+* **Ejemplo 3D Resuelto (Diapositivas 24–25):** Para
+  $$f(x_1, x_2, x_3) = x_1^2 + x_1(1 - x_2) + x_2^2 - x_2 x_3 + x_3^2 + x_3$$
+  el sistema lineal $\nabla_{\mathbf{x}} f = [2x_1 + 1 - x_2,\; -x_1 + 2x_2 - x_3,\; -x_2 + 2x_3 + 1]^T = \mathbf{0}$ tiene solución única $\mathbf{x}^* = (-1, -1, -1)$ con $f(-1,-1,-1) = -1$. La Hessiana constante:
+  $$\nabla_{\mathbf{x}}^2 f = \begin{bmatrix} 2 & -1 & 0 \\ -1 & 2 & -1 \\ 0 & -1 & 2 \end{bmatrix}$$
+  tiene autovalores $\lambda_1 = 2 + \sqrt{2} \approx 3.4142 > 0$, $\lambda_2 = 2 > 0$ y $\lambda_3 = 2 - \sqrt{2} \approx 0.5858 > 0$, confirmando que es **definida positiva** y que $\mathbf{x}^* = (-1, -1, -1)$ es el **mínimo global**.
+
+### 8.3. Descenso por Gradiente Iterativo y 200 Épocas de Regresión Lineal (Diapositivas 26–38)
+Cuando $\nabla_{\mathbf{x}} f(\mathbf{x}) = \mathbf{0}$ no tiene solución analítica cerrada, actualizamos iterativamente en dirección opuesta al gradiente:
+$$\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \eta_k \nabla_{\mathbf{x}} f(\mathbf{x}^{(k)})^T$$
+Evaluando sobre los 3 puntos de las Diapositivas 34–35 $\{(1, 1), (2, 3), (4, 3)\}$ con $\phi(x) = [1, x]$, pérdida $\text{TrainLoss}(\mathbf{w}) = \frac{1}{3}\sum_{i=1}^3 (\mathbf{w}\cdot\phi(x_i) - y_i)^2$, tasa de aprendizaje $\eta = 0.1$ y $\mathbf{w}^{(0)} = [0, 0]$:
+
+| Época $t$ | $\nabla_{\mathbf{w}}\text{TrainLoss}$ (Diap. 35) | Pesos $\mathbf{w}^{(t)} = [w_0, w_1]$ | $\text{TrainLoss}(\mathbf{w}^{(t)})$ |
+| :---: | :---: | :---: | :---: |
+| **$t = 0$** | — | $[0.00, \; 0.00]$ | $6.3333$ |
+| **$t = 1$** | $[-4.67, \; -12.67]$ | $[0.47, \; 1.27]$ | $1.9763$ |
+| **$t = 2$** | $[2.18, \; 7.24]$ | $[0.25, \; 0.54]$ | $0.8407$ |
+| **$t = 200$** | $[0.00, \; 0.00]$ | $[1.00, \; 0.57]$ | $0.4762$ |
+
+### 8.4. Curvatura por Dirección y los 4 Regímenes del Tamaño de Paso (Diapositivas 39–47)
+* **Paso óptimo cuadrático:** En 1D, minimizar $E(w)$ con curvatura $E''$ alcanza el mínimo en un solo paso con $\eta_{\text{opt}} = (E'')^{-1}$.
+* **4 Regímenes sobre $E(w) = w^2$ ($E'' = 2 \implies \eta_{\text{opt}} = 0.5$, 20 iteraciones desde $w^{(0)} = 1.0$, Diapositivas 44–45):**
+  1. $\eta = 0.1 < \eta_{\text{opt}} \implies w^{(20)} = (0.8)^{20} = \mathbf{0.01153}$ (convergencia monótona sin sobrepaso).
+  2. $\eta = 0.5 = \eta_{\text{opt}} \implies w^{(1)} = w^{(20)} = \mathbf{0.0}$ (convergencia exacta en 1 paso).
+  3. $\eta = 0.75 \in (\eta_{\text{opt}}, 2\eta_{\text{opt}}) \implies w^{(20)} = (-0.5)^{20} = \mathbf{9.5367 \times 10^{-7}}$ (oscila cambiando de signo y converge).
+  4. $\eta = 1.1 > 2\eta_{\text{opt}} \implies w^{(20)} = (-1.2)^{20} = \mathbf{38.3376}$ (divergencia exponencial).
+* **Curvatura anisotrópica en 2D (Diapositivas 41–43):** Para $E(\mathbf{w}) = \frac{1}{2}(w_1^2 + 3w_2^2)$, los pasos óptimos por eje son $\eta_{1,\text{opt}} = 1$ y $\eta_{2,\text{opt}} = 1/3$. Para evitar divergencia en la dirección de mayor curvatura ($w_2$), el tamaño de paso global debe cumplir:
+  $$\eta < 2\min_i \eta_{i,\text{opt}} = \frac{2}{3}$$
 
 ---
 
-## 9. Referencias Bibliográficas
+## 9. Conclusiones
 
-1. **McCulloch, W. S., & Pitts, W. (1943).** *A logical calculus of the ideas immanent in nervous activity.* The Bulletin of Mathematical Biophysics, 5(4), 115-133.
-2. **Rosenblatt, F. (1958).** *The perceptron: A probabilistic model for information storage and organization in the brain.* Psychological Review, 65(6), 386-408.
-3. **Widrow, B., & Hoff, M. E. (1960).** *Adaptive switching circuits.* IRE WESCON Convention Record, Part 4, 96-104.
-4. **Minsky, M., & Papert, S. (1969).** *Perceptrons: An Introduction to Computational Geometry.* MIT Press, Cambridge, MA.
-5. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
-6. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
-7. **Raj, B., et al. (CMU 11-785) & Liang, P., et al. (Stanford CS221).** *Aproximación Universal con Redes Neuronales & Aprendizaje de Redes Neuronales.* Ciencia de Datos — Doctorado UCN.
+1. **Comprobación de la teoría (Unidad I):** Se demostró de manera analítica y computacional que el MLP de 3 neuronas y la variante compacta de 2 neuronas de Friedland resuelven de forma exacta el operador lógico XOR, y que un MLP de una sola capa oculta es un aproximador universal booleano, geométrico y continuo cuyo ancho puede crecer como $2^{N-1}$ si no se emplea profundidad ($3(N-1)$).
+2. **Aprendizaje y diferenciabilidad (Unidad II):** Se comprobó empíricamente la convergencia del perceptrón de Rosenblatt en 3 pasos sobre el conjunto de la Diapositiva 22 ($\mathbf{w} = [3.25, 1.9]$), la regla Delta de ADALINE, la diferencia entre el paisaje plano del conteo de errores y la señal continua de la sigmoide, y la superioridad del par Sigmoide/Softmax + Entropía Cruzada (KL) frente a L2 en problemas de clasificación.
+3. **Optimización por Descenso de Gradiente (Unidad III):** Se verificaron analítica y numéricamente la ortogonalidad del gradiente respecto a las curvas de nivel, la clasificación del punto crítico 3D $\mathbf{x}^*=(-1,-1,-1)$ mediante su Matriz Hessiana definida positiva ($\lambda = \{3.414, 2, 0.586\} > 0$), la trayectoria de 200 épocas en Regresión Lineal hacia $\mathbf{w}^*=[1, 0.57]$, y los 4 regímenes de convergencia/divergencia gobernados por la relación entre $\eta$ y la curvatura $(E'')^{-1}$.
+4. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra.
+
+---
+
+## 10. Referencias Bibliográficas
+
+1. **Cauchy, A. (1847).** *Méthode générale pour la résolution des systèmes d'équations simultanées.* Comptes Rendus Hebdomadaires des Séances de l'Académie des Sciences, 25, 536-538.
+2. **McCulloch, W. S., & Pitts, W. (1943).** *A logical calculus of the ideas immanent in nervous activity.* The Bulletin of Mathematical Biophysics, 5(4), 115-133.
+3. **Rosenblatt, F. (1958).** *The perceptron: A probabilistic model for information storage and organization in the brain.* Psychological Review, 65(6), 386-408.
+4. **Widrow, B., & Hoff, M. E. (1960).** *Adaptive switching circuits.* IRE WESCON Convention Record, Part 4, 96-104.
+5. **Minsky, M., & Papert, S. (1969).** *Perceptrons: An Introduction to Computational Geometry.* MIT Press, Cambridge, MA.
+6. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
+7. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
+8. **Raj, B., et al. (CMU 11-785) & Liang, P., et al. (Stanford CS221).** *Aproximación Universal, Aprendizaje de Redes Neuronales & Descenso por Gradiente.* Ciencia de Datos — Doctorado UCN.

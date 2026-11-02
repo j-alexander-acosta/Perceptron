@@ -317,6 +317,17 @@ def launch_learning_module():
         print(f"⚠️ Error al cargar el módulo de Aprendizaje de Redes Neuronales: {e}")
 
 
+def launch_gradient_module():
+    """
+    Ejecuta el laboratorio interactivo de la Unidad III: Descenso por Gradiente.
+    """
+    try:
+        from descenso_gradiente import interactive_gradient_menu
+        interactive_gradient_menu()
+    except Exception as e:
+        print(f"⚠️ Error al cargar el módulo de Descenso por Gradiente: {e}")
+
+
 def main():
     mlp = PerceptronMulticapaXOR()
     
@@ -343,6 +354,8 @@ def main():
             run_all_demos()
             from aprendizaje_redes import run_all_learning_demos
             run_all_learning_demos()
+            from descenso_gradiente import run_all_gradient_demos
+            run_all_gradient_demos()
             return
         elif arg in ('--gui', '-g'):
             launch_gui()
@@ -356,13 +369,16 @@ def main():
         elif arg in ('--learning', '-l', '--aprendizaje'):
             launch_learning_module()
             return
+        elif arg in ('--gradient', '-d', '--gradiente'):
+            launch_gradient_module()
+            return
 
     # Menú Interactivo en Consola Organizado por Unidades
     while True:
-        print("\n" + "=" * 74)
+        print("\n" + "=" * 78)
         print(" SUITE EDUCATIVA DE REDES NEURONALES — DOCTORADO UCN")
-        print(" Unidad I: Aproximación Universal  |  Unidad II: Aprendizaje de Redes")
-        print("=" * 74)
+        print(" Unidad I: Aproximación  |  Unidad II: Aprendizaje  |  Unidad III: Gradiente")
+        print("=" * 78)
         print(" Seleccione una opción:")
         print("   --- UNIDAD I: REPRESENTACIÓN Y APROXIMACIÓN UNIVERSAL ---")
         print("   [1] Ingresar datos manuales para el Perceptrón Multicapa XOR (X e Y)")
@@ -371,14 +387,16 @@ def main():
         print("   [4] 🎓 Laboratorio Consola Unidad I: Aproximación Universal (DNF, Polígonos, Pulsos)")
         print("   --- UNIDAD II: APRENDIZAJE DE REDES NEURONALES ---")
         print("   [5] ⚡ Laboratorio Consola Unidad II: Aprendizaje (Rosenblatt, ADALINE, Softmax, KL)")
+        print("   --- UNIDAD III: DESCENSO POR GRADIENTE ---")
+        print("   [6] 📉 Laboratorio Consola Unidad III: Descenso por Gradiente (Hessiana, 200 Épocas, Step Size)")
         print("   --- INTERFACES GRÁFICAS INTERACTIVAS ---")
-        print("   [6] 🌐 Abrir Suite Web Interactiva Completa (2 Unidades • 9 Laboratorios)")
-        print("   [7] 🖥️  Abrir Interfaz Gráfica de Escritorio XOR (Tkinter)")
-        print("   [8] Salir")
-        print("-" * 74)
+        print("   [7] 🌐 Abrir Suite Web Interactiva Completa (3 Unidades • 13 Laboratorios)")
+        print("   [8] 🖥️  Abrir Interfaz Gráfica de Escritorio XOR (Tkinter)")
+        print("   [9] Salir")
+        print("-" * 78)
         
         try:
-            opc = input("Ingrese opción [1-8]: ").strip()
+            opc = input("Ingrese opción [1-9]: ").strip()
             if opc == '1':
                 run_manual_mode(mlp)
             elif opc == '2':
@@ -390,14 +408,16 @@ def main():
             elif opc == '5':
                 launch_learning_module()
             elif opc == '6':
-                launch_web()
+                launch_gradient_module()
             elif opc == '7':
+                launch_web()
+            elif opc == '8':
                 launch_gui()
-            elif opc in ('8', 'q', 'salir', 'exit'):
+            elif opc in ('9', 'q', 'salir', 'exit'):
                 print("Saliendo. ¡Hasta luego!")
                 break
             else:
-                print("⚠️ Opción no válida. Por favor elija un número del 1 al 8.")
+                print("⚠️ Opción no válida. Por favor elija un número del 1 al 9.")
         except (KeyboardInterrupt, EOFError):
             print("\nSaliendo. ¡Hasta luego!")
             break
