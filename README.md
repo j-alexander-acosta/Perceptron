@@ -1,4 +1,4 @@
-# Suite Educativa de Ciencia de Datos y Redes Neuronales (12 Unidades Académicas • 739 Diapositivas • 49 Laboratorios)
+# Suite Educativa de Ciencia de Datos y Redes Neuronales (13 Unidades Académicas • 812 Diapositivas • 53 Laboratorios)
 
 Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al. y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD13`–`CD18`)**:
 
@@ -8,7 +8,8 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 * **CD04 (Cuarta en orden) — Introducción a Machine Learning (56 Diapositivas):** Laboratorios 04.1 a 04.4 ([`introduccion_ml.py`](introduccion_ml.py)).
 * **CD05 (Quinta en orden) — Generalización y Validación (63 Diapositivas):** Laboratorios 05.1 a 05.4 ([`generalizacion_validacion.py`](generalizacion_validacion.py)).
 * **CD06 (Sexta en orden) — Clustering: Agrupamiento No Supervisado (57 Diapositivas):** Laboratorios 06.1 a 06.4 ([`clustering.py`](clustering.py)).
-* *(Espacio reservado en secuencia para las próximas unidades `CD07` a `CD12` según orden de cátedra).*
+* **CD07 (Séptima en orden) — Reducción de Dimensionalidad (73 Diapositivas):** Laboratorios 07.1 a 07.4 ([`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py)).
+* *(Espacio reservado en secuencia para las próximas unidades `CD08` a `CD12` según orden de cátedra).*
 * **CD13 (Unidad I) — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
 * **CD14 (Unidad II) — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
 * **CD15 (Unidad III) — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
@@ -189,6 +190,36 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 🟨 CD07 (SÉPTIMA EN ORDEN): Reducción de Dimensionalidad — PCA, Fisher LDA, t-SNE y UMAP (73 Diapositivas)
+
+1. **Módulo 07.1 — La Maldición de la Dimensionalidad: Hiperesferas en Hipercubos y Distancias Vacías (Diaps. 1–11):**
+   * **Razón de volumen bola unitaria / hipercubo lado 2 (Diaps. 5–11):** Deducción analítica de:
+     $$P_d = rac{	ext{Vol}(B_d(1))}{	ext{Vol}(C_d(2))} = rac{\pi^{d/2}}{\Gamma(d/2 + 1) \cdot 2^d}$$
+     Evaluación en $d \in \{1, 2, 3, 6, 10, 15, 100\}$: $P_1 = 1.0$, $P_2 = \pi/4 pprox 0.7854$ ($78.5\%$), $P_3 = \pi/6 pprox 0.5236$ ($52.4\%$), $P_6 pprox 0.0807$ ($8.07\%$), $P_{10} pprox \mathbf{0.00249}$ (**$0.25\%$**, solo 1 de cada 400 puntos cae al centro), $P_{15} pprox 1.16 	imes 10^{-5}$ y $P_{100} pprox \mathbf{1.87 	imes 10^{-70}}$ (prácticamente cero; todo el volumen vive en las $2^{100}$ esquinas).
+   * **Simulación con $N=1\,000$ puntos aleatorios (Diap. 11):** En $d=2$ caen $pprox 785$ puntos en el círculo; en $d=10$ caen en promedio **$2.5$ puntos** (solo 2 o 3 con suerte en todo el conjunto).
+   * **Pérdida de contraste métrico (Teorema de Beyer et al., 1999):** $\lim_{d 	o \infty} rac{d_{\max} - d_{\min}}{d_{\min}} = 0$, demostrando que en alta dimensión todos los pares de puntos son equidistantes y las consultas de vecinos más cercanos colapsan.
+2. **Módulo 07.2 — PCA Paso a Paso: Análisis de Componentes Principales, Dualidad Varianza/Error y SVD (Diaps. 12–37):**
+   * **Ejemplo trabajado a mano de 6 puntos en 2D (Págs. 102–142):** $\{(6,4), (5,5), (5,2), (3,4), (3,1), (2,2)\}$.
+     * **Paso 1 (Centrado):** Media $ar{x} = (24/6, 18/6) = (4.0, 3.0)$. Puntos centrados $	ilde{x}_i \in \{(2,1), (1,2), (1,-1), (-1,1), (-1,-2), (-2,-1)\}$.
+     * **Paso 2 (Matriz de covarianza):** $S_{11} = 12/6 = 2.0$, $S_{22} = 12/6 = 2.0$, $S_{12} = 6/6 = 1.0 \implies S = egin{bmatrix} 2.0 & 1.0 \ 1.0 & 2.0 \end{bmatrix}$.
+     * **Paso 3 (Autovalores y autovectores):** $\det(S - \lambda I) = (2-\lambda)^2 - 1 = 0 \implies \lambda_1 = \mathbf{3.0}$ ($75\%$), $\lambda_2 = \mathbf{1.0}$ ($25\%$). Autovectores normalizados: $v^{(1)} = rac{1}{\sqrt{2}}[1, 1]^T$ ($45^\circ$), $v^{(2)} = rac{1}{\sqrt{2}}[1, -1]^T$ ($135^\circ$).
+     * **Paso 4 (Proyecciones $z_i$ y reconstrucción $\hat{x}_i$):** $z = [rac{3}{\sqrt{2}}, rac{3}{\sqrt{2}}, 0, 0, -rac{3}{\sqrt{2}}, -rac{3}{\sqrt{2}}]$. Reconstruidos: $\{(5.5, 4.5), (5.5, 4.5), (4, 3), (4, 3), (2.5, 1.5), (2.5, 1.5)\}$.
+     * **Paso 5 (Teorema exacto de error de compresión):** $\sum_{i=1}^6 \|\hat{x}_i - x_i\|^2 = 0.5 + 0.5 + 2.0 + 2.0 + 0.5 + 0.5 = \mathbf{6.0} = N \cdot \lambda_2 = 6 	imes 1.0 = 6.0$.
+   * **Equivalencia de Eckart-Young-Mirsky y SVD:** $	ilde{X} = U \Sigma V^T \implies S = V(\Sigma^2 / N)V^T \implies \lambda_j = s_j^2 / N$.
+3. **Módulo 07.3 — Fisher LDA: Análisis Discriminante Lineal, Maximización Inter-clase y Supresión de Ruido (Diaps. 38–49):**
+   * **Criterio de Fisher (1936):** Maximizar $J(w) = rac{(w^T (m_2 - m_1))^2}{w^T S_W w} \implies w^* \propto S_W^{-1}(m_2 - m_1)$.
+   * **Ejemplo trabajado de 8 puntos (Diaps. 42–44):** $m_1 = (2, 4)$, $m_2 = (5, 5) \implies m_2 - m_1 = (3, 1)$. Matriz intra-clase $S_W = 	ext{diag}(4, 36)$.
+     * Dirección de Fisher: $w^* \propto [3/4, 1/36]^T \propto \mathbf{[27, 1]^T} \implies w^* pprox (0.9993, 0.0370)$ ($2.1^\circ$).
+     * Separabilidad: $J(w^*) = \mathbf{2.28}$ frente a PCA $J(v_{	ext{PCA}}) = \mathbf{0.03}$ (**$82	imes$ mejor separación supervisada**). PCA se confunde con el ruido vertical de varianza $18$, mientras Fisher lo castiga con $1/36$.
+   * **Segundo caso de Fisher (Diap. 49):** $m_2 - m_1 = (2, 2)$, $S_W = 	ext{diag}(2, 8) \implies w^* \propto (2/2, 2/8) = (1, 1/4) \propto \mathbf{[4, 1]^T}$.
+   * **Límite dimensional:** Para $C$ clases, el subespacio proyectado tiene a lo más $C-1$ dimensiones.
+4. **Módulo 07.4 — Manifold Learning: t-SNE, Distribución t de Student, UMAP y Pipeline HDBSCAN (Diaps. 50–73):**
+   * **Probabilidades de vecindad simétricas:** $p_{j|i} \propto \exp(-\|x_i - x_j\|^2 / 2\sigma_i^2)$ con perplejidad $	ext{Perp}(P_i) = 2^{H(P_i)}$ fija. En $\{0, 1, 2, 8\}$ con $	ext{Perp}=2$, $\sigma(x=1) = 1.0$ mientras que para el punto aislado $x=8$, $\sigma$ se expande a $\mathbf{2.26}$ ($[0.05, 0.21, 0.74]$).
+   * **Colas pesadas de la t de Student contra el Crowding Problem (Diap. 60):** En baja dimensión, $q_{ij} \propto (1 + \|y_i - y_j\|^2)^{-1}$. A distancia $d=3$, la Gaussiana vale $e^{-9} = 0.000123$ mientras Student-t vale $1/(1+9) = 0.100000$ (**$810	imes$ mayor probabilidad**), permitiendo separar clusters sin forzar apiñamiento central.
+   * **Pipeline Moderno y Reglas de Interpretación (Wattenberg et al., 2016):** Los tamaños visuales de clusters y distancias entre clusters no tienen significado geométrico euclidiano. La mejor práctica industrial es reducir con **UMAP a 10 dimensiones** y agrupar con **HDBSCAN**.
+
+---
+
 ### 🟦 CD13 (UNIDAD I): Representación y Aproximación Universal con Redes Neuronales
 
 1. **Módulo 1.1 — Compuertas de Umbral y Arquitecturas XOR (Diaps. 6–15):**
@@ -316,7 +347,7 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-### 1. 🌐 Suite Web Educativa Interactiva (10 Unidades: CD01–CD04 y CD13–CD18 • 41 Laboratorios en Navegador)
+### 1. 🌐 Suite Web Educativa Interactiva (13 Unidades: CD01–CD07 y CD13–CD18 • 53 Laboratorios en Navegador)
 ```bash
 open web/index.html
 # O desde Python:
@@ -325,7 +356,7 @@ python3 perceptron_xor.py --web
 
 ### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro, Orden de Cátedra)
 ```bash
-# Ejecutar TODAS las verificaciones de CD01–CD06 y CD13–CD18 automáticamente (12 Unidades):
+# Ejecutar TODAS las verificaciones de CD01–CD07 y CD13–CD18 automáticamente (13 Unidades):
 python3 perceptron_xor.py --auto
 
 # Laboratorio interactivo de CD01 (Primera en orden — Introducción al Curso):
@@ -345,6 +376,9 @@ python3 generalizacion_validacion.py
 
 # Laboratorio interactivo de CD06 (Sexta en orden — Clustering: K-Means, Rand Index, Dendrogramas y DBSCAN):
 python3 clustering.py
+
+# Laboratorio interactivo de CD07 (Séptima en orden — Reducción de Dimensionalidad: PCA, Fisher LDA, t-SNE, UMAP):
+python3 reduccion_dimensionalidad.py
 
 # Laboratorio interactivo de CD13 / Unidad I (Aproximación Universal):
 python3 aproximacion_universal.py
@@ -373,14 +407,15 @@ python3 perceptron_xor.py
 ## 📁 Estructura del Proyecto
 ```
 ├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD05, luego CD13 a CD18)
-├── INFORME.md                   # Informe académico detallado de las 12 unidades (CD01–CD06 y CD13–CD18)
-├── perceptron_xor.py            # Lanzador central y verificador integrado (12 unidades • 49 laboratorios)
+├── INFORME.md                   # Informe académico detallado de las 12 unidades (CD01–CD07 y CD13–CD18)
+├── perceptron_xor.py            # Lanzador central y verificador integrado (13 unidades • 53 laboratorios)
 ├── introduccion_curso.py        # CD01 (Primera en orden): Pandemia, SIR (Diap. 13), Netflix Prize, 3 Relatos IA y LLMs
 ├── preprocesamiento_eda.py      # CD02 (Segunda en orden): Sesgos Gallup/Yelp/QR, CRISP-DM, Pandas epl_mini (23 jug.) y Anscombe
 ├── visualizacion_datos.py       # CD03 (Tercera en orden): Datasaurus, Burtin 1951 (16 bacterias), Tufte Lie Factor, Stevens, Correll y Mirages
 ├── introduccion_ml.py           # CD04 (Cuarta en orden): Mapa IA 4 Niveles, Regresión Gauss 1801, Hinge/Margen, Logística y Softmax
 ├── generalizacion_validacion.py # CD05 (Quinta en orden): Sobreajuste, Cauchy-Schwarz, Paso L2 a Mano [1.8, -2.0], CV 5-Fold vs Simple y Sesgo-Varianza
 ├── clustering.py                # CD06 (Sexta en orden): Lloyd 1D/2D, Codo K=3, Rand Index vs ARI, Dendrogramas y DBSCAN vs HDBSCAN
+├── reduccion_dimensionalidad.py # CD07 (Séptima en orden): Maldición Dim P_d, PCA Paso a Paso (6 pts), Fisher LDA (8 pts), t-SNE y UMAP
 ├── aproximacion_universal.py    # CD13 (Unidad I): DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
 ├── aprendizaje_redes.py         # CD14 (Unidad II): Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
 ├── descenso_gradiente.py        # CD15 (Unidad III): Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
@@ -389,6 +424,6 @@ python3 perceptron_xor.py
 ├── sgd_lotes.py                 # CD18 (Unidad VI): SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, Nesterov, RMSprop y Adam
 ├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html               # Suite Web Interactiva (12 Unidades: CD01–CD06 y CD13–CD18 • 49 Laboratorios)
+│   └── index.html               # Suite Web Interactiva (13 Unidades: CD01–CD07 y CD13–CD18 • 53 Laboratorios)
 └── contexto/                    # Historial secuencial de planes de trabajo (context1..context17)
 ```

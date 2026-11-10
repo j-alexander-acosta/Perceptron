@@ -416,6 +416,17 @@ def launch_clustering_module():
         print(f"⚠️ Error al cargar el módulo CD06 de Clustering: {e}")
 
 
+def launch_dim_reduction_module():
+    """
+    Ejecuta el laboratorio interactivo de la Unidad CD07 (séptima en orden): Reducción de Dimensionalidad.
+    """
+    try:
+        from reduccion_dimensionalidad import menu_reduccion_dim
+        menu_reduccion_dim()
+    except Exception as e:
+        print(f"⚠️ Error al cargar el módulo CD07 de Reducción de Dimensionalidad: {e}")
+
+
 def launch_sgd_module():
     """
     Ejecuta el laboratorio interactivo de la Unidad VI (CD18): Descenso por Gradiente Estocástico y Lotes.
@@ -481,9 +492,17 @@ UNIDADES_CATEDRA = [
         "launcher": launch_clustering_module,
     },
     {
+        "id": "CD07",
+        "fase": 1,
+        "num": 7,
+        "nombre": "CD07: Reducción de Dimensionalidad (PCA, Fisher LDA, t-SNE, UMAP)",
+        "desc": "Maldición Dimensional, PCA a Mano (6 pts), Fisher LDA (8 pts), t-SNE y UMAP (73 Diaps.)",
+        "launcher": launch_dim_reduction_module,
+    },
+    {
         "id": "CD13",
         "fase": 2,
-        "num": 7,
+        "num": 8,
         "nombre": "CD13 (Unidad I): Aproximación Universal con Redes Neuronales",
         "desc": "DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos (61 Diaps.)",
         "launcher": launch_universal_approx,
@@ -491,7 +510,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD14",
         "fase": 2,
-        "num": 8,
+        "num": 9,
         "nombre": "CD14 (Unidad II): Aprendizaje de Redes Neuronales",
         "desc": "Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y Entropía Cruzada KL (56 Diaps.)",
         "launcher": launch_learning_module,
@@ -499,7 +518,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD15",
         "fase": 2,
-        "num": 9,
+        "num": 10,
         "nombre": "CD15 (Unidad III): Descenso por Gradiente y Convergencia",
         "desc": "Ortogonalidad, Hessiana 3D, 200 Épocas y Relación Paso/Curvatura (47 Diaps.)",
         "launcher": launch_gradient_module,
@@ -507,7 +526,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD16",
         "fase": 2,
-        "num": 10,
+        "num": 11,
         "nombre": "CD16 (Unidad IV): Algoritmo de Backpropagation",
         "desc": "Regla de la Cadena, Grafos de Cómputo (Diaps. 21/23), ReLU 2 Capas y Jacobianos (60 Diaps.)",
         "launcher": launch_backprop_module,
@@ -515,7 +534,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD17",
         "fase": 2,
-        "num": 11,
+        "num": 12,
         "nombre": "CD17 (Unidad V): Problemas de Convergencia en el Entrenamiento",
         "desc": "Brady 1989, 6 Trayectorias, Condición κ, Newton, RProp y QuickProp (58 Diaps.)",
         "launcher": launch_convergence_module,
@@ -523,7 +542,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD18",
         "fase": 2,
-        "num": 12,
+        "num": 13,
         "nombre": "CD18 (Unidad VI): Descenso por Gradiente Estocástico y Lotes",
         "desc": "SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, RMSprop y Adam (41 Diaps.)",
         "launcher": launch_sgd_module,
@@ -590,11 +609,11 @@ def ejecutar_unidad_con_navegacion(unit_idx: int):
 
 def menu_fase1():
     """
-    Submenú enfocado y limpio para la Fase 1: Fundamentos y Análisis de Datos (CD01 a CD06).
+    Submenú enfocado y limpio para la Fase 1: Fundamentos y Análisis de Datos (CD01 a CD07).
     """
     while True:
         print("\n" + "═" * 84)
-        print(" 📊 FASE 1: FUNDAMENTOS Y ANÁLISIS DE DATOS (CD01 a CD06 • 6 Unidades)")
+        print(" 📊 FASE 1: FUNDAMENTOS Y ANÁLISIS DE DATOS (CD01 a CD07 • 7 Unidades)")
         print("═" * 84)
         print(" [1] CD01: Introducción al Curso (Pandemia, SIR, Netflix Prize, 3 Relatos IA)")
         print(" [2] CD02: Preprocesamiento y EDA (Gallup/Yelp, CRISP-DM, epl_mini, Anscombe)")
@@ -602,12 +621,13 @@ def menu_fase1():
         print(" [4] CD04: Introducción a Machine Learning (Ceres, Hinge, Logística, Softmax)")
         print(" [5] CD05: Generalización y Validación (Sobreajuste, L1/L2, K-Fold CV, Sesgo-Varianza)")
         print(" [6] CD06: Clustering (K-Means Lloyd 1D/2D, Rand/ARI, Jerárquico, DBSCAN/HDBSCAN)")
+        print(" [7] CD07: Reducción de Dimensionalidad (Maldición Dim, PCA 6 pts, Fisher LDA, t-SNE/UMAP)")
         print(" [T] Ejecutar todas las demostraciones automáticas de Fase 1")
         print(" [V] Volver al Menú Principal")
         print("─" * 84)
         
         try:
-            opc = input("Fase 1 [1-6, T, V]: ").strip().lower()
+            opc = input("Fase 1 [1-7, T, V]: ").strip().lower()
             if opc == '1':
                 ejecutar_unidad_con_navegacion(0)
             elif opc == '2':
@@ -620,6 +640,8 @@ def menu_fase1():
                 ejecutar_unidad_con_navegacion(4)
             elif opc == '6':
                 ejecutar_unidad_con_navegacion(5)
+            elif opc == '7':
+                ejecutar_unidad_con_navegacion(6)
             elif opc in ('t', 'todos', 'all'):
                 from introduccion_curso import ejecutar_suite_completa
                 ejecutar_suite_completa()
@@ -633,6 +655,8 @@ def menu_fase1():
                 ejecutar_todo_cd05()
                 from clustering import ejecutar_suite_automatica as ejecutar_todo_cd06
                 ejecutar_todo_cd06()
+                from reduccion_dimensionalidad import ejecutar_suite_automatica as ejecutar_todo_cd07
+                ejecutar_todo_cd07()
             elif opc in ('v', 'volver', 'q', 'salir', '0', ''):
                 break
             else:
@@ -662,17 +686,17 @@ def menu_fase2():
         try:
             opc = input("Fase 2 [1-6, T, V]: ").strip().lower()
             if opc == '1':
-                ejecutar_unidad_con_navegacion(6)
-            elif opc == '2':
                 ejecutar_unidad_con_navegacion(7)
-            elif opc == '3':
+            elif opc == '2':
                 ejecutar_unidad_con_navegacion(8)
-            elif opc == '4':
+            elif opc == '3':
                 ejecutar_unidad_con_navegacion(9)
-            elif opc == '5':
+            elif opc == '4':
                 ejecutar_unidad_con_navegacion(10)
-            elif opc == '6':
+            elif opc == '5':
                 ejecutar_unidad_con_navegacion(11)
+            elif opc == '6':
+                ejecutar_unidad_con_navegacion(12)
             elif opc in ('t', 'todos', 'all'):
                 from aproximacion_universal import run_all_demos
                 run_all_demos()
@@ -783,6 +807,8 @@ def main():
             ejecutar_todo_cd05()
             from clustering import ejecutar_suite_automatica as ejecutar_todo_cd06
             ejecutar_todo_cd06()
+            from reduccion_dimensionalidad import ejecutar_suite_automatica as ejecutar_todo_cd07
+            ejecutar_todo_cd07()
             run_verification()
             generate_plot()
             from aproximacion_universal import run_all_demos
@@ -816,6 +842,9 @@ def main():
         elif arg in ('--cluster', '-c6', '--cd06', '--kmeans', '--dbscan'):
             ejecutar_unidad_con_navegacion(5)
             return
+        elif arg in ('--dim', '-c7', '--cd07', '--pca', '--lda', '--tsne', '--umap'):
+            ejecutar_unidad_con_navegacion(6)
+            return
         elif arg in ('--gui', '-g'):
             launch_gui()
             return
@@ -823,32 +852,32 @@ def main():
             launch_web()
             return
         elif arg in ('--universal', '-u', '--cd13'):
-            ejecutar_unidad_con_navegacion(6)
-            return
-        elif arg in ('--learning', '-l', '--aprendizaje', '--cd14'):
             ejecutar_unidad_con_navegacion(7)
             return
-        elif arg in ('--gradient', '-d', '--gradiente', '--cd15'):
+        elif arg in ('--learning', '-l', '--aprendizaje', '--cd14'):
             ejecutar_unidad_con_navegacion(8)
             return
-        elif arg in ('--backprop', '-b', '--backpropagation', '--cd16'):
+        elif arg in ('--gradient', '-d', '--gradiente', '--cd15'):
             ejecutar_unidad_con_navegacion(9)
             return
-        elif arg in ('--convergence', '-c', '--convergencia', '--cd17'):
+        elif arg in ('--backprop', '-b', '--backpropagation', '--cd16'):
             ejecutar_unidad_con_navegacion(10)
             return
-        elif arg in ('--sgd', '-s', '--lotes', '--cd18'):
+        elif arg in ('--convergence', '-c', '--convergencia', '--cd17'):
             ejecutar_unidad_con_navegacion(11)
+            return
+        elif arg in ('--sgd', '-s', '--lotes', '--cd18'):
+            ejecutar_unidad_con_navegacion(12)
             return
 
     # Menú Principal Organizado, Desaturado y con Navegación Jerárquica
     while True:
         print("\n" + "═" * 84)
         print("  CIENCIA DE DATOS Y REDES NEURONALES — SUITE ACADÉMICA (DOCTORADO UCN)")
-        print("  12 Unidades de Cátedra (739 Diapositivas) • 49 Laboratorios Interactivos")
+        print("  13 Unidades de Cátedra (812 Diapositivas) • 53 Laboratorios Interactivos")
         print("═" * 84)
-        print(" [1] 📊 FASE 1: Fundamentos y Análisis de Datos (CD01 a CD06)")
-        print("     • CD01: Intro  • CD02: EDA  • CD03: Viz  • CD04: ML  • CD05: Gen.  • CD06: Clustering")
+        print(" [1] 📊 FASE 1: Fundamentos y Análisis de Datos (CD01 a CD07)")
+        print("     • CD01: Intro  • CD02: EDA  • CD03: Viz  • CD04: ML  • CD05: Gen.  • CD06: Cluster  • CD07: Reducción Dim")
         print("")
         print(" [2] 🧠 FASE 2: Redes Neuronales y Optimización (CD13 a CD18)")
         print("     • CD13: Aprox. Univ.  • CD14: Aprendizaje  • CD15: Gradiente  • CD16: Backprop")
@@ -859,7 +888,7 @@ def main():
         print("")
         print(" [4] 🌐 INTERFACES GRÁFICAS: Suite Web (Navegador) & GUI de Escritorio (Tkinter)")
         print("")
-        print(" [5] 🚀 VERIFICACIÓN COMPLETA AUTOMATIZADA (--auto, 12 Unidades)")
+        print(" [5] 🚀 VERIFICACIÓN COMPLETA AUTOMATIZADA (--auto, 13 Unidades)")
         print("")
         print(" [0] Salir del Sistema")
         print("─" * 84)
@@ -887,6 +916,8 @@ def main():
                 ejecutar_todo_cd05()
                 from clustering import ejecutar_suite_automatica as ejecutar_todo_cd06
                 ejecutar_todo_cd06()
+                from reduccion_dimensionalidad import ejecutar_suite_automatica as ejecutar_todo_cd07
+                ejecutar_todo_cd07()
                 run_verification()
                 generate_plot()
                 from aproximacion_universal import run_all_demos
@@ -917,18 +948,20 @@ def main():
                 ejecutar_unidad_con_navegacion(4)
             elif opc in ('cd06', 'cluster', 'kmeans', 'dbscan'):
                 ejecutar_unidad_con_navegacion(5)
-            elif opc in ('cd13', 'universal'):
+            elif opc in ('cd07', 'pca', 'lda', 'tsne', 'umap', 'dim'):
                 ejecutar_unidad_con_navegacion(6)
-            elif opc in ('cd14', 'learning'):
+            elif opc in ('cd13', 'universal'):
                 ejecutar_unidad_con_navegacion(7)
-            elif opc in ('cd15', 'gradient'):
+            elif opc in ('cd14', 'learning'):
                 ejecutar_unidad_con_navegacion(8)
-            elif opc in ('cd16', 'backprop'):
+            elif opc in ('cd15', 'gradient'):
                 ejecutar_unidad_con_navegacion(9)
-            elif opc in ('cd17', 'convergence'):
+            elif opc in ('cd16', 'backprop'):
                 ejecutar_unidad_con_navegacion(10)
-            elif opc in ('cd18', 'sgd'):
+            elif opc in ('cd17', 'convergence'):
                 ejecutar_unidad_con_navegacion(11)
+            elif opc in ('cd18', 'sgd'):
+                ejecutar_unidad_con_navegacion(12)
             elif opc == 'web':
                 launch_web()
             elif opc == 'gui':

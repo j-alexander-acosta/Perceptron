@@ -449,6 +449,118 @@ Continuando la progresión de los modelos de reflejos lineales y antes de adentr
 
 ---
 
+## 0.10. Séptima Unidad CD07 (Séptima en Orden de Cátedra): Reducción de Dimensionalidad (73 Diapositivas)
+
+El módulo [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py) y los laboratorios `07.1` a `07.4` de [`web/index.html`](web/index.html) formalizan los fundamentos matemáticos y computacionales de **CD07 — Reducción de Dimensionalidad** (basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., y C. M. Bishop *PRML*):
+
+### 0.10.1. La Maldición de la Dimensionalidad: Hiperesferas en Hipercubos y Concentración de Medida (Diapositivas 5–11)
+* **Deducción de la Razón de Volumen $P_d$ (Diapositivas 8–10):**
+  Consideremos una bola euclidiana de radio $r=1$ inscrita dentro de un hipercubo de lado $l=2$ (aristas en $[-1, 1]$) en $\mathbb{R}^d$. El volumen del hipercubo es:
+  $$	ext{Vol}(C_d(2)) = 2^d$$
+  El volumen de la bola hiperesférica $d$-dimensional de radio $r=1$ viene dado por la integral gaussiana multivariada:
+  $$	ext{Vol}(B_d(1)) = rac{\pi^{d/2}}{\Gamma\left(rac{d}{2} + 1ight)}$$
+  donde $\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}\,dt$ es la función Gamma de Euler, cumpliendo $\Gamma(k+1) = k!$ para enteros y $\Gamma(1/2) = \sqrt{\pi}$. Por consiguiente, la fracción de volumen ocupada por la bola central es:
+  $$P_d = rac{	ext{Vol}(B_d(1))}{	ext{Vol}(C_d(2))} = rac{\pi^{d/2}}{\Gamma\left(rac{d}{2} + 1ight) \cdot 2^d}$$
+* **Evaluación Numérica Exacta (Diapositiva 9):**
+  * $d=1$: $P_1 = rac{\sqrt{\pi}}{(1/2)\sqrt{\pi} \cdot 2} = \mathbf{1.0}$ (el segmento coincide al $100\%$ con la bola).
+  * $d=2$: $P_2 = rac{\pi}{1 \cdot 4} = rac{\pi}{4} pprox \mathbf{0.7854}$ ($78.5\%$ en el círculo, $21.5\%$ en las 4 esquinas).
+  * $d=3$: $P_3 = rac{\pi^{3/2}}{(3/4)\sqrt{\pi} \cdot 8} = rac{\pi}{6} pprox \mathbf{0.5236}$ ($52.4\%$ en la esfera; casi la mitad en las 8 esquinas).
+  * $d=6$: $P_6 = rac{\pi^3}{6 \cdot 64} pprox \mathbf{0.0807}$ ($8.07\%$).
+  * $d=10$: $P_{10} = rac{\pi^5}{120 \cdot 1024} pprox \mathbf{0.00249}$ (**$0.25\%$**; solo 1 de cada 401 puntos cae en el centro).
+  * $d=15$: $P_{15} pprox \mathbf{1.16 	imes 10^{-5}}$.
+  * $d=100$: $P_{100} pprox \mathbf{1.87 	imes 10^{-70}}$ (prácticamente cero; todo el volumen vive en las $2^{100}$ esquinas del cubo).
+* **Fenómeno de Concentración de Distancias (Teorema de Beyer et al., 1999):**
+  Bajo distribuciones continuas independientes en $[0, 1]^d$, la distancia entre puntos aleatorios se concentra fuertemente alrededor de su media $\sqrt{d/6}$, de modo que:
+  $$\lim_{d 	o \infty} rac{d_{\max} - d_{\min}}{d_{\min}} = 0$$
+  El concepto euclidiano de «vecino más cercano» pierde todo contraste discriminativo en espacios de dimensión muy alta.
+
+### 0.10.2. Análisis de Componentes Principales (PCA) Paso a Paso y SVD (Diapositivas 12–37)
+* **Formulación Dual: Varianza Máxima vs. Error Mínimo de Reconstrucción (Diapositivas 16–24):**
+  Dado un conjunto de $N$ vectores centrados en $\mathbb{R}^d$ ($\sum_{i=1}^N 	ilde{x}_i = 0$), buscamos un vector unitario $v \in \mathbb{R}^d$ ($\|v\|=1$) tal que:
+  1. **Maximice la varianza de la proyección $z_i = v^T 	ilde{x}_i$:**
+     $$\max_{\|v\|=1} rac{1}{N}\sum_{i=1}^N (v^T 	ilde{x}_i)^2 = \max_{\|v\|=1} v^T \left(rac{1}{N}	ilde{X}^T 	ilde{X}ight) v = \max_{\|v\|=1} v^T S v$$
+     Aplicando multiplicadores de Lagrange con $\mathcal{L}(v, \lambda) = v^T S v - \lambda(v^T v - 1)$:
+     $$
+abla_v \mathcal{L} = 2 S v - 2\lambda v = 0 \implies S v = \lambda v$$
+     La dirección óptima $v$ es el autovector asociado al **mayor autovalor $\lambda_1$** de la matriz de covarianza $S$.
+  2. **Minimice el error de reconstrucción $\hat{x}_i = z_i v$:**
+     Por el Teorema de Pitágoras sobre el triángulo rectángulo formado por $	ilde{x}_i$, su proyección ortogonal $\hat{x}_i$ y el residual $	ilde{x}_i - \hat{x}_i$:
+     $$\|	ilde{x}_i\|^2 = \|\hat{x}_i\|^2 + \|	ilde{x}_i - \hat{x}_i\|^2 \implies 	ext{tr}(S) = v^T S v + rac{1}{N}\sum_{i=1}^N \|	ilde{x}_i - \hat{x}_i\|^2$$
+     Como la traza $	ext{tr}(S)$ es una constante fija de los datos, maximizar la varianza proyectada es matemáticamente idéntico a minimizar el error cuadrático medio de compresión.
+* **Ejemplo Trabajado a Mano Completo (6 Puntos en 2D, Diapositivas 25–32):**
+  Puntos originales: $(6,4), (5,5), (5,2), (3,4), (3,1), (2,2)$.
+  1. **Media:** $ar{x} = rac{1}{6}(24, 18) = (4.0, 3.0)$.
+  2. **Puntos centrados $	ilde{x}_i = x_i - ar{x}$:** $(2,1), (1,2), (1,-1), (-1,1), (-1,-2), (-2,-1)$.
+  3. **Matriz de covarianza $S = rac{1}{6}	ilde{X}^T 	ilde{X}$:**
+     $$S_{11} = rac{1}{6}(4 + 1 + 1 + 1 + 1 + 4) = rac{12}{6} = 2.0$$
+     $$S_{22} = rac{1}{6}(1 + 4 + 1 + 1 + 4 + 1) = rac{12}{6} = 2.0$$
+     $$S_{12} = rac{1}{6}(2 + 2 - 1 - 1 + 2 + 2) = rac{6}{6} = 1.0 \implies S = egin{bmatrix} 2.0 & 1.0 \ 1.0 & 2.0 \end{bmatrix}$$
+  4. **Autovalores:** $\det(S - \lambda I) = (2-\lambda)^2 - 1 = \lambda^2 - 4\lambda + 3 = 0 \implies \mathbf{\lambda_1 = 3.0}, \mathbf{\lambda_2 = 1.0}$.
+     * Comprobación: $	ext{tr}(S) = 2+2 = 4 = \lambda_1 + \lambda_2$; $\det(S) = 4-1 = 3 = \lambda_1 \lambda_2$.
+     * Varianza explicada: PC1 = $3/(3+1) = \mathbf{75.0\%}$, PC2 = $1/(3+1) = \mathbf{25.0\%}$.
+  5. **Autovectores ortogonales unitarios:**
+     Para $\lambda_1 = 3$: $egin{bmatrix} -1 & 1 \ 1 & -1 \end{bmatrix} egin{bmatrix} v_1 \ v_2 \end{bmatrix} = 0 \implies v^{(1)} = rac{1}{\sqrt{2}}egin{bmatrix} 1 \ 1 \end{bmatrix} pprox [0.7071, 0.7071]^T$ ($45^\circ$).
+     Para $\lambda_2 = 1$: $egin{bmatrix} 1 & 1 \ 1 & 1 \end{bmatrix} egin{bmatrix} v_1 \ v_2 \end{bmatrix} = 0 \implies v^{(2)} = rac{1}{\sqrt{2}}egin{bmatrix} 1 \ -1 \end{bmatrix} pprox [0.7071, -0.7071]^T$ ($135^\circ$).
+  6. **Proyecciones escalares $z_i = 	ilde{x}_i^T v^{(1)}$:**
+     $$z_1 = rac{2+1}{\sqrt{2}} = rac{3}{\sqrt{2}}, \quad z_2 = rac{1+2}{\sqrt{2}} = rac{3}{\sqrt{2}}, \quad z_3 = rac{1-1}{\sqrt{2}} = 0$$
+     $$z_4 = rac{-1+1}{\sqrt{2}} = 0, \quad z_5 = rac{-1-2}{\sqrt{2}} = -rac{3}{\sqrt{2}}, \quad z_6 = rac{-2-1}{\sqrt{2}} = -rac{3}{\sqrt{2}}$$
+  7. **Reconstrucción y Pérdida Total Exacta:**
+     $$\hat{x}_i = ar{x} + z_i v^{(1)} \implies \hat{x} \in \{(5.5, 4.5), (5.5, 4.5), (4, 3), (4, 3), (2.5, 1.5), (2.5, 1.5)\}$$
+     $$\sum_{i=1}^6 \|\hat{x}_i - x_i\|^2 = 0.5 + 0.5 + 2.0 + 2.0 + 0.5 + 0.5 = \mathbf{6.0} = N \cdot \lambda_2 = 6 	imes 1.0 = \mathbf{6.0}$$
+* **SVD y Teorema de Eckart-Young-Mirsky (Diapositivas 33–37):**
+  Dada la matriz de datos centrada $	ilde{X} = U \Sigma V^T$, la descomposición en valores singulares satisface $S = rac{1}{N}	ilde{X}^T 	ilde{X} = V (rac{\Sigma^2}{N}) V^T$. Los valores propios de la covarianza corresponden a los valores singulares escalados $\lambda_j = s_j^2 / N$, y la truncación a rango $k$ garantiza la mínima distancia en norma de Frobenius $\|X - X_k\|_F^2 = \sum_{j=k+1}^d s_j^2$.
+
+### 0.10.3. Análisis Discriminante Lineal (LDA) y Criterio de Fisher (Diapositivas 38–49)
+* **Criterio de Fisher (1936, Diapositivas 40–42):**
+  A diferencia de PCA (no supervisado), Fisher busca un vector de proyección $w$ que maximice la separación entre las medias de las clases relativa a la dispersión intra-clase:
+  $$J(w) = rac{w^T S_B w}{w^T S_W w} = rac{(w^T (m_2 - m_1))^2}{w^T S_W w}$$
+  donde $S_B = (m_2 - m_1)(m_2 - m_1)^T$ es la matriz de dispersión inter-clases y $S_W = \sum_{k=1}^2 \sum_{i \in C_k} (x_i - m_k)(x_i - m_k)^T$ es la matriz intra-clase.
+  Calculando el gradiente $
+abla_w J(w) = 0$:
+  $$
+abla_w J(w) = rac{2(w^T(m_2-m_1))(m_2-m_1)(w^T S_W w) - 2(w^T S_B w) S_W w}{(w^T S_W w)^2} = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
+* **Ejemplo Trabajado de 8 Puntos (Diapositivas 42–44):**
+  * $m_1 = (2, 4)$, $m_2 = (5, 5) \implies m_2 - m_1 = (3, 1)$.
+  * Matriz intra-clase: $S_W = egin{bmatrix} 4 & 0 \ 0 & 36 \end{bmatrix}$ (la dispersión vertical es 9 veces mayor que la horizontal).
+  * Inversa: $S_W^{-1} = egin{bmatrix} 1/4 & 0 \ 0 & 1/36 \end{bmatrix}$.
+  * Dirección de Fisher: $w^* \propto egin{bmatrix} 1/4 & 0 \ 0 & 1/36 \end{bmatrix} egin{bmatrix} 3 \ 1 \end{bmatrix} = egin{bmatrix} 3/4 \ 1/36 \end{bmatrix} \propto \mathbf{egin{bmatrix} 27 \ 1 \end{bmatrix}}$.
+  * Normalizado: $w^* pprox [0.9993, 0.0370]^T$ (ángulo $pprox 2.12^\circ$).
+  * Comparación con PCA: PCA se alinea con la dirección de varianza máxima global ($v_{	ext{PCA}} pprox [0.7071, 0.7071]^T$ a $45^\circ$).
+  * **Evaluación de $J$:**
+    $$J(w^*) = rac{(3 	imes 0.9993 + 1 	imes 0.0370)^2}{4(0.9993)^2 + 36(0.0370)^2} = rac{9.21}{4.04} pprox \mathbf{2.28}$$
+    $$J(v_{	ext{PCA}}) = rac{(3 	imes 0.7071 + 1 	imes 0.7071)^2}{4(0.7071)^2 + 36(0.7071)^2} = rac{8.0}{20.0} = \mathbf{0.03}$$
+    Fisher LDA produce una separabilidad **$82$ veces superior a PCA**, demostrando que la dirección de máxima varianza no supervisada puede arruinar la clasificación supervisada.
+* **Segundo Caso de Fisher (Diapositiva 49):**
+  $m_2 - m_1 = (2, 2)$, $S_W = 	ext{diag}(2, 8) \implies w^* \propto (2/2, 2/8) = (1, 1/4) \propto [4, 1]^T$. Aunque la separación de medias es simétrica, la dimensión $x_2$ dispersa 4 veces más y por ende se penaliza con 4 veces menor peso.
+* **Propiedad de Rango:** Como $S_B = \sum_{k=1}^C N_k (m_k - m)(m_k - m)^T$ tiene a lo más rango $C-1$, para $C$ clases LDA reduce a lo sumo a **$C-1$ dimensiones**.
+
+### 0.10.4. Manifold Learning: t-SNE, Distribución t de Student, UMAP y Pipeline HDBSCAN (Diapositivas 50–73)
+* **Probabilidades de Vecindad y Perplejidad en t-SNE (Diapositivas 54–58, van der Maaten y Hinton, 2008):**
+  En alta dimensión, la similitud condicional entre $x_i$ y $x_j$ es:
+  $$p_{j|i} = rac{\exp(-\|x_i - x_j\|^2 / 2\sigma_i^2)}{\sum_{k 
+eq i}\exp(-\|x_i - x_k\|^2 / 2\sigma_i^2)}, \qquad p_{ij} = rac{p_{j|i} + p_{i|j}}{2N}$$
+  La varianza local $\sigma_i$ se adapta automáticamente mediante búsqueda binaria para igualar la perplejidad predeterminada $	ext{Perp}(P_i) = 2^{H(P_i)}$ con $H(P_i) = -\sum_j p_{j|i}\log_2 p_{j|i}$.
+  En el conjunto $\{0, 1, 2, 8\}$ con $	ext{Perp}=2$: para $x=1$, $\sigma=1.0$ asigna $p(0|1)=0.5, p(2|1)=0.5$; para el punto aislado $x=8$, $\sigma$ se ensancha automáticamente a **$2.26$** ($p=[0.05, 0.21, 0.74]$).
+* **Solución al «Crowding Problem» vía Colas Pesadas de Student-t (Diapositiva 60):**
+  En baja dimensión, si se usara una gaussiana, el volumen disponible a distancia $r$ crece solo linealmente en 2D ($\propto r$), mientras que en alta dimensión crece como $r^{d-1}$, provocando que todos los puntos no muy cercanos colapsen en el centro.
+  t-SNE adopta la distribución $t$ de Student con 1 grado de libertad (Cauchy):
+  $$q_{ij} = rac{(1 + \|y_i - y_j\|^2)^{-1}}{\sum_{k 
+eq l}(1 + \|y_k - y_l\|^2)^{-1}}$$
+  A distancia moderada $d=3$, la cola de Student-t $1/(1+9) = 0.100000$ es **$810$ veces más densa** que la cola gaussiana $e^{-9} = 0.000123$, permitiendo mapear distancias moderadas sin tensión destructiva.
+* **Optimización por Divergencia KL y Gradiente:**
+  $$C = 	ext{KL}(P \| Q) = \sum_{i 
+eq j} p_{ij} \log rac{p_{ij}}{q_{ij}}$$
+  $$rac{\partial C}{\partial y_i} = 4 \sum_j (p_{ij} - q_{ij})(y_i - y_j)(1 + \|y_i - y_j\|^2)^{-1}$$
+  interpretado mecánicamente como un sistema de resortes atractivos ($p_{ij}$) y repulsivos ($q_{ij}$).
+* **UMAP y Pipeline Moderno hacia HDBSCAN (Diapositivas 68–71):**
+  UMAP (McInnes et al., 2018) optimiza entropía cruzada difusa preservando la topología de conjuntos simpliciales locales con mayor velocidad y mejor preservación global que t-SNE.
+  **Reglas de oro de interpretación (Wattenberg et al., 2016):**
+  1. Los tamaños visuales de los clusters en 2D no reflejan su dispersión real (el $\sigma_i$ adaptativo infla clusters densos y comprime clusters dispersos).
+  2. Las distancias entre clusters en el mapa 2D no reflejan distancias métricas euclidianas.
+  3. **Pipeline industrial estándar:** Jamás ejecutar clustering directamente sobre la proyección visual 2D. Se reduce con UMAP a una dimensión intermedia (ej. 10 dimensiones) y se alimenta al algoritmo basado en densidad persistente **HDBSCAN**.
+
+---
+
 ## 1. Introducción y Contexto Histórico (Unidad CD13 / Unidad I)
 
 El estudio de las redes neuronales artificiales experimentó un hito fundacional en 1943 con el modelo de neurona formal de Warren McCulloch y Walter Pitts, y posteriormente en 1958 con el Perceptrón propuesto por Frank Rosenblatt. El perceptrón simple demostró ser capaz de aprender y clasificar patrones linealmente separables (como las funciones lógicas AND y OR).
@@ -893,7 +1005,7 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 5. **Algoritmo de Backpropagation (Unidad IV):** Se verificaron las reglas de la cadena simple y distribuida, los grafos de computación de las Diapositivas 21 y 23 ($\nabla_{\mathbf{w}}\text{Loss} = [6, 12]$ y $[4, 2]$), el cálculo completo hacia adelante y hacia atrás en la red ReLU de 2 capas de las Diapositivas 38–39 y 57 ($\nabla_{W_1} = \begin{bmatrix}8 & 16\\0 & 0\end{bmatrix}$), y la equivalencia exacta con la formulación vectorial basada en Jacobianos transpuestos.
 6. **Problemas de Convergencia y Métodos Adaptativos (Unidad V):** Se verificó numéricamente el fenómeno de los puntos «saboteadores» de Brady et al. (1989) donde la saturación exponencial de la sigmoide apaga el gradiente y atrapa a *Backprop* en un mínimo local ($75\%$) mientras el Perceptrón separa los 4 puntos ($100\%$); se reprodujeron las 6 trayectorias de la Diapositiva 27 gobernadas por el número de condición $\kappa$; se demostró la convergencia en 1 paso de Newton en cuencos cuadráticos junto con su atracción patológica hacia puntos de silla (corregida por Levenberg-Marquardt); y se compararon las tasas decrecientes, RProp y QuickProp.
 7. **Descenso por Gradiente Estocástico, Mini-lotes y Optimizadores con Tendencia (Unidad VI):** Se reprodujo exactamente la tabla de «SGD a mano: una época» de la Diapositiva 14 ($[0.20, 0.20] \to [0.68, 1.16] \to [0.22, -0.70]$), la necesidad del barajado por época (*shuffling*), las condiciones de convergencia de Robbins y Monro (1951), la ley de reducción de varianza $\frac{1}{b}\text{Var}(\text{Loss})$ en mini-lotes, la tabla direccional de RMSprop ($\text{RMS}_x \approx 1.36, \text{RMS}_y \approx 2.36$) y la superioridad de Momentum, Nesterov, RMSprop y Adam en valles angostos y puntos de silla.
-8. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (12 Unidades Académicas • 739 Diapositivas • 49 Laboratorios Interactivos).
+8. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (13 Unidades Académicas • 812 Diapositivas • 53 Laboratorios Interactivos).
 
 ---
 
@@ -925,4 +1037,11 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 24. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
 25. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
 26. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
-27. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning & Generalización y Validación.* Ciencia de Datos — Doctorado UCN.
+27. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación & Reducción de Dimensionalidad.* Ciencia de Datos — Doctorado UCN.
+28. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
+29. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
+30. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
+31. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
+32. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
+33. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
+
