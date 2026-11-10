@@ -1,18 +1,195 @@
-# Suite Educativa de Redes Neuronales: Aproximación Universal, Aprendizaje y Descenso por Gradiente
+# Suite Educativa de Ciencia de Datos y Redes Neuronales (12 Unidades Académicas • 739 Diapositivas • 49 Laboratorios)
 
-Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las tres unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 11-785 de B. Raj et al. y Stanford CS221 de P. Liang et al.*):
+Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al. y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD13`–`CD18`)**:
 
-* **Unidad I — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
-* **Unidad II — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
-* **Unidad III — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
+* **CD01 (Primera en orden) — Introducción al Curso (63 Diapositivas):** Laboratorios 0.1 a 0.4 ([`introduccion_curso.py`](introduccion_curso.py)).
+* **CD02 (Segunda en orden) — Preprocesamiento y Análisis Exploratorio de Datos (74 Diapositivas):** Laboratorios 02.1 a 02.4 ([`preprocesamiento_eda.py`](preprocesamiento_eda.py)).
+* **CD03 (Tercera en orden) — Visualización de Datos Efectiva y Engañosa (103 Diapositivas):** Laboratorios 03.1 a 03.4 ([`visualizacion_datos.py`](visualizacion_datos.py)).
+* **CD04 (Cuarta en orden) — Introducción a Machine Learning (56 Diapositivas):** Laboratorios 04.1 a 04.4 ([`introduccion_ml.py`](introduccion_ml.py)).
+* **CD05 (Quinta en orden) — Generalización y Validación (63 Diapositivas):** Laboratorios 05.1 a 05.4 ([`generalizacion_validacion.py`](generalizacion_validacion.py)).
+* **CD06 (Sexta en orden) — Clustering: Agrupamiento No Supervisado (57 Diapositivas):** Laboratorios 06.1 a 06.4 ([`clustering.py`](clustering.py)).
+* *(Espacio reservado en secuencia para las próximas unidades `CD07` a `CD12` según orden de cátedra).*
+* **CD13 (Unidad I) — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
+* **CD14 (Unidad II) — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
+* **CD15 (Unidad III) — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
+* **CD16 (Unidad IV) — Algoritmo de Backpropagation (60 Diapositivas):** Laboratorios 4.1 a 4.4 ([`backpropagation.py`](backpropagation.py)).
+* **CD17 (Unidad V) — Problemas de Convergencia en el Entrenamiento (58 Diapositivas):** Laboratorios 5.1 a 5.4 ([`problemas_convergencia.py`](problemas_convergencia.py)).
+* **CD18 (Unidad VI) — Descenso por Gradiente Estocástico y Lotes (41 Diapositivas):** Laboratorios 6.1 a 6.4 ([`sgd_lotes.py`](sgd_lotes.py)).
 
 > 📄 **Informe Académico Completo:** Consulta el desarrollo matemático y las demostraciones en [`INFORME.md`](INFORME.md).
 
 ---
 
-## 🏛️ Organización Temática por Unidades
+## 🏛️ Organización Temática por Unidades (Orden de Cátedra `CD01` → `CD18`)
 
-### 🟦 UNIDAD I: Representación y Aproximación Universal con Redes Neuronales
+### indigo CD01 (UNIDAD INICIAL — PRIMERA EN ORDEN): Introducción al Curso de Ciencia de Datos
+
+1. **Módulo 0.1 — Caso Real 1: Ciencia de Datos en la Pandemia, Sesgo en la Tasa de Letalidad y Causalidad (Diaps. 5–11 y 19–21):**
+   * Los 5 pasos del proceso de Ciencia de Datos aplicados a la pandemia de COVID-19 y la clasificación de las 4 preguntas clave: *¿Qué tan rápido se propaga?* ($\to$ **modelamiento**), *¿Cuándo se saturarán los hospitales?* ($\to$ **predicción**), *¿Funcionan las cuarentenas?* ($\to$ **inferencia causal**) y *¿Cómo distribuir vacunas con equidad?* ($\to$ **optimización**), junto con el carácter ético de elegir la métrica de éxito (Flaxman et al., 2020, *Nature*, Diap. 7).
+   * Sesgos de captura en testeo PCR/antígenos, movilidad celular (Google/Apple) y registros civiles (Diap. 8).
+   * **El sesgo en acción — Tasa de letalidad aparente vs. real (Diap. 9):** Con $100$ muertes y $2\,000$ casos confirmados (solo sintomáticos), la letalidad aparente es $\text{CFR} = 100/2\,000 = \mathbf{5.0\%}$, mientras que con $20\,000$ infecciones reales la letalidad real es $\text{IFR} = 100/20\,000 = \mathbf{0.5\%}$ (**inflada $10$ veces** por el denominador sesgado).
+   * **Ejercicio del Toque de Queda Nocturno (Diap. 21):** Inferencia causal, sub-representación de quienes no tienen *smartphone* en Google Mobility y el **miedo al virus** como variable de confusión que reduce movilidad y contagios simultáneamente.
+2. **Módulo 0.2 — El Modelo Epidemiológico SIR a Mano, $R_0 = \beta/\gamma$ y «Aplanar la Curva» (Diaps. 12–18):**
+   * Ecuaciones en diferencias diarias sobre $N = S + I + R = 1\,000$: $\text{contagios}_t = \beta S_t I_t / N$ y $\text{recuperaciones}_t = \gamma I_t$.
+   * **Reproducción exacta de la tabla «La dinámica SIR, a mano» (Diap. 13)** con $\beta = 0.3, \gamma = 0.1, S_0 = 990, I_0 = 10, R_0 = 0$: Día 0 ($[2.97, 1.00, 990.0, 10.0, 0.0]$), Día 1 ($[3.54, 1.20, 987.0, 12.0, 1.0]$), Día 2 ($[4.22, 1.43, 983.5, 14.3, 2.2]$) y **Día 28 (pico)** ($[30.24, 31.59, 319.0, \mathbf{315.9}, 365.0]$), con cerca del **$95\%$** de la población infectada al final de la epidemia (Diap. 14).
+   * **Efecto de las cuarentenas sobre $R_0 = \beta/\gamma$ (Diap. 15):** Reducir $\beta$ de $0.3$ ($R_0 = 3.0$) a $0.16$ ($R_0 = 1.6$) baja el máximo de infectados simultáneos de $\approx \mathbf{316}$ (día 28) a $\approx \mathbf{89}$ (día 61), más la lección del modelo IHME (Diaps. 16–18).
+3. **Módulo 0.3 — ¿Qué es Ciencia de Datos?, El Caso Netflix Prize (2006–2009) y la Paradoja de la Sobre-optimización (Diaps. 22–40):**
+   * Espectro Máquina $\leftrightarrow$ Humano (Daniel Keim, *Visual Analytics*) y el ciclo iterativo de 5 etapas (Recolección $\to$ Procesamiento $\to$ Exploración y visualización $\to$ Análisis y ML $\to$ Conocimiento y decisiones), incluyendo los dos casos donde el producto final no es un modelo complejo: la visualización de esperanza de vida en *Our World in Data* (Diap. 39) y el mapeo de pobreza mediante el material del techo como dato sustituto o *proxy* (Abelson, Varshney y Sun, KDD 2014, Diap. 40).
+   * **El vacío en la matriz del Netflix Prize (Diaps. 27–28):** $480\,189 \text{ usuarios} \times 17\,770 \text{ películas} = \mathbf{8\,532\,958\,530} \approx \mathbf{8\,533\text{ millones}}$ de celdas, con $\mathbf{100\,480\,507}$ calificaciones observadas ($\approx \mathbf{1.18\% \approx 1.2\%}$ observado; **falta casi el $99\%$** con datos faltantes no al azar, MNAR).
+   * **Tres años de carrera y la confesión de 2012 (Diaps. 30–34):** De Cinematch ($\text{RMSE} = 0.951$) a *BellKor's Pragmatic Chaos* ($+10.06\%, \text{RMSE} = 0.856$, ganando por 20 minutos) y por qué el ensamble de $>100$ modelos **nunca se desplegó en producción** (paradoja de la sobre-optimización).
+4. **Módulo 0.4 — Los Tres Relatos de la IA, el Mapa de 4 Niveles y la Política de Uso de LLMs (Diaps. 1–4 y 41–63):**
+   * El Test de Turing (1950) y los 3 relatos históricos: **Relato simbólico** (1956–1987, Dartmouth, traducción rusa e informe ALPAC 1966 $\to$ 1.er invierno; sistemas expertos $\to$ 2.º invierno en 1987), **Relato neuronal** (1943–hoy, McCulloch-Pitts, Hebb, Rosenblatt, Minsky y Papert 1969, Backprop 1986, AlexNet 2012 impulsado por datos y cómputo) y **Relato estadístico** (1801–hoy, Gauss y Legendre con la órbita de Ceres, Fisher, Bellman, Vapnik).
+   * **Mapa de 4 Niveles de Modelos en IA (Diaps. 3 y 50):** Reflejos (se recorre entero), Estados (búsqueda, MDP y refuerzo, sin juegos), Variables (modelos probabilísticos, sin CSP) y Lógica (fuera del curso).
+   * **Política de Uso de LLMs (Diaps. 58–61, UC Berkeley DS100):** Desglose en 3 partes (Contexto, Planificación, Ejecución), evaluación de los 4 casos prácticos y autoevaluación de la unidad CD01.
+
+---
+
+### 🟩 CD02 (SEGUNDA EN ORDEN): Preprocesamiento y Análisis Exploratorio de Datos (74 Diapositivas)
+
+1. **Módulo 02.1 — ¿Qué son los Datos?, Advertencias de Fábrica, Alcances y Sesgos de Muestreo (Diaps. 1–20):**
+   * Nos instalamos en los **pasos 2 y 3 del proceso de 5 pasos: obtener y explorar** (los que consumen la mayor parte del tiempo real de un proyecto).
+   * Tres definiciones de «datos» (Diccionario, Informática y **Señales**: salida de un sensor que mezcla información útil, irrelevante y redundante) y distinción entre *datum*, *data* y *dataset* (colección **homogénea**).
+   * **Diagnóstico por procedimiento de registro (Diaps. 7–8 y 11):** *Termómetro horario / GPS de transporte* $\to$ **vacíos**; *Diario del colibrí / Cuaderno de asistencia* $\to$ **imprecisión humana**; *Tweets de un político / Biografías de red social* $\to$ **veracidad** (decir no es ser); *Sensor de feria persa / Columna `v37` sin documentar* $\to$ **sin semántica**.
+   * **Muestreo diseñado (Gallup) vs. Autoselección (Yelp y Encuesta QR de la Cafetería, Diaps. 16–20):** Gallup (~500 llamadas/día RDD, regla del cumpleaños más reciente, 50 estados con 70% celulares / 30% fijos y ponderación demográfica $\to$ describe a la **población general**) frente a Yelp (autoselección sin corrección $\to$ describe **a quien opina en Yelp**) y la encuesta QR de la cafetería (480 respuestas, media **2.1/5**, sesgos de **autoselección + cobertura**: no mide satisfacción general, pero sí sirve para identificar qué reclama quien está descontento).
+2. **Módulo 02.2 — Matriz 2×2 de Formatos, Preguntas Medibles, CRISP-DM vs. KDD/SEMMA y Web Scraping DOM (Diaps. 21–44):**
+   * **Matriz 2×2 según el lector (Personas vs. Computadores, Diap. 21):** Fácil/Fácil = **Tabla CSV** (ojo con comas dentro de comillas como `"Newcastle, England"`, Diap. 23); Fácil/Difícil = **Prosa, fotos**; Difícil/Fácil = **JSON anidado, QR**; Difícil/Difícil = **Audio con ruido**.
+   * **De titular vago a pregunta medible (Diaps. 27–29):** Fijar **población + métrica + ventana temporal** (participación presidencial en Chile 2013–2021 con datos del Servel, y promedio de libros leídos al año por jóvenes de 18 a 29 años en Chile entre 2014 y 2023).
+   * **CRISP-DM (2000) frente a KDD (1996) y SEMMA (SAS) (Diaps. 30–35):** Las 6 fases de CRISP-DM y por qué KDD y SEMMA omiten las dos puntas críticas (**Comprensión del negocio** al inicio y **Despliegue** al final).
+   * **Obtención de datos y Web Scraping Responsable (Diaps. 36–44):** Orden de preferencia $\text{Archivo} > \text{API} > \text{Scraping}$, las 5 reglas éticas/técnicas y verificación de `page.status_code == 200` (vs `404`) antes de extraer con `BeautifulSoup`.
+3. **Módulo 02.3 — Pandas Esencial y Caso Real de EDA: Premier League 2017 (`epl_mini`, 23 jugadores) (Diaps. 45–70):**
+   * Operaciones en `df2`: `Series` vs `DataFrame`, máscaras booleanas, `loc` (etiqueta) vs `iloc` (posición), el trío de caza de extremos (`min`, `idxmin`, `loc`) y las 3 correcciones de Pandas moderno (`.values` sin paréntesis, `.get_group()` en singular y `pd.concat` en lugar de `.append()`).
+   * **Reproducción 100% exacta de `epl_mini.csv` (`shape = (23, 5)`, Diaps. 46, 52, 60, 63–70):**
+     - Promedios por club (`groupby("club")["market_value"].mean()`, Diap. 52): `Arsenal = 32.80`, `Chelsea = 35.01`, `Liverpool = 34.00`, `Man City = 46.67`, `Man United = 45.75`, `Tottenham = 41.25`.
+     - `describe()` global (Diap. 63): `age` (`mean = 27.13, std = 3.99, min = 21, 50% = 26, max = 35`) y `market_value` (`mean = 38.87, std = 23.51, min = 0.05, 50% = 40.00, max = 90.00`).
+     - Caza de extremos y validación externa (Diaps. 64–66): `idxmin() -> 8` (`Eduardo`, Chelsea, 34 años, GK, `0.05M` $\implies$ dato **real**: *extremo $\neq$ error*) e `idxmax()` (`Paul Pogba`, Man United, 24 años, `90.0M` $\implies$ dato **coherente**), más la tabla `groupby("age")["market_value"].agg(["mean", "median"])` (Diap. 68).
+4. **Módulo 02.4 — Media vs. Mediana en el Arsenal y el Cuarteto de Anscombe (1973) (Diaps. 71–74):**
+   * **Sensibilidad en el Arsenal (Diaps. 60 y 72):** Los 5 jugadores (`[7, 20, 22, 50, 65]`) tienen media $\mathbf{32.80}$ y mediana $\mathbf{22.00}$; al simular un fichaje de $100\text{ M}$, la media salta a $\mathbf{44.00}$ mientras la mediana pasa a $\mathbf{36.00}$.
+   * **El Cuarteto de Anscombe (1973, Diap. 71):** Verificación de los 4 conjuntos que comparten media ($\bar{x}=9.0, \bar{y}=7.50$), varianza ($s_x^2=11.0, s_y^2\approx 4.125$), correlación ($r\approx 0.816$) y recta OLS ($y = 3.00 + 0.50x$) con geometrías completamente distintas.
+
+---
+
+### 🟧 CD03 (TERCERA EN ORDEN): Visualización de Datos Efectiva y Engañosa (103 Diapositivas)
+
+1. **Módulo 03.1 — Explorar vs. Comunicar, Datasaurus Dozen (CHI 2017), las 4 Escalas de Medición, Box Plot y Ancho de Intervalo (Diaps. 1–27 y 50–56):**
+   * La visualización actúa en **dos pasos del ciclo a la vez**: **explorar** los datos propios (rápido, desechable, para ti: *descubrir qué es verdad*) y **comunicar** resultados a otros (pulido, con un mensaje: *convencer de que es verdad*).
+   * **Datasaurus Dozen (Matejka y Fitzmaurice, CHI 2017, Diaps. 10–12):** **13 nubes de $n = 142$ puntos** (*dino*, *star*, *circle*, *x shape*, etc.) comparten idénticas estadísticas a dos decimales ($\bar{x} = \mathbf{54.26}, \bar{y} = \mathbf{47.83}, s_x = \mathbf{16.76}, s_y = \mathbf{26.93}, r = \mathbf{-0.06}$) porque $n$ puntos tienen muchos más grados de libertad que $m$ ecuaciones ($n > m$).
+   * **Las 4 escalas de medición (Diaps. 13–14):** **Nominal** (`=, ≠`; ej. `club`), **Ordinal** (`=, ≠, <, >`; ej. `puesto en el ranking`), **Intervalo** (`+, -` con cero arbitrario; ej. °C, `año de debut`) y **Razón** (`÷` con cero absoluto; ej. Kelvin, `precio de mercado`).
+   * **Cálculo exacto del Box Plot (Diap. 21):** En $\{2, 3, 3, 4, 5, 5, 6, 7, 8, 9, 15\}$ ($n=11$), $\text{mediana}=5.0, Q_1=3.5, Q_3=7.5, \text{IQR}=4.0$ y la cerca superior es $Q_3 + 1.5\,\text{IQR} = \mathbf{13.5}$, marcando al $\mathbf{15}$ como **atípico**.
+   * **Por qué NO dispersión 3D (Diaps. 24–25) y el ancho de intervalo en histogramas (Diap. 56):** La perspectiva 3D depende de la cámara y la oclusión borra el $78\%$ de un grupo oculto (sobrevive solo el **$22\%$ de su tinta**); en el histograma de $n = 200$ datos, *bins* de ancho $1.0$ muestran 3 barras planas (`[66, 68, 66]`, «uniforme») mientras que *bins* de ancho $0.2$ revelan **dos modos** (dos poblaciones mezcladas).
+2. **Módulo 03.2 — Caso Clásico: Los Antibióticos de Will Burtin (1951) y el Gráfico que Corrigió a la Biología (Diaps. 28–38):**
+   * **Tabla completa de 16 bacterias y 3 antibióticos (Burtin, 1951, *Scope*; Wainer y Lysen, 2009, Diap. 29):** Concentración inhibitoria mínima (**CIM**: menor = más potente) de penicilina, estreptomicina y neomicina a través de **6 órdenes de magnitud** (`0.001` a `870`), más tinción de Gram ($7$ Gram+ y $9$ Gram-).
+   * **Pregunta 1 (del médico) — Medianas por grupo en escala logarítmica (Diap. 33):** En Gram positivas (`pen = 0.005, estr = 1.0, neo = 0.1`), la penicilina es **$200\times$ más potente** que la estreptomicina; en Gram negativas (`pen = 100.0, estr = 1.0, neo = 0.1`), gana la neomicina (`0.1`) y la penicilina es **$20\,000\times$ menos potente** que en Gram positivas.
+   * **Pregunta 2 (del biólogo) — Dos etiquetas que no calzaban y que anticiparon la microbiología por décadas (Diaps. 34–36):** Al graficar $\log_{10}(\text{penicilina})$ vs. $\log_{10}(\text{neomicina})$, `Diplococcus pneumoniae` (`0.005, 10`) cae dentro del grupo de los estreptococos (reclasificada en **1974** como **`Streptococcus pneumoniae`**), mientras que `Streptococcus fecalis` (`1.0, 0.1`) requiere **$200\times$ a $1\,000\times$ más penicilina** (reclasificada en **1984** como **`Enterococcus faecalis`**).
+3. **Módulo 03.3 — Integridad Gráfica (Tufte, 1983), Efectividad Perceptual (Stevens, Cleveland-McGill, Mackinlay) y Uso del Color (Diaps. 39–49 y 57–75):**
+   * **Factor de Mentira (*Lie Factor*, Tufte, 1983, Diaps. 40–41):** $\text{LieFactor} = \frac{\text{efecto en el gráfico}}{\text{efecto en los datos}}$. En *If Bush Tax Cuts Expire* (Fox Business, 2012: $35\% \to 39.6\%$ con el eje truncado en $34\%$), la segunda barra es **$5.6\times$ más alta** ($+460\%$ visual vs. $+13.14\%$ real $\implies \text{LieFactor} = \mathbf{35.0}$). En la auditoría de las 4 marcas $A=52\%..D=56\%$ con eje en $50\%$ (Diap. 49), $D$ parece el triple de $A$ ($\text{LieFactor} = \mathbf{26.0}$).
+   * **Ley de Potencias de Stevens (1961, Diaps. 61–62) y Rankings de Cleveland-McGill (1984) y Mackinlay (1986, Diaps. 63–64):** $\text{percibido} \propto I^\beta$. Solo la **longitud** ($\beta \approx 1.0 \implies 10\times$ se ve como $10.0\times$) es lineal; el **área** ($\beta \approx 0.7 \implies 10\times$ se ve como $5.0\times$) y el **brillo** ($\beta \approx 0.33 \implies 10\times$ se ve como $2.1\times$) se subestiman, y la **descarga eléctrica** ($\beta = 3.5 \implies 2\times$ se siente $11.3\times$) se sobreestima. La **posición** es #1 en cuantitativo, ordinal y nominal; el **tono (color)** sube al #2 en nominal.
+   * **Uso del Color (Diaps. 67–74):** Regla de Ware (máximo **5 a 8 colores** para categorías), trampa del arcoíris (`jet` oscila 3 veces en luminancia relativa Rec. 709 $Y = 0.2126R + 0.7152G + 0.0722B$ creando bordes falsos como en el mapa de ozono de Rogowitz y Treinish, 1998, mientras `viridis` sube monótonamente de $\mathbf{0.02}$ a $\mathbf{0.78}$) y daltonismo (~**8% de los hombres**; **azul vs. naranjo** como pareja segura).
+4. **Módulo 03.4 — Visualización Engañosa: Taxonomía de Correll, Espejismos (*Mirages*, CHI 2020) y Ética Visual (Diaps. 76–103):**
+   * **Las 4 categorías de Michael Correll (Tableau Research, Diap. 77):** (1) **Incorrectas** (mapa CNN de Hong Kong en Brasil, Fox $2385^\circ$, *Daily Nexus* sin escala, circular de Fox News que suma $70\%+63\%+60\%=\mathbf{193\%}$ y doble eje manipulado `300->340` vs `88->101`); (2) **Ilegibles** (circular de 24 tajadas y burbujas de cesantía en Alabama); (3) **Bullshit** (Harry Frankfurt: indiferencia por la verdad); y (4) **No convencionales** (*Gun deaths in Florida*, Reuters 2014: eje con el **0 arriba** donde el salto a **873 muertes** tras la ley *Stand Your Ground* de 2005 parece una caída, vs. *Iraq's Bloody Toll* de S. Scarr y mapa invertido de ITS).
+   * **Espejismos de visualización (*Visualization Mirages*, McNutt, Kindlmann y Correll, CHI 2020, Diaps. 96–98):** En 2012 los países sin dato saltan de $\approx 72$ a $\approx 177$; sobre la misma tabla, `SUM(Energy Usage)` parece un **desplome** en 2012 y `AVG(Energy Usage)` parece un **auge brusco** en 2012.
+   * **Ética visual (*Cruel Pies*, Dragga y Voss, 2001: 771 muertes laborales), mentiras blancas (Diap. 99) y clasificación de los 4 casos de la Diapositiva 100.**
+
+---
+
+### 🟪 CD04 (CUARTA EN ORDEN): Introducción a Machine Learning (56 Diapositivas)
+
+1. **Módulo 04.1 — Panorama de Machine Learning, Modelos Basados en Reflejos y las 3 Tareas de Predicción (Diaps. 1–10):**
+   * ¿Qué es Machine Learning? Mover la complejidad del código a los datos y generalizar a entradas no vistas. En el **mapa de 4 niveles de la IA** (Reflejos $\to$ Estados $\to$ Variables $\to$ Lógica), los clasificadores lineales y redes profundas son **modelos basados en reflejos**: secuencia fija hacia adelante ($x \to f \to y$) donde la inferencia es rápida y el trabajo duro está en aprender $f$.
+   * **Las 3 tareas según la salida $y$ (Diaps. 7–9):** (1) **Clasificación binaria** ($y \in \{+1, -1\}$) y multiclase ($y \in \{1, \dots, K\}$); (2) **Regresión** ($y \in \mathbb{R}$ continua); y (3) **Predicción estructurada** ($y$ objeto complejo), cuyo secreto es descomponerse en una **secuencia de clasificaciones multiclase** sucesivas (predecir una palabra a la vez).
+   * **Los 4 casos de la Diapositiva 10:** Correo spam ($\to$ binaria), Precio vivienda en Antofagasta ($\to$ regresión), Audio a texto ($\to$ estructurada) y Reconocer dígito 0–9 ($\to$ multiclase $K=10$).
+2. **Módulo 04.2 — El Triunfo de Gauss con Ceres (1801) y las Tres Decisiones de Diseño en Regresión Lineal (Diaps. 11–23):**
+   * Hito de Ceres: 19 observaciones de Piazzi antes de perderse tras el Sol; Gauss predice a mano por mínimos cuadrados y Ceres reaparece a solo $0.5^\circ$.
+   * **El marco de las 3 decisiones sobre $\mathcal{D}_{\text{train}} = \{(1, 1), (2, 3), (4, 3)\}$:**
+     - **Clase de hipótesis:** $\mathcal{F} = \{f_{\mathbf{w}}(x) = \mathbf{w} \cdot \phi(x) : \mathbf{w} \in \mathbb{R}^2\}$ con $\phi(x) = [1, x]$ (ej. con $\mathbf{w} = [1, 0.57]$, $f_{\mathbf{w}}(3) = 2.71$).
+     - **Función de pérdida:** Cuadrática sobre el residuo $\text{Loss}(x, y, \mathbf{w}) = (f_{\mathbf{w}}(x) - y)^2$, con pérdidas individuales $0.32, 0.74, 0.08$ y riesgo empírico $\text{TrainLoss}([1, 0.57]) = \mathbf{0.38}$.
+     - **Algoritmo de optimización (Descenso por Gradiente):** $\nabla_{\mathbf{w}}\text{TrainLoss} = \frac{1}{|\mathcal{D}_{\text{train}}|} \sum 2(\mathbf{w}\cdot\phi(x) - y)\phi(x)$ («algo $\times \phi(x)$»). Con $\eta = 0.1$ desde $[0, 0]$ (Diap. 21): $t=1 \implies \nabla = [-4.67, -12.67], \mathbf{w} = [0.47, 1.27]$; $t=2 \implies \nabla = [2.18, 7.24], \mathbf{w} = [0.25, 0.54]$; y en $t=200$ converge a $\mathbf{w}^* = [1.00, 0.57]$.
+3. **Módulo 04.3 — Clasificación Lineal en $\mathbb{R}^2$: Puntaje, Margen, Pérdida 0-1 y Pérdida Hinge (Diaps. 24–37):**
+   * Clasificador $f_{\mathbf{w}}(x) = \text{sign}(\mathbf{w}\cdot\phi(x))$ sobre $\{([0, 2], +1), ([-2, 0], +1), ([1, -1], -1)\}$: **puntaje** $\mathbf{w}\cdot\phi(x)$ y **margen** $m = (\mathbf{w}\cdot\phi(x))y$.
+   * Por qué $\text{Loss}_{0\text{-}1}$ atasca a GD: gradiente cero en casi todo el plano (Diap. 30).
+   * **Pérdida Hinge:** $\text{Loss}_{\text{hinge}}(x, y, \mathbf{w}) = \max\{1 - m, 0\}$ con gradiente $-\phi(x)y$ si $m < 1$ (o $\mathbf{0}$ si $m > 1$). Exige margen de seguridad $m \ge 1$; en $([1, -1], -1)$ con $\mathbf{w} = [0.5, 1]$, $m = 0.5 > 0$ acierta la etiqueta pero sufre pérdida $\mathbf{0.5}$ (Diap. 35).
+   * Ejemplo a mano (Diap. 36) con $\mathbf{w} = [2, -1], x = [1, 1], y = -1$: puntaje $1$, margen $-1$, pérdida $2$ y gradiente $[1, 1]$.
+4. **Módulo 04.4 — Regresión Logística, Crecimiento de $\|\mathbf{w}\|$, Umbral $\tau$, Softmax y Riesgo Empírico (Diaps. 38–56):**
+   * Regresión lineal sobre $\{0, 1\}$ se escapa de $[0, 1]$ (Diap. 39). La sigmoide $\sigma(z) = 1/(1+e^{-z})$ comprime a $(0, 1)$, y la simetría $\sigma(-z) = 1 - \sigma(z)$ unifica la verosimilitud en $P(y \mid x) = \sigma(\text{margen})$.
+   * **Máxima verosimilitud = Pérdida logística:** $\text{Loss}_{\text{logistic}} = -\log P(y\mid x) = \log(1 + e^{-m})$ con gradiente graduado $-\sigma(-m)\phi(x)y$.
+   * **La logística nunca queda satisfecha (Diap. 48):** en datos separables, con $\eta = 0.5$ $\mathbf{w}$ pasa de $[-2.29, 2.29]$ ($t=100$) a $[-3.45, 3.45]$ ($t=1000$); la frontera no cambia pero $\|\mathbf{w}\|$ crece sin cota (motivación para la **regularización**).
+   * **El umbral $\tau$ como perilla (Diap. 49)**, Softmax multiclase (Diap. 50), comparación en $[1, 1], -1$ (pérdida $1.313$ vs $2.000$, Diap. 51) y el principio del Riesgo Empírico.
+
+---
+
+### 🟦 CD05 (QUINTA EN ORDEN): Generalización y Validación (63 Diapositivas)
+
+1. **Módulo 05.1 — El Objetivo Real: Generalizar, Sobreajuste, Correlación Espuria y Liang (Diaps. 1–16):**
+   * **El objetivo no es memorizar (Diap. 5):** El algoritmo *Memorize* logra $\text{TrainLoss}(w) = 0.0$ memorizando los pares de entrenamiento, pero colapsa catastróficamente fuera de muestra (predice el valor por defecto).
+   * **Correlación espuria clínica (Oakden-Rayner et al., 2019, Diap. 6):** Un modelo para detectar neumotórax en radiografías alcanzó 95% de precisión aprendiendo a detectar el **tubo de drenaje torácico** ya insertado por los médicos en el hospital. En pacientes graves sin tubo colocado, el modelo falló por completo.
+   * **Maldición de la dimensionalidad (Diap. 8):** Con $d = 100$ variables binarias, el espacio $\{0, 1\}^{100}$ contiene $2^{100} \approx 1.27 \times 10^{30}$ estados. Un petabyte de datos ($10^{15}$ muestras) cubre apenas una fracción de $10^{-15}$ ($0.0000000000001\%$). Es **matemáticamente imposible generalizar** sin imponer restricciones / sesgo inductivo a la clase de hipótesis $\mathcal{F}$.
+   * **Descomposición del error de Liang (Stanford CS221, Diap. 12):**
+     $$\text{Err}(\hat{f}) - \text{Err}(f^*) = \underbrace{(\text{Err}(\hat{f}) - \text{Err}(g))}_{\text{Error de Estimación (Varianza)}} + \underbrace{(\text{Err}(g) - \text{Err}(f^*))}_{\text{Error de Aproximación (Sesgo)}}$$
+     donde $f^*$ es el predictor de Bayes, $g \in \mathcal{F}$ es la mejor hipótesis posible en la clase, y $\hat{f}$ es la estimada en muestra finita.
+   * **Auditoría a los 3 equipos de fraude (Diaps. 14–15, baseline 2%):** Equipo A (Train 0%, Test 25% $\implies$ sobreajuste severo / alta estimación); Equipo B (Train 23%, Test 24% $\implies$ subajuste severo / alta aproximación); Equipo C (50 pruebas en Test $\implies$ conjunto de prueba contaminado / Data Leakage).
+2. **Módulo 05.2 — Controlar la Clase de Hipótesis: Dimensión, Cota Cauchy-Schwarz, Regularización L2/L1 y Early Stopping (Diaps. 17–27):**
+   * **Reducción de variables:** Búsqueda exhaustiva $2^J$ ($J=20 \implies 1\,048\,576$ modelos) vs. **Greedy Forward Selection** con $\sum_{k=1}^J k = J(J+1)/2$ ($J=20 \implies \mathbf{210}$ modelos evaluados, ahorro de $4\,993\times$).
+   * **Teorema de Suavidad por Cauchy-Schwarz (Diap. 21):**
+     $$|s(x) - s(x')| = |w \cdot (\phi(x) - \phi(x'))| \le \|w\|_2 \|\phi(x) - \phi(x')\|_2$$
+     Acotar $\|w\|$ restringe la pendiente máxima y garantiza que perturbaciones en la entrada no provoquen oscilaciones erráticas en la predicción.
+   * **Regularización L2 (Ridge / Weight Decay, Diaps. 25–26):** $\min_w \text{TrainLoss}(w) + \frac{\lambda}{2}\|w\|_2^2$, con actualización $w \leftarrow (1 - \eta\lambda)w - \eta\nabla\text{TrainLoss}(w)$.
+   * **Cálculo manual exacto de la Diapositiva 26 (Págs. 103–107):**
+     Con $w = [2, -2]$, $\nabla\text{TrainLoss} = [1, 1]$, $\lambda = 0.5$ y $\eta = 0.1$:
+     $$\lambda w = [1, -1] \implies \nabla_{\text{total}} = [1, 1] + [1, -1] = [2, 0] \implies w_{\text{nuevo}} = [2, -2] - 0.1[2, 0] = \mathbf{[1.8, -2.0]}$$
+   * **L1 (LASSO, $\|w\|_1$) y Early Stopping (Diaps. 24 y 27):** LASSO fuerza coeficientes exactamente a cero (dispersión analítica), mientras que detener el gradiente en $T$ pasos partiendo de $w^{(0)}=0$ impone una cota de radio $\|w^{(T)}\| \le \eta G T$.
+3. **Módulo 05.3 — Hiperparámetros, Experimento Controlado y Validación Cruzada K-Fold (Diaps. 28–52):**
+   * Partición $D_{\text{train}}, D_{\text{val}}, D_{\text{test}}$ y la regla sagrada: **el conjunto de prueba solo se toca una única vez al final**.
+   * **Experimento numérico controlado (Diaps. 42–47):** Función real $y = x^3 - 3x + \varepsilon$, $\varepsilon \sim \mathcal{N}(0, 4.0)$ ($n=30$ puntos en $[-2.2, 2.2]$). Ajuste polinomial de grados $d=1$ a $8$ (el grado verdadero es $d=3$).
+   * **Desenmascaramiento del falso mínimo:**
+     - Validación simple (8 puntos): elige erróneamente $d=6$ ($\text{MSE} = \mathbf{1.9} < 4.0$, ilusión por muestra afortunada).
+     - 5-Fold Cross-Validation ($K=5$): elige correctamente el grado verdadero $d=3$ ($\text{MSE} = \mathbf{3.8}$, casi en el piso de ruido 4.0), mientras que $d=6$ sube a $9.5$ y $d=8$ colapsa a $80.0$.
+   * **Desglose de rondas (Diap. 46 / Pág. 190):** Para $d=3$, las rondas son $[2.4, 2.6, 7.6, 4.7, 1.5]$ (media 3.8); para $d=6$, las rondas son $[1.9, 1.7, 8.2, \mathbf{32.3}, 3.3]$ (media 9.5; ¡la ronda 4 explota a 32.3!).
+   * **Auditoría final en 200,000 datos no vistos (Diap. 47):** $d=3$ (CV) obtiene MSE real $\mathbf{4.2}$ vs. $\mathbf{5.1}$ de $d=6$ (Simple Val) $\implies d=3$ generaliza **21.4% mejor**.
+   * Comparativa de modelos por estabilidad (Diap. 48): Modelo A ($\text{std} = 0.23$) vs. Modelo B ($\text{std} = 1.25$); variantes Stratified K-Fold y TimeSeriesSplit (ventana expansiva sin fuga del futuro).
+4. **Módulo 05.4 — Descomposición Sesgo-Varianza, Matriz de Control de Ingeniería y Curvas de Aprendizaje (Diaps. 53–63):**
+   * **Teorema del MSE esperado:**
+     $$\mathbb{E}[(y - \hat{f}(x))^2] = \text{Bias}[\hat{f}(x)]^2 + \text{Var}[\hat{f}(x)] + \sigma^2$$
+   * **La Diana (Bullseye) en 4 cuadrantes:** Alto/Bajo Sesgo vs. Alto/Bajo Varianza.
+   * **Matriz de control de 4 perillas (Diap. 58):**
+     - Complejidad / Grado $d \uparrow \implies \text{Sesgo} \downarrow, \text{Varianza} \uparrow$.
+     - Regularización $\lambda \uparrow \implies \text{Sesgo} \uparrow, \text{Varianza} \downarrow$.
+     - Early Stopping $T \downarrow \implies \text{Sesgo} \uparrow, \text{Varianza} \downarrow$.
+     - **Tamaño de muestra $n \uparrow \implies \text{Sesgo} =, \mathbf{\text{Varianza} \downarrow}$ (¡El único botón con costo estadístico cero!).**
+   * **Diagnóstico de curvas de aprendizaje (Diaps. 59–60):** Alta Varianza (brecha Train << Val, resuelto con más datos o $\lambda$) vs. Alto Sesgo (Train $\approx$ Val estancados en alto error; más datos **no** ayuda, se requiere un modelo más rico).
+
+---
+
+### 🟩 CD06 (SEXTA EN ORDEN): Clustering — Agrupamiento No Supervisado (57 Diapositivas)
+
+1. **Módulo 06.1 — K-Means: Compresión, Minimización Alternada de Lloyd y Codo (Diaps. 1–21):**
+   * **Doble naturaleza de K-Means (Diap. 4):** Función objetivo de compresión de pérdida cuadrática:
+     $$\text{Loss}_{\text{kmeans}}(z, \mu) = \frac{1}{n}\sum_{i=1}^n \|\phi(x_i) - \mu_{z_i}\|_2^2$$
+     frente al **algoritmo de Lloyd** (1982) que alterna 1) asignación óptima de cada punto $z_i \leftarrow \arg\min_k \|\phi(x_i) - \mu_k\|^2$ y 2) recentrado $\mu_k \leftarrow \frac{1}{|C_k|}\sum_{i \in C_k} \phi(x_i)$.
+   * **Traza manual 1D exacta (Diap. 12):** Conjunto $\{0, 2, 10, 12\}$ inicializado en $\mu = [0, 2]$. Iter 1: $z = [1, 2, 2, 2], \mu = [0, 8]$. Iter 2: $z = [1, 1, 2, 2], \mu = [1, 11]$. Converge en 2 pasos con $\text{Loss} = \mathbf{4.0}$.
+   * **Paso 2D a mano exacto (Diap. 15):** Puntos $(0,0), (2,0), (6,4), (8,4)$ con $\mu_1=(0,0), \mu_2=(2,0)$. Iter 1: $\mu_1=(0,0), \mu_2=(16/3, 8/3) \approx (5.33, 2.67)$ con $\text{Loss}=26.67$. Iter 2: $\mu_1=(1,0), \mu_2=(7,4)$ con $\text{Loss} = \mathbf{4.0}$ (convergencia monótona).
+   * **Simulación de 210 puntos en 3 grupos (Diap. 18):** Mínimo local severo ($\text{Loss} \approx 1\,450$) frente a inicialización K-Means++ que alcanza el óptimo global ($\text{Loss} \approx 328$).
+   * **Curva oficial del codo (Diap. 21):** Para $K=1..8$, pérdidas $[1863.2, 955.1, \mathbf{107.5}, 90.1, 77.9, 66.1, 58.4, 50.7]$. Quiebre abrupto en $K=3$ ($\Delta = 847.6$ vs. solo $17.4$ al pasar a $K=4$).
+   * **Sensibilidad a Outliers:** En $\{0, 2, 10, 12, 30\}$ con $K=2$, el punto $30$ secuestra $\mu_2=30.0$, forzando $\mu_1=6.0$ ($\text{Loss}=104.0$) y desintegrando la estructura verdadera.
+2. **Módulo 06.2 — Evaluación de Clusters: Índice de Rand (RI), Rand Ajustado (ARI) y Ruido (Diaps. 22–30):**
+   * **Matriz de contingencia de pares $\binom{n}{2}$ (Diap. 24):** Conteo exhaustivo de $a$ (acuerdo positivo), $b$ (acuerdo negativo), $c$ (falso negativo) y $d$ (falso positivo).
+   * **Fórmula de Rand Index simple (Diap. 24):** $\text{RI} = \frac{a + b}{\binom{n}{2}}$.
+   * **Demostración de la inflación de base (Diap. 25–26):** En $n=6$, agrupar todo en 1 cluster da $\text{RI} = 6/15 = \mathbf{0.40}$; asignar cada punto solo da $\text{RI} = 9/15 = \mathbf{0.60}$; en ambos el $\text{ARI} = \mathbf{0.0000}$.
+   * **Rand Index Ajustado de Hubert-Arabie (1985, Diap. 27):**
+     $$\text{ARI} = \frac{\text{RI} - \mathbb{E}[\text{RI}]}{\max(\text{RI}) - \mathbb{E}[\text{RI}]}$$
+     Caso exacto de 6 puntos con 1 error ($Y=[1,1,1,2,2,2], Z=[1,1,2,2,2,2]$): $a=4, b=6, c=2, d=3 \implies \text{RI} = 10/15 \approx \mathbf{0.67}$, corregido por azar a $\text{ARI} = \mathbf{0.3243}$.
+3. **Módulo 06.3 — Agrupamiento Jerárquico: Dendrogramas, Single vs. Complete y GMM (Diaps. 31–37):**
+   * **Matriz de distancias 1D sobre $\{1, 2, 5, 9, 12\}$ (Diaps. 31–33):**
+     - Single Linkage ($d_{\min}$): fusiones en $1.0, 3.0, 3.0, 4.0$. El empate simultáneo en $h=3.0$ ($\{1,2\}$ con $5$ y $9$ con $12$) hace **imposible aislar $K=3$ clusters**. Corte a $h=3.5 \implies 2$ clusters; corte a $h=2.9 \implies 4$ clusters.
+     - Complete Linkage ($d_{\max}$): fusiones en $1.0, 3.0, 4.0, 11.0$, permitiendo aislar $K=3$ en $h \in [3.0, 4.0)$.
+   * **Gaussian Mixture Models (GMM, Diaps. 36–37):** Asignación suave (soft clustering) mediante responsabilidades probabilísticas posteriores $\gamma_{ik} = P(z_i = k | x_i) \in [0, 1]$ optimizadas mediante el algoritmo Esperanza-Maximización (EM).
+4. **Módulo 06.4 — Basado en Densidad: DBSCAN, Dos Lunas, Densidades Heterogéneas y HDBSCAN (Diaps. 38–57):**
+   * **DBSCAN (Ester et al., 1996):** Clasificación en Core ($\ge \text{minPts}$ vecinos en radio $\varepsilon$), Border y Noise. Conectividad transitiva de densidad.
+   * **Ejemplo interactivo de 10 puntos (Diaps. 43–48):** Con $\varepsilon=1.05, \text{minPts}=3 \implies 7$ núcleos, 2 fronteras, 1 ruido; con $\text{minPts}=4$, el arco entero colapsa a 5 puntos de ruido.
+   * **Experimento de las Dos Lunas (Diap. 38):** K-Means falla con 31–33 errores ($\text{ARI} \approx 0.49$) al trazar una mediatriz recta; DBSCAN alcanza 0 errores, 0 ruido y $\text{ARI} = \mathbf{1.0000}$.
+   * **Dilema de densidades heterogéneas y solución HDBSCAN (Diaps. 50–57):** Un único $\varepsilon$ no puede separar 2 densos y 1 disperso ($\varepsilon=0.25$ descarta 22 puntos dispersos como ruido; $\varepsilon=0.60$ funde los dos compactos). HDBSCAN (Campello et al., 2013) usa distancia de alcanzabilidad mutua $d_{\text{mreach}}$ y árbol condensado por persistencia ($\lambda = 1/\varepsilon$).
+
+---
+
+### 🟦 CD13 (UNIDAD I): Representación y Aproximación Universal con Redes Neuronales
 
 1. **Módulo 1.1 — Compuertas de Umbral y Arquitecturas XOR (Diaps. 6–15):**
    * Compuertas de umbral universales de $N$ entradas («al menos $K$ de $N$» con umbral $L - N + K$).
@@ -68,30 +245,126 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 🟧 UNIDAD IV: Algoritmo de Backpropagation
+
+1. **Módulo 4.1 — El Problema y las Dos Reglas de la Cadena: Simple vs. Distribuida (Diaps. 5–13 y 18):**
+   * Descomposición de la derivada del riesgo empírico: $\frac{\partial\text{TrainLoss}}{\partial w_{ij}^{(k)}} = \frac{1}{T}\sum_{t=1}^T \frac{\partial\text{div}(Y_t, d_t)}{\partial w_{ij}^{(k)}}$.
+   * La derivada como factor de amplificación local en cada arista ($\Delta y \approx \frac{dy}{dx}\Delta x$).
+   * **Regla de la cadena simple (en serie):** $\frac{dl}{dz} = \frac{dl}{dy}\frac{dy}{dz}$ (*multiplicar por el camino*), con verificación en $b=a^2, c=b^2$ en $a=2 \implies \frac{\partial c}{\partial a} = 8\times 4 = 32 = 4a^3$ (Diap. 18).
+   * **Regla de la cadena distribuida (varios caminos):** $\frac{dl}{dx} = \sum_{i=1}^M \frac{\partial l}{\partial z_i}\frac{dz_i}{dx}$ (*multiplicar por cada camino y sumar sobre los caminos*).
+2. **Módulo 4.2 — Grafos de Computación, Bloques Básicos y Enrutador `max` (Diaps. 14–23 y 40–41):**
+   * Los 6 bloques básicos de construcción (suma, resta, producto, cuadrado, máximo, sigmoide $\sigma'(a)=\sigma(a)(1-\sigma(a))$), pérdida Hinge (Diap. 19) y red de 2 capas como grafo (Diap. 20).
+   * Simulación paso a paso de los dos ejemplos numéricos de $\text{Loss}(x,y,\mathbf{w})=(\mathbf{w}\cdot\phi(x)-y)^2$:
+     * **Ejemplo 1 (Diap. 21):** $\mathbf{w}=[3,1], \phi(x)=[1,2], y=2 \implies \text{puntaje}=5, \text{residuo}=3, \text{Loss}=9, \nabla_{\mathbf{w}}\text{Loss}=[6,12]$.
+     * **Ejemplo 2 (Diap. 23):** $\mathbf{w}=[1,2], \phi(x)=[2,1], y=3 \implies \text{puntaje}=4, \text{residuo}=1, \text{Loss}=1, \nabla_{\mathbf{w}}\text{Loss}=[4,2]$.
+   * Subgradientes y función $y = \max(z_1, z_2, z_3)$ evaluada en $(1, 2, 3) \implies [0, 0, 1]$ como enrutador del gradiente hacia el ganador (Diap. 41).
+3. **Módulo 4.3 — Forward y Backward Pass en una Red ReLU de 2 Capas Paso a Paso (Diaps. 24–39 y 57):**
+   * **Regla de oro (Diap. 29):** Todos los $z_j^{(k)}$ e $y_j^{(k)}$ del *forward pass* se guardan en memoria para evaluar $f_k'(z_j^{(k)})$ e $y_i^{(k-1)}$ en el *backward pass*.
+   * **Simetría Forward vs. Backward (Diap. 37):** $\dot{y}_i^{(k)} = \sum_j w_{ij}^{(k+1)}\dot{z}_j^{(k+1)}$, $\dot{z}_i^{(k)} = f_k'(z_i^{(k)})\dot{y}_i^{(k)}$ y $\frac{\partial\text{div}}{\partial w_{ij}^{(k)}} = y_i^{(k-1)}\dot{z}_j^{(k)}$.
+   * **Ejemplo numérico completo en Red ReLU de 2 capas (Diaps. 38–39 y 57):** Con $\mathbf{x}=[1,2], d=3$:
+     * Forward: $z^{(1)}=[2, -1] \implies y^{(1)}=[2, 0]$, $Y=5$, $\text{div}=(5-3)^2=4$.
+     * Backward: $\dot{Y}=\dot{z}^{(2)}=4$, $\nabla_{W_2}=[[8, 0]], \nabla_{\mathbf{b}_2}=[4]$, $\dot{y}^{(1)}=[8, 4] \implies \dot{z}^{(1)}=[8, 0]$ (la neurona inactiva con $z_2=-1<0$ corta el gradiente), $\nabla_{W_1}=\begin{bmatrix}8 & 16\\0 & 0\end{bmatrix}, \nabla_{\mathbf{b}_1}=[8, 0]$.
+4. **Módulo 4.4 — Ciclo de Entrenamiento, Vista Vectorial con Jacobianos y Autoevaluación IV (Diaps. 42–60):**
+   * **Qué es y qué NO es Backpropagation (Diap. 44):** Backprop calcula las derivadas $\nabla_W\text{div}$; quien actualiza los pesos es el descenso por gradiente.
+   * **Vista vectorial y Jacobianos transpuestos (Diaps. 49–58):** $\nabla_{\mathbf{z}_k}\text{div} = J_{\mathbf{y}_k}(\mathbf{z}_k)^\top \nabla_{\mathbf{y}_k}\text{div}$, $\nabla_{\mathbf{y}_{k-1}}\text{div} = W_k^\top\nabla_{\mathbf{z}_k}\text{div}$, $\nabla_{W_k}\text{div} = (\nabla_{\mathbf{z}_k}\text{div})\mathbf{y}_{k-1}^\top$, $\nabla_{\mathbf{b}_k}\text{div} = \nabla_{\mathbf{z}_k}\text{div}$, comparación entre Jacobiano diagonal (ReLU/Sigmoide) y Jacobiano lleno (Softmax), y cuestionario de autoevaluación IV.
+
+---
+
+### 🟥 UNIDAD V: Problemas de Convergencia en el Entrenamiento
+
+1. **Módulo 5.1 — ¿Encuentra Backprop la solución correcta? Experimento de Brady, Raghavan y Slawny (1989) y Puntos «Saboteadores» (Diaps. 7–16):**
+   * La divergencia diferenciable ($L_2$, entropía cruzada) es un **sustituto (*proxy*)** del error de clasificación $0\text{-}1$; minimizar el sustituto **no siempre** minimiza el error verdadero.
+   * **Experimento clásico de 3 puntos:** $(1,0)\to +1$, $(0,1)\to +1$, $(-1,0)\to -1$ con margen $\varepsilon$ ($u = \sigma^{-1}(1-\varepsilon)$) tiene un mínimo único en $w_1 = w_2 = u, b = 0$ (recta $x_1 + x_2 = 0$).
+   * **El cuarto punto «saboteador» (*spoiler*) lejano $(0, -t)\to +1$:** Con $t$ grande, los 4 puntos siguen siendo linealmente separables (el Perceptrón los separa al 100%), pero en la solución de 3 puntos $z_4 = -ut \to -\infty$ satura la sigmoide: $\sigma'(z_4)\sim e^{-ut}$ cae exponencialmente mientras $t$ crece solo linealmente, haciendo que $\frac{d\,\text{div}_4}{dw_2} = 2(1-\varepsilon-\sigma(z_4))\sigma'(z_4)t \to 0$. *Backprop* queda atrapado en el mínimo local ancho acertando solo $3/4$ (75%).
+   * **Compensación sesgo vs. varianza (Diap. 14):** El Perceptrón tiene sesgo bajo y varianza alta; *Backprop* con pesos acotados puede sesgar ante *spoilers*, pero tiene varianza baja.
+2. **Módulo 5.2 — La Superficie de Pérdida, las 6 Trayectorias desde $(-8, 4)$ y el Número de Condición $\kappa$ (Diaps. 17–33):**
+   * **Puntos de silla** ($E = \frac{1}{2}(w_1^2 - w_2^2)$) y evidencia teórica/empírica en redes grandes: **Baldi y Hornik (1989)**, **Dauphin et al. (2014)**, **Choromanska et al. (2015)** y **Swirszcz et al. (2016)**.
+   * Reproducción exacta de las **6 trayectorias de la Diapositiva 27** sobre $E = \frac{1}{2}(w_1^2 + 3w_2^2)$ desde $\mathbf{w}^{(0)} = (-8, 4)$ con $\eta \in \{0.25, 1/3, 0.5, 2/3, 0.75, 1.0\}$.
+   * **Número de condición** $\kappa = a_{\max}/a_{\min}$, factor geométrico óptimo $\frac{\kappa-1}{\kappa+1}$ en $\eta^* = \frac{2}{a_{\max}+a_{\min}}$, y comparación entre funciones **fuertemente convexas** ($O(\log(1/\delta))$ iteraciones) y funciones **convexas solo Lipschitz-suaves** ($O(1/\delta)$ iteraciones).
+3. **Módulo 5.3 — Métodos de Segundo Orden: Escalamiento $A^{1/2}$, Método de Newton y la Trampa del Punto de Silla (Diaps. 34–44):**
+   * Cambio de coordenadas $\hat{\mathbf{w}} = A^{1/2}\mathbf{w}$ ($A = U\Lambda U^\top$) que vuelve circulares los contornos ($\kappa = 1$) y **Regla de Newton iterada** $\mathbf{w}^{(k+1)} = \mathbf{w}^{(k)} - \eta H_E(\mathbf{w}^{(k)})^{-1}\nabla_{\mathbf{w}}E(\mathbf{w}^{(k)})$, que converge en **un solo paso** ($\eta = 1$) sobre cualquier cuadrática.
+   * **Los 2 problemas de Newton:** (1) Tamaño cuadrático del Hessiano ($N=100\,000 \implies N^2 = 10^{10}$ entradas e inversión $O(N^3)$) y (2) **Curvatura negativa**: cerca de un punto de silla, los valores propios negativos atraen a Newton directo hacia la silla, problema que se mitiga con métodos cuasi-Newton (**BFGS / L-BFGS**) o **Levenberg-Marquardt** ($H + \lambda I$).
+4. **Módulo 5.4 — Tasas Decrecientes, RProp, QuickProp y Autoevaluación V (Diaps. 45–58):**
+   * **Divergir para escapar:** partir con $\eta_0$ grande para saltar de mínimos locales mediocres y reducirlo con esquemas $\eta_0/k$, $\eta_0/k^2$, $\eta_0 e^{-\beta(k-1)}$ o por escalones.
+   * **RProp (*Resilient Propagation*, Diaps. 48–53):** usa solo $\text{signo}(\partial E/\partial w_i)$ con tamaño de paso propio $\Delta_i$ ($\alpha = 1.2$ si mantiene el signo; si cambia de signo, deshace el paso y encoge $\Delta_i \leftarrow \beta\Delta_i$ con $\beta = 0.5$).
+   * **QuickProp (Diaps. 54–56):** aproxima Newton coordenada a coordenada por diferencia finita de derivadas: $\Delta w^{(k)} = \Delta w^{(k-1)}\frac{E'(w^{(k)})}{E'(w^{(k-1)}) - E'(w^{(k)})}$, más adelanto de **Momentum** y cuestionario de autoevaluación V.
+
+---
+
+### 🟦 UNIDAD VI: Descenso por Gradiente Estocástico y Lotes
+
+1. **Módulo 6.1 — El Costo del Lote, «SGD a Mano: Una Época» y el Barajado por Época (Diaps. 5–14):**
+   * **El costo del lote:** Con $|\mathcal{D}_{\text{train}}| = 1\,000\,000$, una actualización de lote evalúa $1\,000\,000$ de gradientes para mover $\mathbf{w}$ una sola vez. Tras $T$ épocas con $N$ ejemplos, el lote mueve $\mathbf{w}$ $T$ veces y SGD lo mueve $TN$ veces con el mismo número de evaluaciones de gradiente ($TN$).
+   * **Reproducción exacta de «SGD a mano: una época» (Diap. 14):** Sobre $\{(1,1),(2,3),(4,3)\}$ con $\phi(x)=[1,x]$, $\eta=0.1$, $\mathbf{w}^{(0)}=[0,0]$ y $\nabla_{\mathbf{w}}\text{Loss} = 2r\phi(x)$:
+     1. $(1,1) \implies r=-1.00, \nabla=[-2.00,-2.00], \mathbf{w}_{\text{nuevo}}=[0.20, 0.20]$.
+     2. $(2,3) \implies r=-2.40, \nabla=[-4.80,-9.60], \mathbf{w}_{\text{nuevo}}=[0.68, 1.16]$.
+     3. $(4,3) \implies r=+2.32, \nabla=[4.64,18.56], \mathbf{w}_{\text{nuevo}}=[0.22, -0.70]$ (vs. 1 paso de lote $\mathbf{w}=[0.47, 1.27]$ y óptimo $[1.00, 0.57]$).
+   * **Cuidado con el orden de presentación (Diaps. 12–13):** Si los datos vienen agrupados (Grupo A luego Grupo B) y se recorren siempre en el mismo orden, los pesos oscilan en ciclos; permutar $\mathcal{D}_{\text{train}}$ al azar en **cada época** (*shuffling*) es parte integral del SGD.
+2. **Módulo 6.2 — Tasa de Aprendizaje Decreciente, Condiciones de Robbins-Monro (1951) y Experimento en Python (Diaps. 15–20):**
+   * **Condiciones suficientes de convergencia (Robbins y Monro, 1951, Diap. 17):** $\sum_{k=1}^\infty \eta_k = \infty$ (permite alcanzar cualquier punto) y $\sum_{k=1}^\infty \eta_k^2 < \infty$ (amortigua el ruido del último ejemplo). Con pérdida fuertemente convexa, $\eta_k \propto 1/k$ es óptimo ($\sum 1/k^2 = \pi^2/6$).
+   * **Velocidad de convergencia (Diap. 18):** Para llegar a distancia $\varepsilon$ del óptimo, el lote requiere $O(\log(1/\varepsilon))$ iteraciones de costo $N$, mientras que SGD requiere $O(1/\varepsilon)$ iteraciones de costo $1$.
+   * **Experimento en Python (Diap. 19):** Con $\eta_k = 1/\sqrt{k}$, tras recorrer apenas $1/10$ de la primera época, SGD ya se acerca a $\mathbf{w}_{\text{real}}$ antes de que el descenso por lote complete su primera actualización.
+3. **Módulo 6.3 — ¿Por qué Funciona? La Varianza del Estimador $\text{Var}(\text{Loss})/b$ y Mini-lotes en la Práctica (Diaps. 21–29 y 39):**
+   * **Estimador insesgado:** $\mathbb{E}[\text{Loss}(x,y,\mathbf{w})] = \mathbb{E}[\text{TrainLoss}(\mathbf{w})]$, pero la varianza de un solo ejemplo es $N$ veces mayor que la del lote completo ($\text{Var}(\text{TrainLoss}) = \frac{1}{N}\text{Var}(\text{Loss})$).
+   * **Mini-lotes de tamaño $b$ (Diaps. 25–29):** Promediar $b$ ejemplos reduce la varianza exactamente a $\frac{1}{b}\text{Var}(\text{Loss})$, aprovecha la vectorización matricial en GPU y recupera SGD cuando $b=1$ y el lote completo cuando $b=N$.
+4. **Módulo 6.4 — Optimizadores con Tendencia: Momentum, Nesterov, RMSprop y Adam (Diaps. 30–38):**
+   * **Momentum (Diaps. 31–32) y Nesterov (Diap. 33):** Momentum acumula un promedio móvil exponencial de los pasos previos ($\Delta\mathbf{w}^{(k)} = \beta\Delta\mathbf{w}^{(k-1)} - \eta\nabla_{\mathbf{w}}\text{Loss}(\mathbf{w}^{(k-1)})$); **Nesterov** primero aplica el paso de inercia y evalúa el gradiente allá donde va a caer ($\mathbf{w}^{(k-1)} + \beta\Delta\mathbf{w}^{(k-1)}$).
+   * **Tasa por dirección y RMSprop (Diaps. 34–35):** En los 5 pasos de la Diap. 34 ($\Delta x = [1, 1, 2, 1, 1.5] \implies \text{total}=6.5, \text{neto}=6.5, \text{RMS}\approx 1.36$; $\Delta y = [+2.5, -3, +2.5, -2, +1.5] \implies \text{total}=11.5, \text{neto}=1.5, \text{RMS}\approx 2.36$), RMSprop divide por $\sqrt{E[\partial_w^2]^{(k)} + \epsilon}$ para frenar la dirección oscilante y acelerar la horizontal.
+   * **Adam (Diap. 36) y Trayectorias en movimiento (Diaps. 37–38):** Combina el primer momento $\hat{m} = \frac{m^{(k)}}{1-\beta_1^k}$ y el segundo momento $\hat{v} = \frac{v^{(k)}}{1-\beta_2^k}$ ($\beta_1=0.9, \beta_2=0.999, \eta=0.001$), amortiguando oscilaciones en valles angostos y escapando rápidamente de puntos de silla, más cuestionario de autoevaluación VI.
+
+---
+
 ## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-### 1. 🌐 Suite Web Educativa Interactiva (3 Unidades • 13 Laboratorios en Navegador)
+### 1. 🌐 Suite Web Educativa Interactiva (10 Unidades: CD01–CD04 y CD13–CD18 • 41 Laboratorios en Navegador)
 ```bash
 open web/index.html
 # O desde Python:
 python3 perceptron_xor.py --web
 ```
 
-### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro)
+### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro, Orden de Cátedra)
 ```bash
-# Ejecutar TODAS las verificaciones de las Unidades I, II y III automáticamente:
+# Ejecutar TODAS las verificaciones de CD01–CD06 y CD13–CD18 automáticamente (12 Unidades):
 python3 perceptron_xor.py --auto
 
-# Laboratorio interactivo de la Unidad I (Aproximación Universal):
+# Laboratorio interactivo de CD01 (Primera en orden — Introducción al Curso):
+python3 introduccion_curso.py
+
+# Laboratorio interactivo de CD02 (Segunda en orden — Preprocesamiento y EDA):
+python3 preprocesamiento_eda.py
+
+# Laboratorio interactivo de CD03 (Tercera en orden — Visualización Efectiva y Engañosa):
+python3 visualizacion_datos.py
+
+# Laboratorio interactivo de CD04 (Cuarta en orden — Introducción a Machine Learning):
+python3 introduccion_ml.py
+
+# Laboratorio interactivo de CD05 (Quinta en orden — Generalización y Validación):
+python3 generalizacion_validacion.py
+
+# Laboratorio interactivo de CD06 (Sexta en orden — Clustering: K-Means, Rand Index, Dendrogramas y DBSCAN):
+python3 clustering.py
+
+# Laboratorio interactivo de CD13 / Unidad I (Aproximación Universal):
 python3 aproximacion_universal.py
 
-# Laboratorio interactivo de la Unidad II (Aprendizaje de Redes Neuronales):
+# Laboratorio interactivo de CD14 / Unidad II (Aprendizaje de Redes Neuronales):
 python3 aprendizaje_redes.py
 
-# Laboratorio interactivo de la Unidad III (Descenso por Gradiente):
+# Laboratorio interactivo de CD15 / Unidad III (Descenso por Gradiente):
 python3 descenso_gradiente.py
 
-# Menú principal integrado:
+# Laboratorio interactivo de CD16 / Unidad IV (Algoritmo de Backpropagation):
+python3 backpropagation.py
+
+# Laboratorio interactivo de CD17 / Unidad V (Problemas de Convergencia en el Entrenamiento):
+python3 problemas_convergencia.py
+
+# Laboratorio interactivo de CD18 / Unidad VI (Descenso por Gradiente Estocástico y Lotes):
+python3 sgd_lotes.py
+
+# Menú principal integrado con navegación secuencial:
 python3 perceptron_xor.py
 ```
 
@@ -99,14 +372,23 @@ python3 perceptron_xor.py
 
 ## 📁 Estructura del Proyecto
 ```
-├── README.md                    # Guía general organizada por Unidades I, II y III
-├── INFORME.md                   # Informe académico detallado de las tres unidades
-├── perceptron_xor.py            # Lanzador central y verificador del MLP XOR
-├── aproximacion_universal.py    # Unidad I: DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
-├── aprendizaje_redes.py         # Unidad II: Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
-├── descenso_gradiente.py        # Unidad III: Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
+├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD05, luego CD13 a CD18)
+├── INFORME.md                   # Informe académico detallado de las 12 unidades (CD01–CD06 y CD13–CD18)
+├── perceptron_xor.py            # Lanzador central y verificador integrado (12 unidades • 49 laboratorios)
+├── introduccion_curso.py        # CD01 (Primera en orden): Pandemia, SIR (Diap. 13), Netflix Prize, 3 Relatos IA y LLMs
+├── preprocesamiento_eda.py      # CD02 (Segunda en orden): Sesgos Gallup/Yelp/QR, CRISP-DM, Pandas epl_mini (23 jug.) y Anscombe
+├── visualizacion_datos.py       # CD03 (Tercera en orden): Datasaurus, Burtin 1951 (16 bacterias), Tufte Lie Factor, Stevens, Correll y Mirages
+├── introduccion_ml.py           # CD04 (Cuarta en orden): Mapa IA 4 Niveles, Regresión Gauss 1801, Hinge/Margen, Logística y Softmax
+├── generalizacion_validacion.py # CD05 (Quinta en orden): Sobreajuste, Cauchy-Schwarz, Paso L2 a Mano [1.8, -2.0], CV 5-Fold vs Simple y Sesgo-Varianza
+├── clustering.py                # CD06 (Sexta en orden): Lloyd 1D/2D, Codo K=3, Rand Index vs ARI, Dendrogramas y DBSCAN vs HDBSCAN
+├── aproximacion_universal.py    # CD13 (Unidad I): DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
+├── aprendizaje_redes.py         # CD14 (Unidad II): Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
+├── descenso_gradiente.py        # CD15 (Unidad III): Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
+├── backpropagation.py           # CD16 (Unidad IV): Reglas de la Cadena, Grafos (Diaps. 21/23), Red ReLU 2 Capas y Jacobianos
+├── problemas_convergencia.py    # CD17 (Unidad V): Brady et al. (1989), 6 Trayectorias, Condición κ, Newton, RProp y QuickProp
+├── sgd_lotes.py                 # CD18 (Unidad VI): SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, Nesterov, RMSprop y Adam
 ├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html               # Suite Web Interactiva (3 Unidades Temáticas • 13 Laboratorios)
-└── contexto/                    # Historial secuencial de planes de trabajo (context1..context8)
+│   └── index.html               # Suite Web Interactiva (12 Unidades: CD01–CD06 y CD13–CD18 • 49 Laboratorios)
+└── contexto/                    # Historial secuencial de planes de trabajo (context1..context17)
 ```
