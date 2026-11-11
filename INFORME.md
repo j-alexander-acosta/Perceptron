@@ -561,6 +561,102 @@ eq j} p_{ij} \log rac{p_{ij}}{q_{ij}}$$
 
 ---
 
+## 0.11. Octava Unidad CD08 (Octava en Orden de Cátedra): Modelos de Árboles de Clasificación y Regresión (68 Diapositivas)
+
+El módulo [`arboles_decision.py`](arboles_decision.py) y los laboratorios `53` a `56` (Labs 08.1 a 08.4) de [`web/index.html`](web/index.html) formalizan los fundamentos matemáticos y computacionales de **CD08 — Modelos de Árboles de Clasificación y Regresión (CART e ID3)** (basado en Harvard CS109 de P. Protopapas, K. Rader et al., Stanford CS221, y Breiman et al., 1984):
+
+### 0.11.1. Particionado Ortogonal, Complejidad Booleana $2^{2^n}$ y NP-Completitud (Diapositivas 1–19)
+* **La Geometría del Particionado Ortogonal (Diapositivas 3–5):**
+  Un árbol de decisión divide recursivamente el espacio de características $\mathbb{R}^d$ en regiones disjuntas $R_1, R_2, \dots, R_M$ mediante hiperplanos estrictamente paralelos a los ejes coordenados de la forma:
+  $$x_j \le t \quad \text{vs.} \quad x_j > t$$
+  Mientras un clasificador lineal paramétrico modela una frontera inclinada con una sola ecuación ($x_2 - 0.8 x_1 = 0$), el árbol CART se ve forzado a construir una **aproximación en escalera** ortogonal (requiriendo múltiples hiperplanos axiales para acotar un simple plano oblicuo), introduciendo un sesgo geométrico intrínseco.
+* **Explosión Combinatoria de Funciones Booleanas (Diapositivas 6–10):**
+  Para $n$ variables de entrada binarias $x \in \{0, 1\}^n$, el número de configuraciones de entrada (filas en la tabla de verdad) es $2^n$. Dado que cada configuración puede mapearse a $\{0, 1\}$, el espacio total de funciones booleanas posibles crece a una tasa doblemente exponencial:
+  $$|\mathcal{F}_n| = 2^{2^n}$$
+  * $n=1 \implies 2^2 = 4$ funciones.
+  * $n=2 \implies 2^4 = 16$ funciones.
+  * $n=3 \implies 2^8 = 256$ funciones.
+  * $n=4 \implies 2^{16} = 65\,536$ funciones.
+  * $n=7 \implies 2^{128} \approx \mathbf{3.4028 \times 10^{38}}$ funciones (número astronómico inabordable por enumeración exhaustiva).
+* **Teorema de NP-Completitud (Hyafil & Rivest, 1976, Diapositiva 11):**
+  Determinar el árbol de decisión binario óptimo (que minimice la profundidad esperada o el error global para un tamaño fijo) es un problema **NP-completo**. En consecuencia, todos los algoritmos prácticos (CART, ID3, C4.5) son heurísticas voraces (*greedy*) de partición recursiva de arriba hacia abajo (*top-down induction*), optimizando localmente la impureza de cada nodo sin capacidad de retrospección o previsión multivariada.
+* **La Trampa del Ordenamiento Categórico Nominal (Diapositivas 17–18):**
+  Al particionar variables categóricas cualitativas nominales con $K$ categorías $\{C_1, \dots, C_K\}$, codificarlas arbitrariamente como enteros $\{1, 2, \dots, K\}$ impone un orden artificial espurio: un corte univariado $x \le t$ jamás podrá aislar el subconjunto $\{C_1, C_3\}$ frente a $\{C_2\}$. Para evitar esto, CART evalúa todas las **$2^{K-1}-1$ particiones binarias disjuntas**, o se recurre a variables indicadoras *one-hot*.
+
+### 0.11.2. Criterios de Impureza (Error, Gini, Entropía de Shannon) y Algoritmo ID3 (Diapositivas 20–39)
+* **Insensibilidad de la Tasa de Error de Clasificación (Diapositivas 21–28):**
+  Sea $p_{mk} = \frac{1}{N_m}\sum_{x_i \in R_m} \mathbb{I}(y_i = k)$ la proporción de muestras de la clase $k$ en el nodo $m$. Se definen las tres medidas clásicas de impureza:
+  $$\text{Error: } E(m) = 1 - \max_k p_{mk}, \qquad \text{Gini: } I_G(m) = \sum_{k=1}^K p_{mk}(1 - p_{mk}), \qquad \text{Entropía: } H(m) = -\sum_{k=1}^K p_{mk}\log_2 p_{mk}$$
+  * **Demostración de Insensibilidad (Caso 1 de la Cátedra, Diapositiva 24):**
+    Un nodo padre con $14A, 5B$ ($N=19$, $E=5/19 \approx 0.263$) se divide en Hijo 1: $6A, 0B$ (nodo puro) e Hijo 2: $8A, 5B$.
+    $$E_{\text{ponderado}} = \frac{6}{19}(0) + \frac{13}{19}\left(\frac{5}{13}\right) = \frac{5}{19} \approx 0.263 \implies \mathbf{\Delta E = 0.000}$$
+    La tasa de error es **completamente ciega** al hecho fundamental de que se creó un nodo puro con 6 ejemplos. En contraste:
+    $$I_G(\text{padre}) = 0.3878 \to I_G(\text{hijos}) = 0.3239 \implies \mathbf{\Delta I_G = +0.0639}$$
+    $$H(\text{padre}) = 0.8349 \to H(\text{hijos}) = 0.6611 \implies \mathbf{\Delta H = +0.1738 \text{ bit}}$$
+  * **Caso 2 de la Cátedra (Diapositiva 26):** Padre $9A, 3B$ ($N=12$) dividido en $6A, 0B$ (puro) y $3A, 3B$ (impuro). Nuevamente $\Delta E = 0.000$, mientras $\Delta I_G = 0.375 - 0.250 = \mathbf{+0.1250}$.
+  * **Causa matemática:** $E(p) = \min(p, 1-p)$ es lineal a trozos y no es estrictamente cóncava; una combinación convexa sobre un mismo tramo lineal preserva el valor promedio. Gini y Entropía son **estrictamente cóncavas**, satisfaciendo la desigualdad de Jensen $\sum \frac{N_j}{N} I(p_j) < I(\sum \frac{N_j}{N} p_j)$, garantizando ganancia positiva estricta en cualquier partición que altere las frecuencias relativas.
+* **Trazado Manual Exacto del Algoritmo ID3 (Diapositivas 31–39):**
+  Sobre el dataset oficial de 10 días de entrenamiento "¿Salgo a correr?" (Harvard CS109): 5 días Sí / 5 días No $\implies H(S) = -0.5\log_2(0.5) - 0.5\log_2(0.5) = \mathbf{1.000\text{ bit}}$.
+  1. **Ganancia de Información en la Raíz ($IG = H(S) - \sum \frac{|S_v|}{|S|}H(S_v)$):**
+     * **Clima (3 ramas):**
+       * Nublado ($3/3$ Sí, $0/3$ No): $H = 0.000$.
+       * Lluvioso ($0/3$ Sí, $3/3$ No): $H = 0.000$.
+       * Soleado ($2/4$ Sí, $2/4$ No): $H = 1.000$.
+       * $IG(\text{Clima}) = 1.000 - \left[\frac{3}{10}(0) + \frac{3}{10}(0) + \frac{4}{10}(1.0)\right] = \mathbf{0.600\text{ bit}}$ (**¡Ganador de la Raíz!**).
+     * **Viento (2 ramas):** Suave ($3$ Sí, $2$ No, $H=0.971$), Fuerte ($2$ Sí, $3$ No, $H=0.971$) $\implies IG(\text{Viento}) = 1.000 - 0.971 = \mathbf{0.029\text{ bit}}$.
+     * **Temperatura (2 ramas):** Cálido ($2$ Sí, $3$ No), Templado ($3$ Sí, $2$ No) $\implies IG(\text{Temp}) = 1.000 - 0.971 = \mathbf{0.029\text{ bit}}$.
+  2. **Subárbol "Soleado" (4 muestras: 2 Sí, 2 No):**
+     * Clima ya está fijado en Soleado. Evaluamos Viento en este subconjunto:
+       * Viento = Suave: $2/2$ Sí, $0/2$ No ($H = 0.000 \implies$ Hoja Pura: **SÍ**).
+       * Viento = Fuerte: $0/2$ Sí, $2/2$ No ($H = 0.000 \implies$ Hoja Pura: **NO**).
+       * $IG(\text{Viento} \mid \text{Soleado}) = 1.000 - 0 = \mathbf{1.000\text{ bit}}$ (**Partición Perfecta**).
+  El árbol inducido clasifica con $100\%$ de exactitud el conjunto de entrenamiento y generaliza de forma determinista para cualquier combinación ambiental.
+
+### 0.11.3. Control de Complejidad, Miopía del Early Stopping y Poda CART (Diapositivas 40–54)
+* **La Falla del Early Stopping por Ganancia Mínima (Miopía Voraz, Diapositivas 42–45):**
+  Fijar un umbral de parada temprana $\Delta I \ge \varepsilon$ fracasa en problemas con dependencias no lineales u operaciones tipo XOR / Paridad: el primer corte univariado genera dos nodos con $50\%$ de cada clase ($IG = 0$), lo que provocaría detener el árbol en un solo nodo con $50\%$ de error, a pesar de que el siguiente corte lograría separar perfectamente el problema al $100\%$.
+* **Poda por Costo-Complejidad de Breiman (Weakest Link Pruning, Diapositivas 46–54):**
+  La solución rigurosa de CART (Breiman et al., 1984) es hacer crecer el árbol completo $T_{\max}$ y luego podar retrospectivamente minimizando el funcional regularizado:
+  $$C_\alpha(T) = R(T) + \alpha |T|$$
+  donde $R(T)$ es la tasa de error empírico y $|T|$ es el número de hojas terminales.
+* **Eslabón más Débil $g(t)$ y Secuencia Anidada:**
+  Para cada nodo interno $t$, el colapso de su subárbol descendente $T_t$ a una hoja individual produce un costo idéntico cuando:
+  $$R(t) + \alpha(1) = R(T_t) + \alpha |T_t| \implies \alpha = g(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}$$
+  El eslabón más débil es aquel nodo interno $t$ que minimiza $g(t)$.
+* **Validación Numérica Exacta del Árbol de 100 Puntos (Diapositiva 48):**
+  * $T_0$ (Árbol Completo): $|T|=3$ hojas, $R(T_0) = 0.14$.
+  * Nodo interno $x_2 < 3$: $R(t) = 0.18$, $|T_t| = 2 \implies g(x_2<3) = \frac{0.18 - 0.14}{2 - 1} = \mathbf{0.040}$.
+  * Nodo raíz $x_1 < 5$: $R(\text{raíz}) = 0.50$, $|T_{\text{raíz}}| = 3 \implies g(\text{raíz}) = \frac{0.50 - 0.14}{3 - 1} = 0.180$ (o $\frac{0.50 - 0.18}{2 - 1} = \mathbf{0.320}$ relativo a $T_1$).
+  * **Secuencia de subárboles anidados:**
+    * Para $\alpha \in [0.00, 0.04)$: óptimo es $T_0$ ($3$ hojas).
+    * Para $\alpha \in [0.04, 0.32)$: se poda $x_2 < 3 \implies$ óptimo es $T_1$ ($2$ hojas).
+    * Para $\alpha \ge 0.32$: se poda la raíz $\implies$ óptimo es $T_2$ (nodo único, $1$ hoja).
+  * En $\alpha = 0.10$: $C(T_1) = 0.18 + 0.10(2) = \mathbf{0.38} < C(T_0) = 0.14 + 0.10(3) = 0.44 < C(T_2) = 0.50 + 0.10(1) = 0.60$.
+  La selección final del $\alpha^*$ óptimo se realiza mediante validación cruzada $K$-fold (*cross-validation 1-SE rule*).
+
+### 0.11.4. Árboles de Regresión Continua CART y Reducción de MSE (Diapositivas 55–68)
+* **Formulación del Estimador en Regresión:**
+  Dado un espacio particionado en regiones rectangulares $R_1, \dots, R_M$, la predicción constante para cualquier punto $x \in R_m$ que minimiza la suma de errores cuadráticos $\sum_{x_i \in R_m}(y_i - c)^2$ es la media muestral local:
+  $$\hat{y}_m = \bar{y}_m = \frac{1}{N_m}\sum_{i \in R_m} y_i$$
+  El criterio de división busca el par de característica $j$ y umbral $s$ que minimice la varianza residual ponderada:
+  $$\min_{j, s} \left[ \sum_{x_i \in R_1(j,s)} (y_i - \bar{y}_1)^2 + \sum_{x_i \in R_2(j,s)} (y_i - \bar{y}_2)^2 \right]$$
+* **Trazado Manual Paso a Paso del Dataset de 6 Puntos (Diapositiva 57):**
+  Datos: $(1, 2.0), (2, 3.0), (3, 2.5), (4, 8.0), (5, 9.0), (6, 8.5)$ con $\bar{y}_{\text{global}} = 5.50$ y $\text{Var}_{\text{total}} = 9.25$.
+  * **Corte 1 ($x < 2.5$):** $R_1=\{1, 2\}$ ($\bar{y}=2.5, \text{MSE}=0.25$), $R_2=\{3, 4, 5, 6\}$ ($\bar{y}=6.875, \text{MSE}=6.88$) $\implies \text{MSE}_{\text{pond}} = \frac{2}{6}(0.25) + \frac{4}{6}(6.875) = \mathbf{4.667}$.
+  * **Corte 2 ($x < 3.5$):** $R_1=\{1, 2, 3\}$ ($\bar{y}=2.5, \text{MSE}=0.167$), $R_2=\{4, 5, 6\}$ ($\bar{y}=8.5, \text{MSE}=0.167$) $\implies \text{MSE}_{\text{pond}} = \frac{3}{6}(0.167) + \frac{3}{6}(0.167) = \mathbf{0.167}$ (**¡Partición Óptima Global!**).
+  * **Corte 3 ($x < 4.5$):** $R_1=\{1, 2, 3, 4\}$ ($\bar{y}=3.875, \text{MSE}=5.69$), $R_2=\{5, 6\}$ ($\bar{y}=8.75, \text{MSE}=0.25$) $\implies \text{MSE}_{\text{pond}} = \mathbf{3.875}$.
+  * **Predicciones:** Para una nueva consulta $x=2 \in R_1 \implies \hat{y} = \mathbf{2.50}$; para $x=5 \in R_2 \implies \hat{y} = \mathbf{8.50}$.
+* **Progresión de Profundidad y Memorización:**
+  * Profundidad 1: 2 hojas, $\text{MSE} = 0.167$.
+  * Profundidad 2: 4 hojas, $\text{MSE} = 0.062$.
+  * Profundidad 3: 6 hojas, $\text{MSE} = \mathbf{0.000}$ (memorización exacta de todos los puntos de entrenamiento, alta varianza).
+* **Conexión con Métodos de Ensamble (Diapositivas 64–68):**
+  Los árboles de decisión son modelos no paramétricos altamente interpretables e invariantes a transformaciones monótonas de las variables, pero sufren de **alta varianza** (inestabilidad estructural ante pequeñas perturbaciones de datos). Esta propiedad de ser estimadores de bajo sesgo y alta varianza los convierte en la unidad base perfecta para ensambles:
+  * **Bagging y Random Forest (Breiman, 2001):** Promedian $B$ árboles descorrelacionados reduciendo la varianza en $\sigma^2/B + \rho \sigma^2$.
+  * **Boosting (Freund & Schapire, Friedman, 2001):** Ajustan árboles de poca profundidad (*stumps*) de forma secuencial sobre los residuos para reducir el sesgo.
+
+---
+
 ## 1. Introducción y Contexto Histórico (Unidad CD13 / Unidad I)
 
 El estudio de las redes neuronales artificiales experimentó un hito fundacional en 1943 con el modelo de neurona formal de Warren McCulloch y Walter Pitts, y posteriormente en 1958 con el Perceptrón propuesto por Frank Rosenblatt. El perceptrón simple demostró ser capaz de aprender y clasificar patrones linealmente separables (como las funciones lógicas AND y OR).
@@ -1005,7 +1101,8 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 5. **Algoritmo de Backpropagation (Unidad IV):** Se verificaron las reglas de la cadena simple y distribuida, los grafos de computación de las Diapositivas 21 y 23 ($\nabla_{\mathbf{w}}\text{Loss} = [6, 12]$ y $[4, 2]$), el cálculo completo hacia adelante y hacia atrás en la red ReLU de 2 capas de las Diapositivas 38–39 y 57 ($\nabla_{W_1} = \begin{bmatrix}8 & 16\\0 & 0\end{bmatrix}$), y la equivalencia exacta con la formulación vectorial basada en Jacobianos transpuestos.
 6. **Problemas de Convergencia y Métodos Adaptativos (Unidad V):** Se verificó numéricamente el fenómeno de los puntos «saboteadores» de Brady et al. (1989) donde la saturación exponencial de la sigmoide apaga el gradiente y atrapa a *Backprop* en un mínimo local ($75\%$) mientras el Perceptrón separa los 4 puntos ($100\%$); se reprodujeron las 6 trayectorias de la Diapositiva 27 gobernadas por el número de condición $\kappa$; se demostró la convergencia en 1 paso de Newton en cuencos cuadráticos junto con su atracción patológica hacia puntos de silla (corregida por Levenberg-Marquardt); y se compararon las tasas decrecientes, RProp y QuickProp.
 7. **Descenso por Gradiente Estocástico, Mini-lotes y Optimizadores con Tendencia (Unidad VI):** Se reprodujo exactamente la tabla de «SGD a mano: una época» de la Diapositiva 14 ($[0.20, 0.20] \to [0.68, 1.16] \to [0.22, -0.70]$), la necesidad del barajado por época (*shuffling*), las condiciones de convergencia de Robbins y Monro (1951), la ley de reducción de varianza $\frac{1}{b}\text{Var}(\text{Loss})$ en mini-lotes, la tabla direccional de RMSprop ($\text{RMS}_x \approx 1.36, \text{RMS}_y \approx 2.36$) y la superioridad de Momentum, Nesterov, RMSprop y Adam en valles angostos y puntos de silla.
-8. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (13 Unidades Académicas • 812 Diapositivas • 53 Laboratorios Interactivos).
+8. **Árboles de Decisión, CART e ID3 (Unidad CD08):** Se comprobó analítica y numéricamente que los árboles CART producen particiones ortogonales estrictamente paralelas a los ejes coordenados requiriendo escaleras para aproximar diagonales, la explosión combinatoria $2^{2^n}$ de funciones booleanas ($3.4028 \times 10^{38}$ en $n=7$), la NP-completitud de Hyafil & Rivest (1976), la insensibilidad de la tasa de error ($\Delta E = 0.000$) frente a la concavidad estricta de Gini y Entropía, el trazado exacto de ID3 en 10 días ($H(S)=1.0, IG(\text{Clima})=0.60, IG(\text{Viento}|\text{Soleado})=1.0$), la miopía del *early stopping*, la poda por costo-complejidad de Breiman mediante el eslabón más débil $g(t)$ en el árbol de 100 puntos ($\alpha \in \{0.04, 0.32\}$), y la formulación continua de CART para regresión donde la partición $x<3.5$ minimiza el MSE a $0.167$ antes de memorizar a profundidad 3 ($MSE=0$).
+9. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (14 Unidades Académicas • 880 Diapositivas • 57 Laboratorios Interactivos).
 
 ---
 
@@ -1018,30 +1115,34 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 5. **Widrow, B., & Hoff, M. E. (1960).** *Adaptive switching circuits.* IRE WESCON Convention Record, Part 4, 96-104.
 6. **Polyak, B. T. (1964).** *Some methods of speeding up the convergence of iteration methods.* USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.
 7. **Minsky, M., & Papert, S. (1969).** *Perceptrons: An Introduction to Computational Geometry.* MIT Press, Cambridge, MA.
-8. **Nesterov, Y. (1983).** *A method for unconstrained convex minimization problem with the rate of convergence $O(1/k^2)$.* Doklady AN SSSR, 269, 543-547.
-9. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
-10. **Fahlman, S. E. (1988).** *An empirical study of learning speed in back-propagation networks (QuickProp).* CMU-CS-88-162.
-11. **Brady, M. L., Raghavan, R., & Slawny, J. (1989).** *Back propagation fails to separate where perceptrons succeed.* IEEE Transactions on Circuits and Systems, 36(5), 665-674.
-12. **Baldi, P., & Hornik, K. (1989).** *Neural networks and principal component analysis: Learning from examples without local minima.* Neural Networks, 2(1), 53-58.
-13. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
-14. **Riedmiller, M., & Braun, H. (1993).** *A direct adaptive method for faster backpropagation learning: The RPROP algorithm.* IEEE International Conference on Neural Networks, 586-591.
-15. **Tieleman, T., & Hinton, G. (2012).** *Lecture 6.5—rmsprop: Divide the gradient by a running average of its recent magnitude.* COURSERA: Neural Networks for Machine Learning.
-16. **Dauphin, Y. N., Pascanu, R., Gulcehre, C., Cho, K., Ganguli, S., & Bengio, Y. (2014).** *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.* NIPS 2014.
-17. **Kingma, D. P., & Ba, J. (2015).** *Adam: A method for stochastic optimization.* ICLR 2015.
-18. **Choromanska, A., Henaff, M., Mathieu, M., Ben Arous, G., & LeCun, Y. (2015).** *The loss surfaces of multilayer networks.* AISTATS 2015.
-19. **Swirszcz, G., Czarnecki, W. M., & Pascanu, R. (2016).** *Local minima in training of neural networks.* arXiv:1611.06310.
-20. **Oakden-Rayner, L., Gale, W., Bonham, T. A., Lungren, M. P., Carneiro, G., Bradley, A. P., & Palmer, L. J. (2019).** *Validation and Algorithmic Audit of a Deep Learning System for the Detection of Pneumothorax in Chest Radiographs.* Scientific Reports, 10, 16140.
-21. **Rand, W. M. (1971).** *Objective criteria for the evaluation of clustering methods.* Journal of the American Statistical Association, 66(336), 846-850.
-22. **Lloyd, S. (1982).** *Least squares quantization in PCM.* IEEE Transactions on Information Theory, 28(2), 129-137.
-23. **Hubert, L., & Arabie, P. (1985).** *Comparing partitions.* Journal of Classification, 2(1), 193-218.
-24. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
-25. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
-26. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
-27. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación & Reducción de Dimensionalidad.* Ciencia de Datos — Doctorado UCN.
-28. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
-29. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
-30. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
-31. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
-32. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
-33. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
+8. **Hyafil, L., & Rivest, R. L. (1976).** *Constructing optimal binary decision trees is NP-complete.* Information Processing Letters, 5(1), 15-17.
+9. **Nesterov, Y. (1983).** *A method for unconstrained convex minimization problem with the rate of convergence $O(1/k^2)$.* Doklady AN SSSR, 269, 543-547.
+10. **Breiman, L., Friedman, J., Stone, C. J., & Olshen, R. A. (1984).** *Classification and Regression Trees.* Wadsworth & Brooks/Cole, Monterey, CA.
+11. **Quinlan, J. R. (1986).** *Induction of decision trees.* Machine Learning, 1(1), 81-106.
+12. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
+13. **Fahlman, S. E. (1988).** *An empirical study of learning speed in back-propagation networks (QuickProp).* CMU-CS-88-162.
+14. **Brady, M. L., Raghavan, R., & Slawny, J. (1989).** *Back propagation fails to separate where perceptrons succeed.* IEEE Transactions on Circuits and Systems, 36(5), 665-674.
+15. **Baldi, P., & Hornik, K. (1989).** *Neural networks and principal component analysis: Learning from examples without local minima.* Neural Networks, 2(1), 53-58.
+16. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
+17. **Riedmiller, M., & Braun, H. (1993).** *A direct adaptive method for faster backpropagation learning: The RPROP algorithm.* IEEE International Conference on Neural Networks, 586-591.
+18. **Tieleman, T., & Hinton, G. (2012).** *Lecture 6.5—rmsprop: Divide the gradient by a running average of its recent magnitude.* COURSERA: Neural Networks for Machine Learning.
+19. **Dauphin, Y. N., Pascanu, R., Gulcehre, C., Cho, K., Ganguli, S., & Bengio, Y. (2014).** *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.* NIPS 2014.
+20. **Kingma, D. P., & Ba, J. (2015).** *Adam: A method for stochastic optimization.* ICLR 2015.
+21. **Choromanska, A., Henaff, M., Mathieu, M., Ben Arous, G., & LeCun, Y. (2015).** *The loss surfaces of multilayer networks.* AISTATS 2015.
+22. **Swirszcz, G., Czarnecki, W. M., & Pascanu, R. (2016).** *Local minima in training of neural networks.* arXiv:1611.06310.
+23. **Oakden-Rayner, L., Gale, W., Bonham, T. A., Lungren, M. P., Carneiro, G., Bradley, A. P., & Palmer, L. J. (2019).** *Validation and Algorithmic Audit of a Deep Learning System for the Detection of Pneumothorax in Chest Radiographs.* Scientific Reports, 10, 16140.
+24. **Rand, W. M. (1971).** *Objective criteria for the evaluation of clustering methods.* Journal of the American Statistical Association, 66(336), 846-850.
+25. **Lloyd, S. (1982).** *Least squares quantization in PCM.* IEEE Transactions on Information Theory, 28(2), 129-137.
+26. **Hubert, L., & Arabie, P. (1985).** *Comparing partitions.* Journal of Classification, 2(1), 193-218.
+27. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
+28. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
+29. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
+30. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad & Modelos de Árboles (CART/ID3).* Ciencia de Datos — Doctorado UCN.
+31. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
+32. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
+33. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
+34. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
+35. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
+36. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
+37. **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.).* Springer, New York.
 

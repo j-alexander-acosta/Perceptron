@@ -1,4 +1,4 @@
-# Suite Educativa de Ciencia de Datos y Redes Neuronales (13 Unidades Académicas • 812 Diapositivas • 53 Laboratorios)
+# Suite Educativa de Ciencia de Datos y Redes Neuronales (14 Unidades Académicas • 880 Diapositivas • 57 Laboratorios)
 
 Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al. y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD13`–`CD18`)**:
 
@@ -9,7 +9,8 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 * **CD05 (Quinta en orden) — Generalización y Validación (63 Diapositivas):** Laboratorios 05.1 a 05.4 ([`generalizacion_validacion.py`](generalizacion_validacion.py)).
 * **CD06 (Sexta en orden) — Clustering: Agrupamiento No Supervisado (57 Diapositivas):** Laboratorios 06.1 a 06.4 ([`clustering.py`](clustering.py)).
 * **CD07 (Séptima en orden) — Reducción de Dimensionalidad (73 Diapositivas):** Laboratorios 07.1 a 07.4 ([`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py)).
-* *(Espacio reservado en secuencia para las próximas unidades `CD08` a `CD12` según orden de cátedra).*
+* **CD08 (Octava en orden) — Modelos de Árboles de Clasificación y Regresión (68 Diapositivas):** Laboratorios 08.1 a 08.4 ([`arboles_decision.py`](arboles_decision.py)).
+* *(Espacio reservado en secuencia para las próximas unidades `CD09` a `CD12` según orden de cátedra).*
 * **CD13 (Unidad I) — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
 * **CD14 (Unidad II) — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
 * **CD15 (Unidad III) — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
@@ -220,6 +221,31 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 🌲 CD08 (OCTAVA EN ORDEN): Modelos de Árboles de Clasificación y Regresión (68 Diapositivas)
+
+1. **Módulo 08.1 — Particionado Ortogonal, Complejidad Booleana $2^{2^n}$ y NP-Completitud (Diaps. 1–19):**
+   * **Particionado Ortogonal de CART (Diaps. 3–5):** Los árboles solo generan hiperplanos paralelos a los ejes coordenados ($x_j \le t$). Para modelar fronteras lineales oblicuas simples (ej. $x_2 = 0.8 x_1$), el árbol debe construir una costosa escalera de hiperplanos ortogonales.
+   * **Explosión Combinatoria de Funciones Booleanas (Diaps. 6–10):** Para $n$ variables binarias existen $2^n$ estados de entrada y $2^{2^n}$ funciones booleanas posibles ($n=1 \to 4$, $n=2 \to 16$, $n=3 \to 256$, $n=4 \to 65\,536$ y $n=7 \to \mathbf{3.4028 \times 10^{38}}$).
+   * **Teorema de Hyafil & Rivest (1976):** Determinar el árbol binario óptimo es **NP-completo**, obligando a usar algoritmos voraces (*greedy*) sin retroceso.
+   * **La Trampa del Orden Categórico Nominal (Diaps. 17–18):** Ordenar nominales como enteros $\{1, 2, 3\}$ impide aislar $\{C_1, C_3\}$ frente a $\{C_2\}$; CART evalúa las $2^{K-1}-1$ particiones binarias disjuntas.
+2. **Módulo 08.2 — Criterios de Impureza (Error, Gini, Entropía de Shannon) y Algoritmo ID3 (Diaps. 20–39):**
+   * **Insensibilidad de la Tasa de Error de Clasificación (Diaps. 21–28):**
+     * En el **Caso 1 de la Cátedra (Diap. 24)** ($14A, 5B \to 6A, 0B$ [puro] y $8A, 5B$), el error del padre es $5/19$ y el error ponderado de los hijos es $(6/19)(0) + (13/19)(5/13) = 5/19 \implies \mathbf{\Delta E = 0.000}$ (insensible a la creación del nodo puro). En cambio, $\mathbf{\Delta I_G = +0.0639}$ y $\mathbf{\Delta H = +0.1738\text{ bit}}$.
+     * En el **Caso 2 (Diap. 26)** ($9A, 3B \to 6A, 0B$ y $3A, 3B$), nuevamente $\Delta E = 0.000$ mientras $\mathbf{\Delta I_G = +0.1250}$.
+     * Causa: la concavidad estricta de Gini y Entropía frente a la naturaleza lineal a trozos del error.
+   * **Trazado Manual Exacto de ID3 en 10 Días (Harvard CS109, Diaps. 31–39):** $H(S) = 1.000\text{ bit}$. Raíz: Clima $IG = \mathbf{0.600}$ (gana) vs Viento $0.029$ y Temp $0.029$. En rama Soleado (2 Sí, 2 No): Viento genera $IG = \mathbf{1.000\text{ bit}}$ dividiendo perfectamente Suave (Sí) y Fuerte (No).
+3. **Módulo 08.3 — Control de Complejidad, Miopía del Early Stopping y Poda CART (Diaps. 40–54):**
+   * **Falla de la Parada Temprana por Ganancia Mínima (Diaps. 42–45):** En problemas tipo paridad o XOR, un corte univariado produce ganancia cero provocando detención prematura. CART soluciona esto creciendo el árbol completo y podando después.
+   * **Poda por Costo-Complejidad (Weakest Link Pruning, Diaps. 46–54):** Minimiza $C_\alpha(T) = R(T) + \alpha |T|$ colapsando el nodo interno con menor eslabón $g(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}$.
+   * **Verificación del Árbol de 100 Puntos (Diap. 48):** $T_0$ ($3$ hojas, $R=0.14$), nodo $x_2 < 3$ con $g(t) = 0.040 \implies T_1$ ($2$ hojas, $R=0.18$), y raíz con $g=0.320 \implies T_2$ ($1$ hoja, $R=0.50$). Para $\alpha=0.10$, $C(T_1) = 0.38 < C(T_0) = 0.44 < C(T_2) = 0.60$.
+4. **Módulo 08.4 — CART para Regresión Continua, Reducción de MSE y Ensambles (Diaps. 55–68):**
+   * Predicción en hoja como la media muestral $\bar{y}_m$ y criterio de división por minimización de la varianza ponderada (suma de cuadrados).
+   * **Trazado del Dataset de 6 Puntos (Diap. 57):** $x=[1..6], y=[2.0, 3.0, 2.5, 8.0, 9.0, 8.5]$. El umbral $x < 3.5$ produce $\text{MSE} = \mathbf{0.167}$ (óptimo global) frente a $x < 2.5$ ($4.667$) y $x < 4.5$ ($3.875$).
+   * Progresión de profundidad: Prof 1 ($\text{MSE}=0.167$), Prof 2 ($0.062$), Prof 3 ($\text{MSE}=0.000$, memorización total).
+   * Transición teórica a Ensambles (Bagging, Random Forest y Boosting) para domar la alta varianza.
+
+---
+
 ### 🟦 CD13 (UNIDAD I): Representación y Aproximación Universal con Redes Neuronales
 
 1. **Módulo 1.1 — Compuertas de Umbral y Arquitecturas XOR (Diaps. 6–15):**
@@ -347,7 +373,7 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-### 1. 🌐 Suite Web Educativa Interactiva (13 Unidades: CD01–CD07 y CD13–CD18 • 53 Laboratorios en Navegador)
+### 1. 🌐 Suite Web Educativa Interactiva (14 Unidades: CD01–CD08 y CD13–CD18 • 57 Laboratorios en Navegador)
 ```bash
 open web/index.html
 # O desde Python:
@@ -356,7 +382,7 @@ python3 perceptron_xor.py --web
 
 ### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro, Orden de Cátedra)
 ```bash
-# Ejecutar TODAS las verificaciones de CD01–CD07 y CD13–CD18 automáticamente (13 Unidades):
+# Ejecutar TODAS las verificaciones de CD01–CD08 y CD13–CD18 automáticamente (14 Unidades):
 python3 perceptron_xor.py --auto
 
 # Laboratorio interactivo de CD01 (Primera en orden — Introducción al Curso):
@@ -379,6 +405,9 @@ python3 clustering.py
 
 # Laboratorio interactivo de CD07 (Séptima en orden — Reducción de Dimensionalidad: PCA, Fisher LDA, t-SNE, UMAP):
 python3 reduccion_dimensionalidad.py
+
+# Laboratorio interactivo de CD08 (Octava en orden — Árboles CART e ID3, Impureza, Poda y Regresión):
+python3 arboles_decision.py
 
 # Laboratorio interactivo de CD13 / Unidad I (Aproximación Universal):
 python3 aproximacion_universal.py
@@ -406,9 +435,9 @@ python3 perceptron_xor.py
 
 ## 📁 Estructura del Proyecto
 ```
-├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD05, luego CD13 a CD18)
-├── INFORME.md                   # Informe académico detallado de las 12 unidades (CD01–CD07 y CD13–CD18)
-├── perceptron_xor.py            # Lanzador central y verificador integrado (13 unidades • 53 laboratorios)
+├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD08, luego CD13 a CD18)
+├── INFORME.md                   # Informe académico detallado de las 14 unidades (CD01–CD08 y CD13–CD18)
+├── perceptron_xor.py            # Lanzador central y verificador integrado (14 unidades • 57 laboratorios)
 ├── introduccion_curso.py        # CD01 (Primera en orden): Pandemia, SIR (Diap. 13), Netflix Prize, 3 Relatos IA y LLMs
 ├── preprocesamiento_eda.py      # CD02 (Segunda en orden): Sesgos Gallup/Yelp/QR, CRISP-DM, Pandas epl_mini (23 jug.) y Anscombe
 ├── visualizacion_datos.py       # CD03 (Tercera en orden): Datasaurus, Burtin 1951 (16 bacterias), Tufte Lie Factor, Stevens, Correll y Mirages
@@ -416,6 +445,7 @@ python3 perceptron_xor.py
 ├── generalizacion_validacion.py # CD05 (Quinta en orden): Sobreajuste, Cauchy-Schwarz, Paso L2 a Mano [1.8, -2.0], CV 5-Fold vs Simple y Sesgo-Varianza
 ├── clustering.py                # CD06 (Sexta en orden): Lloyd 1D/2D, Codo K=3, Rand Index vs ARI, Dendrogramas y DBSCAN vs HDBSCAN
 ├── reduccion_dimensionalidad.py # CD07 (Séptima en orden): Maldición Dim P_d, PCA Paso a Paso (6 pts), Fisher LDA (8 pts), t-SNE y UMAP
+├── arboles_decision.py          # CD08 (Octava en orden): Particionado Ortogonal, Impureza Error/Gini/Entropía, ID3, Weakest Link y CART Regresión
 ├── aproximacion_universal.py    # CD13 (Unidad I): DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
 ├── aprendizaje_redes.py         # CD14 (Unidad II): Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
 ├── descenso_gradiente.py        # CD15 (Unidad III): Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
@@ -424,6 +454,6 @@ python3 perceptron_xor.py
 ├── sgd_lotes.py                 # CD18 (Unidad VI): SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, Nesterov, RMSprop y Adam
 ├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html               # Suite Web Interactiva (13 Unidades: CD01–CD07 y CD13–CD18 • 53 Laboratorios)
-└── contexto/                    # Historial secuencial de planes de trabajo (context1..context17)
+│   └── index.html               # Suite Web Interactiva (14 Unidades: CD01–CD08 y CD13–CD18 • 57 Laboratorios)
+└── contexto/                    # Historial secuencial de planes de trabajo (context1..context20)
 ```

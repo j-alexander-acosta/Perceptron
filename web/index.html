@@ -736,6 +736,12 @@
       box-shadow: 0 0 18px rgba(234, 179, 8, 0.24);
     }
 
+    .unit-btn.active-unit-08 {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.20), rgba(17, 24, 39, 0.9));
+      border-color: #10b981;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.24);
+    }
+
     .unit-btn .u-name {
       font-size: 0.95rem;
       font-weight: 700;
@@ -793,6 +799,12 @@
       color: #fef08a;
       border-bottom-color: #eab308;
       background: rgba(234, 179, 8, 0.14);
+    }
+
+    .tab-btn.unit08-tab.active {
+      color: #6ee7b7;
+      border-bottom-color: #10b981;
+      background: rgba(16, 185, 129, 0.14);
     }
 
     .tab-btn.unit2-tab.active {
@@ -893,6 +905,12 @@
       background: rgba(234, 179, 8, 0.20);
       color: #fef08a;
       border: 1px solid rgba(234, 179, 8, 0.45);
+    }
+
+    .unit-pill.u08 {
+      background: rgba(16, 185, 129, 0.20);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.45);
     }
 
     .unit-pill.u1 {
@@ -1030,6 +1048,13 @@
           <span class="u-name">Reducción de Dimensionalidad (PCA, Fisher LDA, t-SNE y UMAP)</span>
         </div>
         <span class="u-meta">Labs 07.1–07.4 (73 Diaps.)</span>
+      </button>
+      <button class="unit-btn u08" id="unitBtn08" onclick="selectUnit('08')">
+        <div>
+          <span class="u-tag">CD08 • Paso 6 • Modelos No Paramétricos y Particionado</span>
+          <span class="u-name">Árboles de Clasificación y Regresión (CART, ID3, Poda y Varianza)</span>
+        </div>
+        <span class="u-meta">Labs 08.1–08.4 (68 Diaps.)</span>
       </button>
       <button class="unit-btn u1" id="unitBtn1" onclick="selectUnit(1)">
         <div>
@@ -1184,6 +1209,22 @@
       </button>
       <button class="tab-btn unit07-tab" data-tab="52" onclick="switchTab(52)">
         <span>07.4 Manifold Learning: t-SNE, Student-t, UMAP y Pipeline HDBSCAN (Diaps. 50–73)</span>
+      </button>
+    </nav>
+
+    <!-- Pestañas de la Unidad CD08 (Octava en orden: Labs 08.1 a 08.4) -->
+    <nav class="nav-tabs" id="unit08Tabs" style="display:none;">
+      <button class="tab-btn unit08-tab" data-tab="53" onclick="switchTab(53)">
+        <span>08.1 Particionado Ortogonal: Hiperplanos Axiales y Espacio Booleano 2^(2^n) (Diaps. 1–19)</span>
+      </button>
+      <button class="tab-btn unit08-tab" data-tab="54" onclick="switchTab(54)">
+        <span>08.2 Criterios de Impureza: Error, Gini, Entropía de Shannon y Algoritmo ID3 (Diaps. 20–39)</span>
+      </button>
+      <button class="tab-btn unit08-tab" data-tab="55" onclick="switchTab(55)">
+        <span>08.3 Control de Complejidad y Poda: Weakest Link Pruning y Trade-off Sesgo-Varianza (Diaps. 40–54)</span>
+      </button>
+      <button class="tab-btn unit08-tab" data-tab="56" onclick="switchTab(56)">
+        <span>08.4 Árboles de Regresión CART: Reducción de Varianza MSE y Escalonamiento (Diaps. 55–68)</span>
       </button>
     </nav>
 
@@ -4134,6 +4175,344 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
     </div>
 
     <!-- =================================================================== -->
+    <!-- UNIDAD CD08: MODELOS DE ÁRBOLES DE CLASIFICACIÓN Y REGRESIÓN -->
+    <!-- =================================================================== -->
+
+    <!-- LAB 53 / MÓDULO 08.1: PARTISIONADO ORTOGONAL Y COMPLEJIDAD BOOLEANA -->
+    <div class="module-panel" id="panel-53">
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🌲 Particionado Ortogonal: Hiperplanos Axiales vs Fronteras Diagonales</div>
+            <span class="slide-ref">Diapositivas 1–19</span>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.8rem;">
+            <button class="btn btn-outline active" id="btnCd08PartLinear" onclick="setCd08PartMode('linear')">Frontera Lineal Diagonal</button>
+            <button class="btn btn-outline" id="btnCd08PartK1" onclick="setCd08PartMode('k1')">Árbol K=1 Corte</button>
+            <button class="btn btn-outline" id="btnCd08PartK2" onclick="setCd08PartMode('k2')">Árbol K=2 Cortes</button>
+            <button class="btn btn-outline" id="btnCd08PartK4" onclick="setCd08PartMode('k4')">Árbol K=4 Cortes</button>
+            <button class="btn btn-outline" id="btnCd08PartK8" onclick="setCd08PartMode('k8')">Árbol K=8 Escalera</button>
+          </div>
+
+          <div class="canvas-container" style="background:#090d16; border-radius:8px; padding:8px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <canvas id="canvasCd08Partitions" width="480" height="260" style="max-width:100%; height:auto;"></canvas>
+          </div>
+
+          <div class="math-box" style="margin-top:0.8rem; font-size:0.82rem;">
+            <strong>Propiedad Fundamental de CART (Breiman et al., 1984):</strong>
+            <p>Los árboles de decisión solo generan cortes <em>ortogonales a los ejes coordenados</em> (\(x_j \le t\)). Mientras que un clasificador lineal requiere una única ecuación (\(x_2 - 0.8 x_1 = 0\)), un árbol de decisión se ve forzado a construir una <strong>escalera de hiperplanos</strong> para aproximar diagonales, introduciendo error de sesgo geométrico o requiriendo árboles muy profundos.</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🔢 Explosión Booleana 2^(2^n), NP-Completitud y Trampa Categórica</div>
+            <span class="slide-ref">Diapositivas 6–18</span>
+          </div>
+
+          <div style="margin-bottom:0.8rem;">
+            <label style="font-size:0.82rem; color:var(--text-muted); display:block; margin-bottom:0.3rem;">Seleccionar Número de Variables Binarias (n):</label>
+            <div style="display:flex; gap:0.4rem;">
+              <button class="btn btn-outline" id="btnCd08N1" onclick="setCd08N(1)">n = 1</button>
+              <button class="btn btn-outline" id="btnCd08N2" onclick="setCd08N(2)">n = 2</button>
+              <button class="btn btn-outline active" id="btnCd08N3" onclick="setCd08N(3)">n = 3</button>
+              <button class="btn btn-outline" id="btnCd08N4" onclick="setCd08N(4)">n = 4</button>
+              <button class="btn btn-outline" id="btnCd08N7" onclick="setCd08N(7)">n = 7</button>
+            </div>
+          </div>
+
+          <div class="metric-grid" style="grid-template-columns:repeat(2, 1fr); gap:0.5rem; margin-bottom:0.8rem;">
+            <div class="metric-chip">
+              <span class="label">Filas en Tabla (2^n)</span>
+              <span class="val" id="cd08RowsVal" style="color:#6ee7b7;">8 filas</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">Total Funciones (2^(2^n))</span>
+              <span class="val" id="cd08FuncsVal" style="color:#fde047;">256 funciones</span>
+            </div>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.82rem;">
+            <strong>Teorema de Hyafil & Rivest (1976):</strong>
+            <p>Construir el árbol de decisión binario de tamaño mínimo o exactitud óptima para un conjunto de datos arbitrario es <strong>NP-completo</strong>. Esto prohíbe la búsqueda exhaustiva y obliga a algoritmos voraces (<em>greedy heuristics</em>) que optimizan un solo nodo a la vez sin mirar hacia adelante.</p>
+            <strong>La Trampa del Ordenamiento Categórico (Diaps. 17–18):</strong>
+            <p>Si codificamos una variable nominal como enteros bajo un orden arbitrario (ej. Azul=1, Rojo=2, Amarillo=3), una partición univariada \(x \le t\) jamás podrá agrupar {Azul, Amarillo} contra {Rojo}. Para \(K\) categorías existen \(2^{K-1}-1\) particiones binarias posibles que deben evaluarse explícitamente o codificarse en variables <em>one-hot</em>.</p>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-53">
+            <div class="quiz-q">1 (Diaps. 1–19). «Los árboles de decisión de tipo CART dividen recursivamente el espacio mediante hiperplanos estrictamente paralelos a los ejes coordenados (particionado ortogonal), lo que provoca que fronteras diagonales simples requieran una aproximación en escalera con múltiples cortes; y el problema de encontrar el árbol binario óptimo global es NP-completo (Hyafil & Rivest, 1976), justificando el uso de algoritmos voraces (greedy).»</div>
+            <div class="quiz-options">
+              <button class="btn btn-outline" id="q53-btn-true" onclick="answerQuiz(53, true)">Verdadero</button>
+              <button class="btn btn-outline" id="q53-btn-false" onclick="answerQuiz(53, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-53"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- LAB 54 / MÓDULO 08.2: IMPUREZA Y ALGORITMO ID3 -->
+    <div class="module-panel" id="panel-54">
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📉 Criterios de Impureza: Error vs Gini vs Entropía de Shannon</div>
+            <span class="slide-ref">Diapositivas 20–30</span>
+          </div>
+
+          <div style="margin-bottom:0.8rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.25rem;">
+              <span>Proporción de Clase Positiva \(p\):</span>
+              <strong id="cd08PLabel" style="color:#6ee7b7;">p = 0.50</strong>
+            </div>
+            <input type="range" id="cd08PSlider" min="0" max="100" value="50" step="1" style="width:100%;" oninput="onCd08PSlider(this.value)">
+          </div>
+
+          <div class="canvas-container" style="background:#090d16; border-radius:8px; padding:8px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <canvas id="canvasCd08Impurity" width="480" height="200" style="max-width:100%; height:auto;"></canvas>
+          </div>
+
+          <div class="metric-grid" style="grid-template-columns:repeat(3, 1fr); gap:0.5rem; margin-top:0.8rem; margin-bottom:0.8rem;">
+            <div class="metric-chip">
+              <span class="label">Error min(p, 1-p)</span>
+              <span class="val" id="cd08ErrorVal" style="color:#f87171;">0.500</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">Gini 2p(1-p)</span>
+              <span class="val" id="cd08GiniVal" style="color:#60a5fa;">0.500</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">Entropía H(p)/2</span>
+              <span class="val" id="cd08EntropyVal" style="color:#34d399;">0.500</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.4rem; margin-bottom:0.6rem;">
+            <button class="btn btn-outline" id="btnCd08Case1" onclick="showCd08ImpurityCase(1)">Caso 1 (Diap. 24): 14A, 5B</button>
+            <button class="btn btn-outline" id="btnCd08Case2" onclick="showCd08ImpurityCase(2)">Caso 2 (Diap. 26): 9A, 3B</button>
+          </div>
+          <div id="cd08CaseExplanation" class="math-box" style="font-size:0.80rem;">
+            <strong>Insensibilidad del Error de Clasificación:</strong> En el Caso 1 (\(14A, 5B \to 6A, 0B\) y \(8A, 5B\)), el error del padre es \(5/19\) y el de los hijos es \(0 + 5/19\). La ganancia de error es exactamente <strong>0.000</strong> (ciego a la pureza del nodo izquierdo). Gini reduce \(0.064\) y Entropía reduce \(0.174\).
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">☀️ Algoritmo ID3: "¿Salgo a correr?" (10 Días de Harvard CS109)</div>
+            <span class="slide-ref">Diapositivas 31–39</span>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.80rem;">
+            <strong>Entropía del Conjunto Raíz (S):</strong> 10 días (5 Sí, 5 No) \(\implies H(S) = -0.5\log_2(0.5) - 0.5\log_2(0.5) = 1.000\) bit.
+            <div style="margin-top:0.4rem; display:grid; grid-template-columns:repeat(3, 1fr); gap:0.4rem;">
+              <div style="background:rgba(255,255,255,0.04); padding:4px 6px; border-radius:4px;">
+                <strong>Clima:</strong><br>Nublado (3/3 Sí, H=0)<br>Lluvioso (3/3 No, H=0)<br>Soleado (2 Sí, 2 No, H=1)<br><span style="color:#34d399; font-weight:700;">IG = 0.600 (Gana Raíz)</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.04); padding:4px 6px; border-radius:4px;">
+                <strong>Viento:</strong><br>Suave (3 Sí, 2 No, H=0.971)<br>Fuerte (2 Sí, 3 No, H=0.971)<br><span style="color:#94a3b8;">IG = 0.125</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.04); padding:4px 6px; border-radius:4px;">
+                <strong>Temperatura:</strong><br>Cálido (2 Sí, 3 No)<br>Templado (3 Sí, 2 No)<br><span style="color:#94a3b8;">IG = 0.049</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.80rem;">
+            <strong>Recursión en Rama "Soleado":</strong> 4 días (2 Sí, 2 No, H=1.0). Se evalúa Viento:
+            <ul style="margin:0.2rem 0 0 1rem;">
+              <li>Viento = Fuerte \(\implies\) [0 Sí, 2 No] (Puro \(\implies\) <strong>NO</strong>)</li>
+              <li>Viento = Suave \(\implies\) [2 Sí, 0 No] (Puro \(\implies\) <strong>SÍ</strong>)</li>
+            </ul>
+            <span style="color:#34d399; font-weight:700;">\(IG(\text{Viento} | \text{Soleado}) = 1.000\) bit (Partición Perfecta).</span>
+          </div>
+
+          <div style="background:#090d16; border-radius:8px; padding:8px; border:1px solid rgba(255,255,255,0.06); margin-bottom:0.8rem;">
+            <div style="font-size:0.82rem; font-weight:700; margin-bottom:0.4rem; color:#6ee7b7;">🧪 Evaluador de Días de Prueba:</div>
+            <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+              <label style="font-size:0.80rem;">Clima:
+                <select id="cd08TestClima" onchange="evalCd08Day()" style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:2px 6px;">
+                  <option value="Nublado">Nublado</option>
+                  <option value="Lluvioso">Lluvioso</option>
+                  <option value="Soleado" selected>Soleado</option>
+                </select>
+              </label>
+              <label style="font-size:0.80rem;">Viento:
+                <select id="cd08TestViento" onchange="evalCd08Day()" style="background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:2px 6px;">
+                  <option value="Suave">Suave</option>
+                  <option value="Fuerte" selected>Fuerte</option>
+                </select>
+              </label>
+              <div style="font-size:0.82rem;">Decisión del Árbol: <strong id="cd08PredDecision" style="color:#f87171;">NO CORRER</strong></div>
+            </div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-54">
+            <div class="quiz-q">2 (Diaps. 20–39). «La tasa de error de clasificación no es adecuada como función de impureza en árboles de decisión porque es insensible a particiones que purifican nodos si la clase mayoritaria no cambia, mientras que el índice de Gini y la entropía de Shannon son funciones estrictamente cóncavas que garantizan una reducción positiva de impureza en cualquier partición no trivial.»</div>
+            <div class="quiz-options">
+              <button class="btn btn-outline" id="q54-btn-true" onclick="answerQuiz(54, true)">Verdadero</button>
+              <button class="btn btn-outline" id="q54-btn-false" onclick="answerQuiz(54, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-54"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- LAB 55 / MÓDULO 08.3: CONTROL DE COMPLEJIDAD Y PODA CART -->
+    <div class="module-panel" id="panel-55">
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">✂️ Poda CART por Costo-Complejidad (Weakest Link Pruning)</div>
+            <span class="slide-ref">Diapositivas 40–54</span>
+          </div>
+
+          <div style="margin-bottom:0.8rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.25rem;">
+              <span>Parámetro de Regularización de Poda (\(\alpha\)):</span>
+              <strong id="cd08AlphaLabel" style="color:#6ee7b7;">α = 0.00</strong>
+            </div>
+            <input type="range" id="cd08AlphaSlider" min="0" max="45" value="0" step="1" style="width:100%;" oninput="onCd08AlphaSlider(this.value)">
+          </div>
+
+          <div class="canvas-container" style="background:#090d16; border-radius:8px; padding:8px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <canvas id="canvasCd08Pruning" width="480" height="230" style="max-width:100%; height:auto;"></canvas>
+          </div>
+
+          <div class="metric-grid" style="grid-template-columns:repeat(3, 1fr); gap:0.5rem; margin-top:0.8rem;">
+            <div class="metric-chip">
+              <span class="label">Árbol Activo</span>
+              <span class="val" id="cd08TreeActive" style="color:#6ee7b7;">T₀ (Completo)</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">Hojas |T|</span>
+              <span class="val" id="cd08LeavesCount" style="color:#fde047;">3 hojas</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">Costo C_α(T)</span>
+              <span class="val" id="cd08CostVal" style="color:#60a5fa;">0.140</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚖️ Eslabón Más Débil g(t), Miopía y Validación Cruzada</div>
+            <span class="slide-ref">Diapositivas 46–54</span>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.82rem;">
+            <strong>Función Objetivo de Breiman et al. (1984):</strong>
+            \[ C_\alpha(T) = R(T) + \alpha |T| \]
+            <p>Donde \(R(T)\) es la tasa de error empírico y \(|T|\) es el número de nodos terminales (hojas).</p>
+            <strong>Eslabón más débil (Weakest Link):</strong>
+            \[ g(t) = \frac{R(t) - R(T_t)}{|T_t| - 1} \]
+            <ul style="margin:0.2rem 0 0 1rem; line-height:1.4;">
+              <li>Nodo \(x_2 < 3\): \(g(t) = \frac{0.18 - 0.14}{2 - 1} = 0.040\) \(\implies\) se colapsa primero para \(\alpha \ge 0.04\).</li>
+              <li>Nodo Raíz \(x_1 < 5\): \(g(t) = \frac{0.50 - 0.18}{2 - 1} = 0.320\) \(\implies\) se colapsa a nodo único para \(\alpha \ge 0.32\).</li>
+            </ul>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.82rem;">
+            <strong>Miopía del Early Stopping vs Poda Posterior:</strong>
+            <p>Detener el crecimiento cuando \(\Delta I < \epsilon\) (parada temprana) falla catastróficamente en problemas como XOR o Paridad: el primer corte produce ganancia de impureza exactamente cero, causando detención prematura. El enfoque correcto de CART es <strong>crecer el árbol completo</strong> y luego podar retrospectivamente mediante \(C_\alpha(T)\) y validación cruzada \(K\)-fold.</p>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-55">
+            <div class="quiz-q">3 (Diaps. 40–54). «El método de Poda por Costo-Complejidad (Cost-Complexity Pruning / Weakest Link Pruning) de CART minimiza la función de costo regularizada \(C_\alpha(T) = R(T) + \alpha |T|\) y colapsa sucesivamente el subárbol interno con el menor valor de \(g(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}\), produciendo una secuencia finita y estrictamente anidada de subárboles óptimos para cualquier \(\alpha \ge 0\).»</div>
+            <div class="quiz-options">
+              <button class="btn btn-outline" id="q55-btn-true" onclick="answerQuiz(55, true)">Verdadero</button>
+              <button class="btn btn-outline" id="q55-btn-false" onclick="answerQuiz(55, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-55"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- LAB 56 / MÓDULO 08.4: CART PARA REGRESIÓN CONTINUA Y PROS/CONTRAS -->
+    <div class="module-panel" id="panel-56">
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📈 CART para Regresión: Ajuste Escalonado y Reducción de MSE</div>
+            <span class="slide-ref">Diapositivas 55–63</span>
+          </div>
+
+          <div style="margin-bottom:0.8rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.25rem;">
+              <span>Profundidad Máxima del Árbol (max_depth):</span>
+              <strong id="cd08DepthLabel" style="color:#6ee7b7;">Profundidad = 1</strong>
+            </div>
+            <input type="range" id="cd08DepthSlider" min="1" max="6" value="1" step="1" style="width:100%;" oninput="onCd08DepthSlider(this.value)">
+          </div>
+
+          <div class="canvas-container" style="background:#090d16; border-radius:8px; padding:8px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <canvas id="canvasCd08Regression" width="480" height="230" style="max-width:100%; height:auto;"></canvas>
+          </div>
+
+          <div class="metric-grid" style="grid-template-columns:repeat(3, 1fr); gap:0.5rem; margin-top:0.8rem;">
+            <div class="metric-chip">
+              <span class="label">Regiones / Hojas</span>
+              <span class="val" id="cd08RegLeaves" style="color:#6ee7b7;">2 hojas</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">MSE Entrenamiento</span>
+              <span class="val" id="cd08RegMse" style="color:#fde047;">0.392</span>
+            </div>
+            <div class="metric-chip">
+              <span class="label">Predicción en x=3.5</span>
+              <span class="val" id="cd08PredXVal" style="color:#60a5fa;">5.50</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧮 Trazado Manual 6 Puntos (CS109) y Pasarela a Ensambles</div>
+            <span class="slide-ref">Diapositivas 57–68</span>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.80rem;">
+            <strong>Dataset de la Cátedra:</strong> \(x=[1..6], y=[2.0, 3.0, 2.5, 8.0, 9.0, 8.5]\).
+            <p>Se evalúan todos los puntos medios entre muestras adyacentes para minimizar la suma de errores cuadráticos \(MSE = \frac{N_1}{N} Var(y_1) + \frac{N_2}{N} Var(y_2)\):</p>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.4rem; margin-top:0.3rem;">
+              <div style="background:rgba(255,255,255,0.04); padding:4px 6px; border-radius:4px;">
+                <strong>Corte x &lt; 2.5:</strong><br>R₁={1,2}, R₂={3,4,5,6}<br>MSE = 4.67 (Subóptimo)
+              </div>
+              <div style="background:rgba(16,185,129,0.15); border:1px solid #10b981; padding:4px 6px; border-radius:4px;">
+                <strong>Corte x &lt; 3.5:</strong><br>R₁={1,2,3}, R₂={4,5,6}<br><span style="color:#6ee7b7; font-weight:700;">MSE = 0.17 (¡ÓPTIMO!)</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.04); padding:4px 6px; border-radius:4px;">
+                <strong>Corte x &lt; 4.5:</strong><br>R₁={1,2,3,4}, R₂={5,6}<br>MSE = 3.89 (Subóptimo)
+              </div>
+            </div>
+            <p style="margin-top:0.4rem;">Predicciones en hojas: Para \(x \in R_1 \implies \hat{y} = 2.50\); para \(x \in R_2 \implies \hat{y} = 8.50\).</p>
+          </div>
+
+          <div class="math-box" style="margin-bottom:0.8rem; font-size:0.80rem;">
+            <strong>Pros, Contras y Transición a Ensambles (Diaps. 64–68):</strong>
+            <ul style="margin:0.2rem 0 0 1rem; line-height:1.4;">
+              <li><strong>Ventajas:</strong> Interpretables como reglas "if-then", invariantes a transformaciones monótonas de variables (no requieren escalamiento), manejan datos mixtos y valores faltantes de forma nativa.</li>
+              <li><strong>Desventajas:</strong> Alta varianza (pequeños cambios en los datos provocan árboles completamente distintos), aproximación escalonada no diferenciable.</li>
+              <li><strong>Solución:</strong> Reducir varianza promediando múltiples árboles descorrelacionados en <strong>Random Forest</strong> (Bagging) o reducir sesgo iterativamente en <strong>Gradient Boosted Trees (XGBoost/LightGBM)</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-56">
+            <div class="quiz-q">4 (Diaps. 55–68). «En los árboles de regresión CART, la predicción en cada región terminal \(R_m\) es la media de las respuestas de entrenamiento \(\hat{y}_m = \frac{1}{N_m}\sum_{i \in R_m} y_i\), el criterio de división voraz minimiza la suma ponderada de errores cuadráticos medios (reducción de varianza), y debido a su alta varianza intrínseca frente a pequeñas perturbaciones de datos, constituyen los estimadores base ideales para métodos de ensamble como Random Forest y Gradient Boosted Trees.»</div>
+            <div class="quiz-options">
+              <button class="btn btn-outline" id="q56-btn-true" onclick="answerQuiz(56, true)">Verdadero</button>
+              <button class="btn btn-outline" id="q56-btn-false" onclick="answerQuiz(56, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-56"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
     <!-- MÓDULO 1 (CD13): COMPUERTAS DE UMBRAL Y REDES XOR (3 NEURONAS VS 2 NEURONAS) -->
     <!-- =================================================================== -->
     <div class="module-panel" id="panel-0">
@@ -6832,11 +7211,15 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       { unit: '07', pill: 'CD07 • REDUCCIÓN DIMENSIONAL', title: 'Módulo 07.1: La Maldición de la Dimensionalidad: Hiperesferas en Hipercubos y Distancias Vacías', slides: 'Temario: El volumen se escapa a las esquinas • P_d = Vol(bola)/Vol(cubo) • Concentración de distancia • Diaps. 1–11' },
       { unit: '07', pill: 'CD07 • REDUCCIÓN DIMENSIONAL', title: 'Módulo 07.2: PCA Paso a Paso: Análisis de Componentes Principales, Dualidad Varianza/Error y SVD', slides: 'Temario: Centrado x̄=(4,3) • Covarianza S • Autovalores λ₁=3, λ₂=1 • Error Loss*=Nλ₂=6.0 • Varianza 75% vs 25% • Diaps. 12–37' },
       { unit: '07', pill: 'CD07 • REDUCCIÓN DIMENSIONAL', title: 'Módulo 07.3: Fisher LDA: Análisis Discriminante Lineal, Maximización Inter-clase y Supresión de Ruido', slides: 'Temario: w* ∝ S_W⁻¹(m₂ - m₁) ∝ [27, 1]ᵀ • Criterio J=2.28 vs PCA J=0.03 • Castigar varianza intra-clase • Diaps. 38–49' },
-      { unit: '07', pill: 'CD07 • REDUCCIÓN DIMENSIONAL', title: 'Módulo 07.4: Manifold Learning: t-SNE, Distribución t de Student, UMAP, Pipeline con HDBSCAN y Quiz CD07', slides: 'Temario: Probabilidades p_{j|i} • Perplejidad y σ adaptativo • Colas pesadas de Student-t (810x) • UMAP y pipeline a HDBSCAN • Diaps. 50–73' }
+      { unit: '07', pill: 'CD07 • REDUCCIÓN DIMENSIONAL', title: 'Módulo 07.4: Manifold Learning: t-SNE, Distribución t de Student, UMAP, Pipeline con HDBSCAN y Quiz CD07', slides: 'Temario: Probabilidades p_{j|i} • Perplejidad y σ adaptativo • Colas pesadas de Student-t (810x) • UMAP y pipeline a HDBSCAN • Diaps. 50–73' },
+      { unit: '08', pill: 'CD08 • ÁRBOLES DE DECISIÓN', title: 'Módulo 08.1: Particionado Ortogonal: Hiperplanos Axiales y Espacio Booleano 2^(2^n)', slides: 'Temario: Fronteras lineales vs escalonadas • 2^(2^n) funciones booleanas • NP-completitud Hyafil & Rivest • Orden categórico nominal • Diaps. 1–19' },
+      { unit: '08', pill: 'CD08 • ÁRBOLES DE DECISIÓN', title: 'Módulo 08.2: Criterios de Impureza: Error, Gini, Entropía de Shannon y Algoritmo ID3', slides: 'Temario: Insensibilidad del error • Concavidad de Gini e Información • Dataset 10 días ¿Salgo a correr? • Ganancia de Información • Diaps. 20–39' },
+      { unit: '08', pill: 'CD08 • ÁRBOLES DE DECISIÓN', title: 'Módulo 08.3: Control de Complejidad y Poda: Weakest Link Pruning y Trade-off Sesgo-Varianza', slides: 'Temario: Sobreajuste • Miopía de parada temprana • Poda costo-complejidad C_α(T) = R(T) + α|T| • Eslabón más débil g(t) • Diaps. 40–54' },
+      { unit: '08', pill: 'CD08 • ÁRBOLES DE DECISIÓN', title: 'Módulo 08.4: Árboles de Regresión CART: Reducción de Varianza MSE y Escalonamiento', slides: 'Temario: Criterio MSE de varianza • Trazado manual 6 puntos • Profundidad vs varianza • Pros, contras y puente hacia Ensambles • Diaps. 55–68' }
     ];
 
-    const ORDERED_UNITS = [0, '02', '03', '04', '05', '06', '07', 1, 2, 3, 4, 5, 6];
-    const ORDERED_TABS = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+    const ORDERED_UNITS = [0, '02', '03', '04', '05', '06', '07', '08', 1, 2, 3, 4, 5, 6];
+    const ORDERED_TABS = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
 
     let currentActiveTabIdx = 25;
     let currentPhaseFilter = 'all';
@@ -6868,7 +7251,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       document.getElementById('phaseBtn1').classList.toggle('active', phase === 1);
       document.getElementById('phaseBtn2').classList.toggle('active', phase === 2);
 
-      const f1Btns = ['unitBtn0', 'unitBtn02', 'unitBtn03', 'unitBtn04', 'unitBtn05', 'unitBtn06', 'unitBtn07'];
+      const f1Btns = ['unitBtn0', 'unitBtn02', 'unitBtn03', 'unitBtn04', 'unitBtn05', 'unitBtn06', 'unitBtn07', 'unitBtn08'];
       const f2Btns = ['unitBtn1', 'unitBtn2', 'unitBtn3', 'unitBtn4', 'unitBtn5', 'unitBtn6'];
 
       f1Btns.forEach(id => {
@@ -6921,6 +7304,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       else if (unitNum === '05') switchTab(41);
       else if (unitNum === '06') switchTab(45);
       else if (unitNum === '07') switchTab(49);
+      else if (unitNum === '08') switchTab(53);
       else if (unitNum === 1) switchTab(0);
       else if (unitNum === 2) switchTab(5);
       else if (unitNum === 3) switchTab(9);
@@ -6940,6 +7324,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       const u05Btn = document.getElementById('unitBtn05');
       const u06Btn = document.getElementById('unitBtn06');
       const u07Btn = document.getElementById('unitBtn07');
+      const u08Btn = document.getElementById('unitBtn08');
       const u1Btn = document.getElementById('unitBtn1');
       const u2Btn = document.getElementById('unitBtn2');
       const u3Btn = document.getElementById('unitBtn3');
@@ -6953,6 +7338,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       const u05Tabs = document.getElementById('unit05Tabs');
       const u06Tabs = document.getElementById('unit06Tabs');
       const u07Tabs = document.getElementById('unit07Tabs');
+      const u08Tabs = document.getElementById('unit08Tabs');
       const u1Tabs = document.getElementById('unit1Tabs');
       const u2Tabs = document.getElementById('unit2Tabs');
       const u3Tabs = document.getElementById('unit3Tabs');
@@ -6967,6 +7353,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       u05Btn.classList.toggle('active-unit-05', meta.unit === '05');
       if (u06Btn) u06Btn.classList.toggle('active-unit-06', meta.unit === '06');
       if (u07Btn) u07Btn.classList.toggle('active-unit-07', meta.unit === '07');
+      if (u08Btn) u08Btn.classList.toggle('active-unit-08', meta.unit === '08');
       u1Btn.classList.toggle('active-unit-1', meta.unit === 1);
       u2Btn.classList.toggle('active-unit-2', meta.unit === 2);
       u3Btn.classList.toggle('active-unit-3', meta.unit === 3);
@@ -6981,6 +7368,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       u05Tabs.style.display = meta.unit === '05' ? 'flex' : 'none';
       if (u06Tabs) u06Tabs.style.display = meta.unit === '06' ? 'flex' : 'none';
       if (u07Tabs) u07Tabs.style.display = meta.unit === '07' ? 'flex' : 'none';
+      if (u08Tabs) u08Tabs.style.display = meta.unit === '08' ? 'flex' : 'none';
       u1Tabs.style.display = meta.unit === 1 ? 'flex' : 'none';
       u2Tabs.style.display = meta.unit === 2 ? 'flex' : 'none';
       u3Tabs.style.display = meta.unit === 3 ? 'flex' : 'none';
@@ -7066,6 +7454,10 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       if (idx === 50) { drawCd07PcaProjections(); drawCd07Scree(); }
       if (idx === 51) { drawCd07FisherLda(); drawCd07Fisher1D(); }
       if (idx === 52) { drawCd07TsneStudentT(); drawCd07Perplexity(); }
+      if (idx === 53) { drawCd08Partitions(); }
+      if (idx === 54) { drawCd08Impurity(); }
+      if (idx === 55) { drawCd08Pruning(); }
+      if (idx === 56) { drawCd08Regression(); }
     }
 
     // =========================================================================
@@ -8018,6 +8410,22 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       52: {
         correctAnswer: true,
         explanation: 'En las Diapositivas 50–73 (CD07) esta afirmación es <strong>VERDADERA</strong>: La distribución t de Student q_{ij} ∝ 1/(1 + d²) tiene colas pesadas de ley de potencia que permiten a puntos moderadamente lejanos tener probabilidades apreciables sin amontonarse en el centro. Además, los tamaños visuales de clusters en 2D no reflejan densidad real; el pipeline moderno estándar es UMAP (a 10D) seguido de HDBSCAN.'
+      },
+      53: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 1–19 (CD08) esta afirmación es <strong>VERDADERA</strong>: CART divide recursivamente el espacio únicamente mediante hiperplanos paralelos a los ejes coordenados (particionado ortogonal x_j ≤ t), provocando que una frontera lineal oblicua requiera una aproximación escalonada costosa. Además, encontrar el árbol binario óptimo es NP-completo según Hyafil & Rivest (1976), obligando al uso de algoritmos voraces.'
+      },
+      54: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 20–39 (CD08) esta afirmación es <strong>VERDADERA</strong>: La tasa de error de clasificación es una función lineal a trozos cóncava no estricta, lo que provoca que divisiones que purifican nodos sin alterar la clase mayoritaria tengan ganancia de error exactamente cero. Por ello, CART e ID3 exigen métricas estrictamente cóncavas como el índice de Gini o la entropía de Shannon.'
+      },
+      55: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 40–54 (CD08) esta afirmación es <strong>VERDADERA</strong>: La parada temprana por ganancia mínima (early stopping) es miope porque no detecta interacciones multivariadas como XOR. La poda por costo-complejidad de Breiman minimiza C_α(T) = R(T) + α|T|, y el eslabón más débil g(t) = (R(t) - R(T_t))/(|T_t| - 1) garantiza una secuencia finita y anidada de subárboles podados evaluables por validación cruzada.'
+      },
+      56: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 55–68 (CD08) esta afirmación es <strong>VERDADERA</strong>: En árboles de regresión continua CART, la constante óptima en cada hoja es la media y el criterio voraz minimiza la suma ponderada de varianzas (MSE). Por su alta varianza e inestabilidad intrínseca, los árboles individuales sirven de bloques de construcción base para ensambles como Random Forest y Gradient Boosted Trees.'
       }
     };
 
@@ -15803,6 +16211,585 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       ctx.fillStyle = '#f87171';
       ctx.textAlign = 'right';
       ctx.fillText('Punto aislado: σ=2.26 adaptativo', w - 40, 30);
+    }
+
+    // =========================================================================
+    // UNIDAD CD08: ÁRBOLES DE DECISIÓN (CART, ID3, PODA Y REGRESIÓN)
+    // =========================================================================
+
+    // Lab 53: Particionado Ortogonal y Complejidad Booleana
+    let cd08PartMode = 'linear';
+    let cd08CurrentN = 3;
+
+    function setCd08PartMode(mode) {
+      cd08PartMode = mode;
+      document.getElementById('btnCd08PartLinear').classList.toggle('active', mode === 'linear');
+      document.getElementById('btnCd08PartK1').classList.toggle('active', mode === 'k1');
+      document.getElementById('btnCd08PartK2').classList.toggle('active', mode === 'k2');
+      document.getElementById('btnCd08PartK4').classList.toggle('active', mode === 'k4');
+      document.getElementById('btnCd08PartK8').classList.toggle('active', mode === 'k8');
+      drawCd08Partitions();
+    }
+
+    function setCd08N(n) {
+      cd08CurrentN = n;
+      [1, 2, 3, 4, 7].forEach(k => {
+        const btn = document.getElementById(`btnCd08N${k}`);
+        if (btn) btn.classList.toggle('active', k === n);
+      });
+      const rows = Math.pow(2, n);
+      const rowsEl = document.getElementById('cd08RowsVal');
+      const funcsEl = document.getElementById('cd08FuncsVal');
+      if (rowsEl) rowsEl.textContent = `${rows} filas`;
+      if (funcsEl) {
+        if (n === 7) {
+          funcsEl.textContent = '3.4028 × 10³⁸';
+        } else {
+          const funcs = Math.pow(2, rows);
+          funcsEl.textContent = `${funcs.toLocaleString()} funciones`;
+        }
+      }
+    }
+
+    function drawCd08Partitions() {
+      const cvs = document.getElementById('canvasCd08Partitions');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width, h = cvs.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const padX = 45, padY = 30;
+      const plotW = w - padX - 25, plotH = h - padY - 35;
+
+      // Draw background and grid
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(padX, padY, plotW, plotH);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 10; i += 2) {
+        const x = padX + (i / 10) * plotW;
+        const y = padY + plotH - (i / 10) * plotH;
+        ctx.beginPath(); ctx.moveTo(x, padY); ctx.lineTo(x, padY + plotH); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(padX, y); ctx.lineTo(padX + plotW, y); ctx.stroke();
+      }
+
+      // Generate points: slope 0.8 boundary: x2 = 0.8 * x1
+      const points = [
+        { x: 1.5, y: 3.5, c: 0 }, { x: 2.5, y: 5.0, c: 0 }, { x: 3.0, y: 7.0, c: 0 },
+        { x: 4.5, y: 6.5, c: 0 }, { x: 5.5, y: 8.5, c: 0 }, { x: 7.0, y: 9.0, c: 0 },
+        { x: 2.0, y: 1.0, c: 1 }, { x: 4.0, y: 2.0, c: 1 }, { x: 5.0, y: 3.2, c: 1 },
+        { x: 6.5, y: 4.0, c: 1 }, { x: 8.0, y: 5.0, c: 1 }, { x: 9.0, y: 6.2, c: 1 }
+      ];
+
+      // Draw partition boundary according to mode
+      if (cd08PartMode === 'linear') {
+        // Oblique diagonal line x2 = 0.8 * x1
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        const xStart = padX;
+        const yStart = padY + plotH;
+        const xEnd = padX + (10 / 10) * plotW;
+        const yEnd = padY + plotH - (8.0 / 10) * plotH;
+        ctx.moveTo(xStart, yStart);
+        ctx.lineTo(xEnd, yEnd);
+        ctx.stroke();
+
+        ctx.fillStyle = '#facc15';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Frontera Lineal: x₂ - 0.8x₁ = 0', padX + 80, padY + 40);
+      } else {
+        // Stepped axis-aligned cuts (orthogonal partitioning)
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+
+        let steps = [];
+        if (cd08PartMode === 'k1') {
+          // 1 cut at x1 = 5.0
+          steps = [{ x: 5.0, y: 0 }, { x: 5.0, y: 10 }];
+        } else if (cd08PartMode === 'k2') {
+          // 2 cuts: x1 = 5.0, and x2 = 4.0 in left region
+          steps = [
+            { x: 0, y: 4.0 }, { x: 5.0, y: 4.0 },
+            { x: 5.0, y: 0 }, { x: 5.0, y: 8.0 }, { x: 10.0, y: 8.0 }
+          ];
+        } else if (cd08PartMode === 'k4') {
+          // 4 stepped cuts
+          steps = [
+            { x: 0, y: 2.0 }, { x: 2.5, y: 2.0 },
+            { x: 2.5, y: 4.0 }, { x: 5.0, y: 4.0 },
+            { x: 5.0, y: 6.0 }, { x: 7.5, y: 6.0 },
+            { x: 7.5, y: 8.0 }, { x: 10.0, y: 8.0 }
+          ];
+        } else if (cd08PartMode === 'k8') {
+          // 8 fine stair steps
+          steps = [];
+          for (let s = 0; s <= 8; s++) {
+            const x = s * (10 / 8);
+            const y = (s === 0) ? 0 : (s - 1) * (8 / 8);
+            const yNext = s * (8 / 8);
+            steps.push({ x: x, y: y });
+            steps.push({ x: x, y: yNext });
+          }
+        }
+
+        if (steps.length > 0) {
+          steps.forEach((pt, idx) => {
+            const sx = padX + (pt.x / 10) * plotW;
+            const sy = padY + plotH - (pt.y / 10) * plotH;
+            if (idx === 0) ctx.moveTo(sx, sy);
+            else ctx.lineTo(sx, sy);
+          });
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = '#10b981';
+        ctx.font = '12px sans-serif';
+        ctx.fillText(`Partición CART Ortogonal (${cd08PartMode.toUpperCase()})`, padX + 60, padY + 30);
+      }
+
+      // Draw points
+      points.forEach(p => {
+        const px = padX + (p.x / 10) * plotW;
+        const py = padY + plotH - (p.y / 10) * plotH;
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = (p.c === 0) ? '#38bdf8' : '#fb923c';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      });
+
+      // Axis labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Característica x₁', padX + plotW / 2, h - 8);
+      ctx.save();
+      ctx.translate(14, padY + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('Característica x₂', 0, 0);
+      ctx.restore();
+    }
+
+    // Lab 54: Impureza y Algoritmo ID3
+    let cd08P = 0.50;
+
+    function onCd08PSlider(val) {
+      cd08P = parseFloat(val) / 100.0;
+      document.getElementById('cd08PLabel').textContent = `p = ${cd08P.toFixed(2)}`;
+      drawCd08Impurity();
+    }
+
+    function showCd08ImpurityCase(caseNum) {
+      const btn1 = document.getElementById('btnCd08Case1');
+      const btn2 = document.getElementById('btnCd08Case2');
+      const exp = document.getElementById('cd08CaseExplanation');
+      if (btn1) btn1.classList.toggle('active', caseNum === 1);
+      if (btn2) btn2.classList.toggle('active', caseNum === 2);
+
+      if (caseNum === 1) {
+        exp.innerHTML = '<strong>Caso 1 (Diapositiva 24 - Harvard CS109):</strong> Nodo padre con 14A y 5B (19 muestras). Se divide en Hijo 1: <code>6A, 0B (Puro)</code> e Hijo 2: <code>8A, 5B</code>.<br>' +
+          '• Error del padre: 5/19 = 0.263. Error ponderado hijos: (6/19)(0) + (13/19)(5/13) = 5/19 = 0.263 \(\implies\) <strong>ΔError = 0.000 (¡Completamente insensible a la creación del nodo puro!)</strong>.<br>' +
+          '• Gini del padre: 0.388 \(\to\) Gini ponderado hijos: 0.324 \(\implies\) <strong>ΔGini = +0.064 (¡Detecta el progreso!)</strong>.<br>' +
+          '• Entropía del padre: 0.835 \(\to\) Entropía ponderada hijos: 0.661 \(\implies\) <strong>ΔH = +0.174 bit</strong>.';
+      } else {
+        exp.innerHTML = '<strong>Caso 2 (Diapositiva 26 - Harvard CS109):</strong> Nodo padre con 9A y 3B (12 muestras). Se divide en Hijo 1: <code>6A, 0B (Puro)</code> e Hijo 2: <code>3A, 3B (Máxima impureza)</code>.<br>' +
+          '• Error del padre: 3/12 = 0.250. Error ponderado hijos: (6/12)(0) + (6/12)(3/6) = 3/12 = 0.250 \(\implies\) <strong>ΔError = 0.000</strong>.<br>' +
+          '• Gini del padre: 0.375 \(\to\) Gini ponderado hijos: 0.250 \(\implies\) <strong>ΔGini = +0.125 (Fuerte incentivo a purificar)</strong>.<br>' +
+          '• Conclusión: El error de clasificación es lineal a trozos y no tiene concavidad estricta. Gini y Entropía son estrictamente cóncavas y guían la optimización voraz.';
+      }
+    }
+
+    function evalCd08Day() {
+      const clima = document.getElementById('cd08TestClima').value;
+      const viento = document.getElementById('cd08TestViento').value;
+      const decEl = document.getElementById('cd08PredDecision');
+
+      let decision = 'SÍ CORRER';
+      let color = '#34d399';
+
+      if (clima === 'Nublado') {
+        decision = 'SÍ CORRER (Hoja Pura 3/3)';
+        color = '#34d399';
+      } else if (clima === 'Lluvioso') {
+        decision = 'NO CORRER (Hoja Pura 3/3)';
+        color = '#f87171';
+      } else if (clima === 'Soleado') {
+        if (viento === 'Fuerte') {
+          decision = 'NO CORRER (Soleado + Fuerte)';
+          color = '#f87171';
+        } else {
+          decision = 'SÍ CORRER (Soleado + Suave)';
+          color = '#34d399';
+        }
+      }
+
+      if (decEl) {
+        decEl.textContent = decision;
+        decEl.style.color = color;
+      }
+    }
+
+    function drawCd08Impurity() {
+      const cvs = document.getElementById('canvasCd08Impurity');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width, h = cvs.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const padX = 40, padY = 20;
+      const plotW = w - padX - 20, plotH = h - padY - 30;
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padX, padY + plotH);
+      ctx.lineTo(padX + plotW, padY + plotH);
+      ctx.moveTo(padX, padY);
+      ctx.lineTo(padX, padY + plotH);
+      ctx.stroke();
+
+      // Plot curves
+      // 1. Error: min(p, 1-p)
+      ctx.strokeStyle = '#f87171';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x = 0; x <= 100; x++) {
+        const p = x / 100.0;
+        const err = Math.min(p, 1.0 - p);
+        const px = padX + p * plotW;
+        const py = padY + plotH - (err / 0.5) * plotH;
+        if (x === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // 2. Gini: 2 * p * (1 - p)
+      ctx.strokeStyle = '#60a5fa';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x = 0; x <= 100; x++) {
+        const p = x / 100.0;
+        const gini = 2.0 * p * (1.0 - p);
+        const px = padX + p * plotW;
+        const py = padY + plotH - (gini / 0.5) * plotH;
+        if (x === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // 3. Scaled Entropy: 0.5 * H(p)
+      ctx.strokeStyle = '#34d399';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x = 1; x < 100; x++) {
+        const p = x / 100.0;
+        const ent = - (p * Math.log2(p) + (1.0 - p) * Math.log2(1.0 - p));
+        const scaledEnt = 0.5 * ent;
+        const px = padX + p * plotW;
+        const py = padY + plotH - (scaledEnt / 0.5) * plotH;
+        if (x === 1) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Current p vertical marker
+      const curX = padX + cd08P * plotW;
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(curX, padY);
+      ctx.lineTo(curX, padY + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Current metrics
+      const curErr = Math.min(cd08P, 1.0 - cd08P);
+      const curGini = 2.0 * cd08P * (1.0 - cd08P);
+      let curEnt = 0.0;
+      if (cd08P > 0 && cd08P < 1) {
+        curEnt = - (cd08P * Math.log2(cd08P) + (1.0 - cd08P) * Math.log2(1.0 - cd08P));
+      }
+      const curScaledEnt = 0.5 * curEnt;
+
+      const errEl = document.getElementById('cd08ErrorVal');
+      const giniEl = document.getElementById('cd08GiniVal');
+      const entEl = document.getElementById('cd08EntropyVal');
+      if (errEl) errEl.textContent = curErr.toFixed(3);
+      if (giniEl) giniEl.textContent = curGini.toFixed(3);
+      if (entEl) entEl.textContent = curScaledEnt.toFixed(3);
+
+      // Points on curves
+      const drawPoint = (val, col) => {
+        const py = padY + plotH - (val / 0.5) * plotH;
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.arc(curX, py, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      };
+      drawPoint(curErr, '#f87171');
+      drawPoint(curGini, '#60a5fa');
+      drawPoint(curScaledEnt, '#34d399');
+
+      // Labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('0.0', padX, padY + plotH + 16);
+      ctx.fillText('0.5', padX + plotW / 2, padY + plotH + 16);
+      ctx.fillText('1.0', padX + plotW, padY + plotH + 16);
+      ctx.fillText('Proporción p', padX + plotW / 2, padY + plotH + 28);
+    }
+
+    // Lab 55: Poda CART por Costo-Complejidad
+    let cd08Alpha = 0.00;
+
+    function onCd08AlphaSlider(val) {
+      cd08Alpha = parseFloat(val) / 100.0;
+      document.getElementById('cd08AlphaLabel').textContent = `α = ${cd08Alpha.toFixed(2)}`;
+      drawCd08Pruning();
+    }
+
+    function drawCd08Pruning() {
+      const cvs = document.getElementById('canvasCd08Pruning');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width, h = cvs.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Thresholds: alpha = 0.04 collapses x2 < 3; alpha = 0.32 collapses root
+      let activeTree = 'T₀ (Completo)';
+      let leaves = 3;
+      let cost = 0.14 + cd08Alpha * 3;
+
+      if (cd08Alpha >= 0.32) {
+        activeTree = 'T₂ (Raíz Colapsada)';
+        leaves = 1;
+        cost = 0.50 + cd08Alpha * 1;
+      } else if (cd08Alpha >= 0.04) {
+        activeTree = 'T₁ (Nodo x₂ Podado)';
+        leaves = 2;
+        cost = 0.18 + cd08Alpha * 2;
+      }
+
+      document.getElementById('cd08TreeActive').textContent = activeTree;
+      document.getElementById('cd08LeavesCount').textContent = `${leaves} hoja${leaves > 1 ? 's' : ''}`;
+      document.getElementById('cd08CostVal').textContent = cost.toFixed(3);
+
+      // Tree rendering
+      const rootX = w / 2, rootY = 30;
+      const leftX = w / 4, leftY = 110;
+      const rightX = (3 * w) / 4, rightY = 110;
+      const leafX1 = w / 8, leafY1 = 180;
+      const leafX2 = (3 * w) / 8, leafY2 = 180;
+
+      // Function to draw box node
+      const drawNode = (x, y, text, isCollapsed, isLeaf, pred) => {
+        ctx.fillStyle = isCollapsed ? 'rgba(255,255,255,0.05)' : (isLeaf ? '#065f46' : '#1e293b');
+        ctx.strokeStyle = isCollapsed ? 'rgba(255,255,255,0.1)' : (isLeaf ? '#10b981' : '#38bdf8');
+        ctx.lineWidth = 1.8;
+
+        const bw = 90, bh = 34;
+        ctx.beginPath();
+        ctx.roundRect(x - bw / 2, y - bh / 2, bw, bh, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = isCollapsed ? 'rgba(255,255,255,0.3)' : '#ffffff';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, x, y + 4);
+
+        if (pred && !isCollapsed) {
+          ctx.fillStyle = '#fde047';
+          ctx.font = '10px monospace';
+          ctx.fillText(pred, x, y + bh / 2 + 12);
+        }
+      };
+
+      const drawBranch = (x1, y1, x2, y2, label, isCollapsed) => {
+        ctx.strokeStyle = isCollapsed ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1 + 17);
+        ctx.lineTo(x2, y2 - 17);
+        ctx.stroke();
+
+        ctx.fillStyle = isCollapsed ? 'rgba(255,255,255,0.2)' : '#94a3b8';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, (x1 + x2) / 2 + (x2 < x1 ? -12 : 12), (y1 + y2) / 2);
+      };
+
+      if (cd08Alpha >= 0.32) {
+        // T2: Root alone
+        drawNode(rootX, rootY, 'Raíz: x₁ < 5.0', false, true, 'Pred: Clase A (50%)');
+        ctx.fillStyle = '#f87171';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('✂️ Árbol totalmente colapsado por alta regularización (α ≥ 0.32)', rootX, 130);
+      } else {
+        // Root active
+        drawNode(rootX, rootY, 'x₁ < 5.0', false, false);
+        drawBranch(rootX, rootY, rightX, rightY, 'No', false);
+        drawNode(rightX, rightY, 'Hoja 1', false, true, 'Pred: Clase B');
+
+        if (cd08Alpha >= 0.04) {
+          // T1: Node x2 collapsed into single leaf
+          drawBranch(rootX, rootY, leftX, leftY, 'Sí', false);
+          drawNode(leftX, leftY, 'Hoja 2 (Podada)', false, true, 'Pred: Clase A');
+          ctx.fillStyle = '#fde047';
+          ctx.font = '11px sans-serif';
+          ctx.fillText('✂️ Subárbol x₂ < 3 colapsado (g(t) = 0.04)', leftX, 160);
+        } else {
+          // T0: Full tree
+          drawBranch(rootX, rootY, leftX, leftY, 'Sí', false);
+          drawNode(leftX, leftY, 'x₂ < 3.0', false, false);
+
+          drawBranch(leftX, leftY, leafX1, leafY1, 'Sí', false);
+          drawNode(leafX1, leafY1, 'Hoja A', false, true, 'Pred: Clase A');
+
+          drawBranch(leftX, leftY, leafX2, leafY2, 'No', false);
+          drawNode(leafX2, leafY2, 'Hoja B', false, true, 'Pred: Clase B');
+        }
+      }
+    }
+
+    // Lab 56: CART para Regresión
+    let cd08Depth = 1;
+
+    function onCd08DepthSlider(val) {
+      cd08Depth = parseInt(val);
+      document.getElementById('cd08DepthLabel').textContent = `Profundidad = ${cd08Depth}`;
+      drawCd08Regression();
+    }
+
+    function drawCd08Regression() {
+      const cvs = document.getElementById('canvasCd08Regression');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width, h = cvs.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const padX = 45, padY = 25;
+      const plotW = w - padX - 25, plotH = h - padY - 35;
+
+      // 6 Points from CS109 Cátedra
+      const data = [
+        { x: 1, y: 2.0 }, { x: 2, y: 3.0 }, { x: 3, y: 2.5 },
+        { x: 4, y: 8.0 }, { x: 5, y: 9.0 }, { x: 6, y: 8.5 }
+      ];
+
+      // Coordinate scaling
+      const toX = x => padX + ((x - 0.5) / 6.0) * plotW;
+      const toY = y => padY + plotH - ((y - 0.0) / 10.0) * plotH;
+
+      // Grid
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(padX, padY, plotW, plotH);
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      for (let y = 0; y <= 10; y += 2) {
+        ctx.beginPath(); ctx.moveTo(padX, toY(y)); ctx.lineTo(padX + plotW, toY(y)); ctx.stroke();
+      }
+      for (let x = 1; x <= 6; x++) {
+        ctx.beginPath(); ctx.moveTo(toX(x), padY); ctx.lineTo(toX(x), padY + plotH); ctx.stroke();
+      }
+
+      // Step function piecewise constant predictions
+      let leavesCount = 2;
+      let mse = 0.392;
+      let intervals = [];
+
+      if (cd08Depth === 1) {
+        // Optimal split at x < 3.5: R1=[0.5, 3.5] y=2.5, R2=[3.5, 6.5] y=8.5
+        leavesCount = 2;
+        mse = 0.167;
+        intervals = [
+          { xMin: 0.5, xMax: 3.5, pred: 2.50 },
+          { xMin: 3.5, xMax: 6.5, pred: 8.50 }
+        ];
+      } else if (cd08Depth === 2) {
+        leavesCount = 4;
+        mse = 0.062;
+        intervals = [
+          { xMin: 0.5, xMax: 1.5, pred: 2.00 },
+          { xMin: 1.5, xMax: 3.5, pred: 2.75 },
+          { xMin: 3.5, xMax: 4.5, pred: 8.00 },
+          { xMin: 4.5, xMax: 6.5, pred: 8.75 }
+        ];
+      } else {
+        // Depth >= 3: memorizes all 6 points perfectly
+        leavesCount = 6;
+        mse = 0.000;
+        intervals = [
+          { xMin: 0.5, xMax: 1.5, pred: 2.00 },
+          { xMin: 1.5, xMax: 2.5, pred: 3.00 },
+          { xMin: 2.5, xMax: 3.5, pred: 2.50 },
+          { xMin: 3.5, xMax: 4.5, pred: 8.00 },
+          { xMin: 4.5, xMax: 5.5, pred: 9.00 },
+          { xMin: 5.5, xMax: 6.5, pred: 8.50 }
+        ];
+      }
+
+      document.getElementById('cd08RegLeaves').textContent = `${leavesCount} hojas`;
+      document.getElementById('cd08RegMse').textContent = mse.toFixed(3);
+
+      // Draw piecewise steps
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      intervals.forEach((inv, i) => {
+        const sx1 = toX(inv.xMin);
+        const sx2 = toX(inv.xMax);
+        const sy = toY(inv.pred);
+
+        ctx.beginPath();
+        ctx.moveTo(sx1, sy);
+        ctx.lineTo(sx2, sy);
+        ctx.stroke();
+
+        // Vertical step connector
+        if (i < intervals.length - 1) {
+          const nextY = toY(intervals[i + 1].pred);
+          ctx.beginPath();
+          ctx.setLineDash([3, 3]);
+          ctx.moveTo(sx2, sy);
+          ctx.lineTo(sx2, nextY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      });
+
+      // Draw data points
+      data.forEach(p => {
+        const px = toX(p.x);
+        const py = toY(p.y);
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#fb923c';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      // Axis labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      for (let x = 1; x <= 6; x++) {
+        ctx.fillText(`x=${x}`, toX(x), padY + plotH + 16);
+      }
+      ctx.fillText('Variable Predictora x', padX + plotW / 2, h - 6);
+      ctx.save();
+      ctx.translate(14, padY + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('Respuesta Continua y', 0, 0);
+      ctx.restore();
     }
 
   </script>
