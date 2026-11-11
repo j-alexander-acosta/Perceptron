@@ -657,6 +657,105 @@ El módulo [`arboles_decision.py`](arboles_decision.py) y los laboratorios `53` 
 
 ---
 
+## 0.12. Novena Unidad CD09 (Novena en Orden de Cátedra): Ensamblaje de Modelos y Random Forests (59 Diapositivas)
+
+El módulo [`ensambles_random_forest.py`](ensambles_random_forest.py) y los laboratorios `57` a `60` (Labs 09.1 a 09.4) de [`web/index.html`](web/index.html) formalizan los fundamentos matemáticos y computacionales de **CD09 — Ensamblaje de Modelos y Random Forests** (basado en Harvard CS109 de Pavlos Protopapas y Kevin Rader, Hastie, Tibshirani & Friedman *The Elements of Statistical Learning* Cap. 15, y Leo Breiman 1996, 2001):
+
+### 0.12.1. Sabiduría de las Masas, Teorema de Condorcet y Experimento de Galton (Diapositivas 1–16)
+* **El Experimento de Francis Galton (1907, Plymouth, Diapositivas 3–6):**
+  En una feria agrícola en West of England (Plymouth), $N = 787$ personas (desde matarifes expertos hasta campesinos legos) apostaron sobre el peso de un buey faenado y desprovisto de vísceras:
+  * **Mediana del colectivo:** $1{,}207\text{ libras}$.
+  * **Peso real verificado:** $1{,}198\text{ libras}$.
+  * **Error colectivo:** $+9\text{ libras}$ ($\mathbf{+0.751\% \approx 0.8\%}$).
+  La mediana colectiva superó a los matarifes y estimadores profesionales individuales, demostrando el poder del consenso cuando los errores individuales no están correlacionados sistemáticamente.
+* **Teorema del Jurado del Marqués de Condorcet (1785, Diapositivas 7–11):**
+  Sean $B$ clasificadores binarios independientes con probabilidad individual $p$ de emitir la decisión correcta. La probabilidad de que la mayoría simple acierte es:
+  $$P(\text{mayoría correcta}) = \sum_{k=\lfloor B/2 \rfloor + 1}^{B} \binom{B}{k} p^k (1-p)^{B-k}$$
+  * Si $p > 0.5 \implies \lim_{B \to \infty} P = 1.0$ (mejora monótona y convergencia asintótica a la certeza).
+  * Si $p = 0.5 \implies P = 0.5$ (invariante al azar).
+  * Si $p < 0.5 \implies \lim_{B \to \infty} P = 0.0$ (el jurado colectivo converge con certeza al error).
+  * **Valores empíricos calculados:**
+    * Para $p = 0.70$: $B=3 \implies P = 0.784$; $B=5 \implies P = 0.837$; $B=15 \implies P = 0.950$; $B=101 \implies P \approx 0.9999997$.
+    * Para $p = 0.55$: $B=101 \implies P = 0.844$ (el ensamble convierte estimadores débilmente superiores al azar en un clasificador robusto).
+* **Las Tres Condiciones de Surowiecki (2004, Diapositiva 12):**
+  1. **Diversidad de opinión:** Cada participante debe poseer información privada o interpretaciones disímiles.
+  2. **Independencia:** Las determinaciones individuales no deben estar condicionadas por las opiniones ajenas.
+  3. **Descentralización:** El conocimiento proviene de fuentes locales y especializadas sin coordinación central.
+* **Modos de Falla del Ensamblaje (Diapositivas 13–16):**
+  Si los modelos son copias idénticas ($f_1(x) \equiv f_2(x)$), el ensamble no reduce varianza. Si los modelos comparten un sesgo sistemático correlacionado (ej. todos omiten una variable de confusión), el voto mayoritario amplifica la distorsión colectiva.
+
+### 0.12.2. Bagging y Remuestreo Bootstrap: La Fracción $(1 - 1/e)$ y Estimación OOB (Diapositivas 17–28)
+* **Fundamentos del Remuestreo con Reemplazo (Breiman, 1996, Diapositivas 18–21):**
+  Dada una muestra de entrenamiento $\mathcal{D} = \{(x_1, y_1), \dots, (x_N, y_N)\}$, cada réplica bootstrap $\mathcal{D}^{*b}$ de tamaño $N$ se extrae con reemplazo uniforme:
+  * Probabilidad de que la observación $i$ **no** sea elegida en una extracción: $1 - \frac{1}{N}$.
+  * Probabilidad de que la observación $i$ quede excluida (*Out-Of-Bag*, OOB) tras las $N$ extracciones independientes:
+    $$P(i \in \text{OOB}) = \left(1 - \frac{1}{N}\right)^N \xrightarrow{N \to \infty} \frac{1}{e} \approx 0.367879 \quad (\mathbf{36.8\%})$$
+  * Fracción complementaria presente en la bolsa de entrenamiento (*In-Bag*):
+    $$P(i \in \text{In-Bag}) = 1 - \left(1 - \frac{1}{N}\right)^N \xrightarrow{N \to \infty} 1 - \frac{1}{e} \approx 0.632121 \quad (\mathbf{63.2\%})$$
+  * Para $N=10$: $P(\text{OOB}) = (9/10)^{10} = 0.3487$ ($34.9\%$), convergiendo con rapidez a $e^{-1}$.
+* **Estimación del Error Out-Of-Bag (OOB, Diapositivas 22–24):**
+  Para cada observación $i$, sea $B_i^{-} = \{b : (x_i, y_i) \notin \mathcal{D}^{*b}\}$ el subconjunto de réplicas donde $x_i$ no fue utilizado durante el entrenamiento. La predicción agregada OOB es:
+  $$\hat{f}^{\text{OOB}}(x_i) = \frac{1}{|B_i^{-}|} \sum_{b \in B_i^{-}} \hat{f}^{*b}(x_i)$$
+  El error de generalización OOB se computa como:
+  $$\hat{R}^{\text{OOB}} = \frac{1}{N} \sum_{i=1}^N L\left(y_i, \hat{f}^{\text{OOB}}(x_i)\right)$$
+  Constituye un estimador insesgado del error de prueba sin requerir partición de validación independiente ni validación cruzada $K$-fold computacionalmente onerosa.
+* **Reducción de Varianza en Estimadores Inestables (Diapositivas 25–28):**
+  Bagging estabiliza modelos no lineales de alta varianza y bajo sesgo (como árboles CART no podados). Si $\hat{f}(x)$ es no lineal, el promedio $\frac{1}{B}\sum_{b=1}^B \hat{f}^{*b}(x)$ suaviza las fronteras en escalera y reduce el error cuadrático medio (MSE demostrado: de $3.25$ en árbol único a $1.12$ en ensamble de 15 árboles, reducción de $-65.5\%$).
+
+### 0.12.3. Random Forests, Descorrelación y la Ecuación ESL 15.1 de Hastie et al. (Diapositivas 29–43)
+* **Derivación Analítica de la Ecuación Fundamental ESL 15.1 (Hastie et al. 2009, Diapositiva 31):**
+  Sean $B$ variables aleatorias idénticamente distribuidas (no necesariamente independientes), cada una con varianza $\operatorname{var}(X_i) = \sigma^2$ y correlación positiva por pares $\operatorname{corr}(X_i, X_j) = \rho$ para $i \neq j$. La varianza del promedio muestral $\bar{X} = \frac{1}{B}\sum_{i=1}^B X_i$ es:
+  $$\operatorname{var}(\bar{X}) = \frac{1}{B^2} \operatorname{var}\left(\sum_{i=1}^B X_i\right) = \frac{1}{B^2} \left[ \sum_{i=1}^B \operatorname{var}(X_i) + \sum_{i \neq j} \operatorname{cov}(X_i, X_j) \right]$$
+  Como $\operatorname{cov}(X_i, X_j) = \rho \sigma^2$ y existen $B(B-1)$ términos fuera de la diagonal:
+  $$\operatorname{var}(\bar{X}) = \frac{1}{B^2} \left[ B \sigma^2 + B(B - 1) \rho \sigma^2 \right] = \frac{\sigma^2}{B} + \frac{B - 1}{B}\rho \sigma^2 = \mathbf{\rho \sigma^2 + \frac{1 - \rho}{B}\sigma^2}$$
+* **El Piso Inamovible y el Límite Asintótico (Diapositivas 32–35):**
+  Al tomar el límite cuando el número de estimadores tiende a infinito:
+  $$\lim_{B \to \infty} \operatorname{var}(\bar{X}) = \mathbf{\rho \sigma^2}$$
+  * Aumentar $B$ sólo reduce el segundo término $\frac{1-\rho}{B}\sigma^2$, pero deja inalterado el piso irreducible $\rho \sigma^2$.
+  * **Paradoja de Bagging Clásico:** Si los árboles están correlacionados con $\rho = 0.60$ ($\sigma^2 = 1.0$), con $B=10$ la varianza es $0.640$. Duplicar el cómputo a $B=20$ sólo baja la varianza a $0.620$ (ganancia marginal de $0.020$).
+  * En contraste, **descorrelacionar los árboles** bajando $\rho$ de $0.60$ a $0.30$ reduce la varianza directamente a $\mathbf{0.370}$ (¡una reducción masiva de $0.270$!).
+* **Subespacios Aleatorios en Random Forests (Breiman, 2001, Diapositivas 36–43):**
+  Para quebrar activamente la correlación inter-árbol $\rho$ sin inflar sustancialmente la varianza individual $\sigma^2$, Breiman introdujo la selección aleatoria de variables en cada nodo:
+  * En cada división (*split*), se selecciona un subconjunto aleatorio de tamaño $m \le J$:
+    $$m = \lfloor \sqrt{J} \rfloor \quad \text{(clasificación)}, \qquad m = \lfloor J/3 \rfloor \quad \text{(regresión)}$$
+  * Para $J=36$ predictores: $m = \sqrt{36} = 6$. La probabilidad de que un predictor dominante monopolice la primera división cae de $100\%$ (Bagging estándar) a solo $\frac{6}{36} = \mathbf{16.7\%}$, forzando a los árboles a explorar predictores secundarios y maximizando la diversidad estructural.
+
+### 0.12.4. Boosting Adaptativo (AdaBoost), Gradient Boosting y Stacking (Diapositivas 44–59)
+* **Algoritmo AdaBoost (Freund & Schapire, 1997, Diapositivas 45–50):**
+  A diferencia de Bagging (paralelo e independiente), Boosting entrena estimadores débiles (*decision stumps*) de forma **secuencial**:
+  1. Inicializar pesos uniformes para $N$ observaciones: $w_n^{(1)} = \frac{1}{N}$.
+  2. Para $m = 1, \dots, M$:
+     * Ajustar clasificador base $T_m(x) \in \{-1, +1\}$ minimizando el error ponderado:
+       $$\varepsilon_m = \sum_{n=1}^N w_n^{(m)} \mathbb{I}(y_n \neq T_m(x_n))$$
+     * Calcular ponderador del clasificador:
+       $$\alpha_m = \frac{1}{2} \ln \left( \frac{1 - \varepsilon_m}{\varepsilon_m} \right)$$
+     * Actualizar y renormalizar los pesos muestrales:
+       $$w_n^{(m+1)} = \frac{w_n^{(m)} \exp\left( -\alpha_m y_n T_m(x_n) \right)}{Z_m}$$
+  3. Clasificador final por combinación convexa:
+     $$H(x) = \operatorname{sign}\left( \sum_{m=1}^M \alpha_m T_m(x) \right)$$
+  * **Trazado Numérico del Dataset de Crédito (13 Casos, Diapositiva 48):**
+    * Ronda 1: Stump $T_1$ sobre Ingresos $\implies \varepsilon_1 = 0.222, \alpha_1 = 1.242$ (2 errores reponderados al alza).
+    * Ronda 2: Stump $T_2$ sobre Score Crediticio $\implies \varepsilon_2 = 0.231, \alpha_2 = 1.203$ (1 error reponderado).
+    * Ronda 3: Stump $T_3$ sobre Ingresos $\implies \varepsilon_3 = 0.240, \alpha_3 = 1.153$.
+    * Ensamble final $H(x)$: $\mathbf{0\text{ errores}}$ sobre los 13 clientes ($100\%$ exactitud).
+* **Gradient Boosting en el Espacio de Funciones (Friedman, 2001, Diapositivas 51–54):**
+  Optimización por descenso de gradiente en el espacio de funciones Hilbertiano. En la iteración $m$, cada nuevo árbol $h_m(x)$ se ajusta a los **residuos pseudo-gradiente**:
+  $$r_{in} = -\left[ \frac{\partial L(y_i, f(x_i))}{\partial f(x_i)} \right]_{f(x) = F_{m-1}(x)}$$
+  Para pérdida cuadrática $L(y, f) = \frac{1}{2}(y - f)^2$, los residuos son directos: $r_i = y_i - F_{m-1}(x_i)$. El modelo se actualiza con encogimiento (*shrinkage* / tasa de aprendizaje $\nu \in (0, 1]$):
+  $$F_m(x) = F_{m-1}(x) + \nu \cdot \gamma_m h_m(x)$$
+  Demostrado en 10 puntos: MSE decae de $3.09 \to 1.16 \to 0.90 \to 0.55$.
+* **Discrepancia entre Hard Voting y Soft Voting (Diapositiva 55):**
+  * **Hard Voting (Mayoría Simple):** Toma la moda de las etiquetas predichas. Ignora la confianza de cada clasificador.
+  * **Soft Voting (Probabilidades Ponderadas):** Promedia los vectores de probabilidad $\bar{p}(k) = \frac{1}{B}\sum_{b=1}^B p_b(k)$.
+  * **Ejemplo Crítico:** Para 3 modelos con probabilidades para clase $+1$ de $[0.45, 0.45, 0.90]$:
+    * Hard voting: Dos modelos votan $-1$ ($0.45 < 0.5$) y uno vota $+1$ ($0.90 > 0.5$) $\implies$ Predicción **$-1$**.
+    * Soft voting: Probabilidad media $= \frac{0.45 + 0.45 + 0.90}{3} = \mathbf{0.60} > 0.5 \implies$ Predicción **$+1$**!
+    El modelo con certeza del $90\%$ supera justificadamente a dos modelos apenas dudosos al $45\%$.
+* **Stacking y Meta-Aprendizaje (Wolpert, 1992, Diapositivas 56–59):**
+  Ensamble heterogéneo donde las predicciones de modelos disímiles (Random Forest, SVM, Redes Neuronales) alimentan a un meta-estimador (ej. Regresión Logística). Requiere estrictamente **Out-of-Fold Cross-Validation** para generar los datos de entrenamiento del meta-modelo, evitando filtración de datos (*data leakage*) y sobreajuste espurio.
+
+---
+
 ## 1. Introducción y Contexto Histórico (Unidad CD13 / Unidad I)
 
 El estudio de las redes neuronales artificiales experimentó un hito fundacional en 1943 con el modelo de neurona formal de Warren McCulloch y Walter Pitts, y posteriormente en 1958 con el Perceptrón propuesto por Frank Rosenblatt. El perceptrón simple demostró ser capaz de aprender y clasificar patrones linealmente separables (como las funciones lógicas AND y OR).
@@ -1102,7 +1201,8 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 6. **Problemas de Convergencia y Métodos Adaptativos (Unidad V):** Se verificó numéricamente el fenómeno de los puntos «saboteadores» de Brady et al. (1989) donde la saturación exponencial de la sigmoide apaga el gradiente y atrapa a *Backprop* en un mínimo local ($75\%$) mientras el Perceptrón separa los 4 puntos ($100\%$); se reprodujeron las 6 trayectorias de la Diapositiva 27 gobernadas por el número de condición $\kappa$; se demostró la convergencia en 1 paso de Newton en cuencos cuadráticos junto con su atracción patológica hacia puntos de silla (corregida por Levenberg-Marquardt); y se compararon las tasas decrecientes, RProp y QuickProp.
 7. **Descenso por Gradiente Estocástico, Mini-lotes y Optimizadores con Tendencia (Unidad VI):** Se reprodujo exactamente la tabla de «SGD a mano: una época» de la Diapositiva 14 ($[0.20, 0.20] \to [0.68, 1.16] \to [0.22, -0.70]$), la necesidad del barajado por época (*shuffling*), las condiciones de convergencia de Robbins y Monro (1951), la ley de reducción de varianza $\frac{1}{b}\text{Var}(\text{Loss})$ en mini-lotes, la tabla direccional de RMSprop ($\text{RMS}_x \approx 1.36, \text{RMS}_y \approx 2.36$) y la superioridad de Momentum, Nesterov, RMSprop y Adam en valles angostos y puntos de silla.
 8. **Árboles de Decisión, CART e ID3 (Unidad CD08):** Se comprobó analítica y numéricamente que los árboles CART producen particiones ortogonales estrictamente paralelas a los ejes coordenados requiriendo escaleras para aproximar diagonales, la explosión combinatoria $2^{2^n}$ de funciones booleanas ($3.4028 \times 10^{38}$ en $n=7$), la NP-completitud de Hyafil & Rivest (1976), la insensibilidad de la tasa de error ($\Delta E = 0.000$) frente a la concavidad estricta de Gini y Entropía, el trazado exacto de ID3 en 10 días ($H(S)=1.0, IG(\text{Clima})=0.60, IG(\text{Viento}|\text{Soleado})=1.0$), la miopía del *early stopping*, la poda por costo-complejidad de Breiman mediante el eslabón más débil $g(t)$ en el árbol de 100 puntos ($\alpha \in \{0.04, 0.32\}$), y la formulación continua de CART para regresión donde la partición $x<3.5$ minimiza el MSE a $0.167$ antes de memorizar a profundidad 3 ($MSE=0$).
-9. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (14 Unidades Académicas • 880 Diapositivas • 57 Laboratorios Interactivos).
+9. **Ensamblaje de Modelos y Random Forests (Unidad CD09):** Se verificó analítica y numéricamente el Teorema del Jurado de Condorcet y el experimento de Galton en Plymouth ($N=787$, mediana 1207 lbs vs 1198 lbs real, error 0.75%), la matemática de bootstrap donde la probabilidad OOB es $(1-1/N)^N \to e^{-1} \approx 36.8\%$ y la bolsa retiene $63.2\%$ de muestras únicas, la derivación analítica de la ecuación ESL 15.1 de Hastie et al. $\operatorname{var}(\bar{X}) = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2$ y su piso irreducible $\rho \sigma^2$, la descorrelación mediante subespacios aleatorios $m=\sqrt{J}$, el algoritmo AdaBoost con convergencia a 0 errores en 3 rondas sobre 13 clientes bancarios, el descenso en espacio de funciones sobre residuos en Gradient Boosting, la discrepancia entre Hard Voting y Soft Voting ($[0.45, 0.45, 0.90] \to -1$ vs $+1$), y la arquitectura de Stacking con validación fuera de pliegue.
+10. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`ensambles_random_forest.py`](ensambles_random_forest.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (15 Unidades Académicas • 939 Diapositivas • 61 Laboratorios Interactivos).
 
 ---
 
@@ -1137,7 +1237,7 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 27. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
 28. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
 29. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
-30. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad & Modelos de Árboles (CART/ID3).* Ciencia de Datos — Doctorado UCN.
+30. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad, Árboles CART/ID3 & Ensambles/Random Forests.* Ciencia de Datos — Doctorado UCN.
 31. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
 32. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
 33. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
@@ -1145,4 +1245,11 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 35. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
 36. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
 37. **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.).* Springer, New York.
+38. **Galton, F. (1907).** *Vox populi (The wisdom of crowds).* Nature, 75(1949), 450-451.
+39. **Breiman, L. (1996).** *Bagging predictors.* Machine Learning, 24(2), 123-140.
+40. **Freund, Y., & Schapire, R. E. (1997).** *A decision-theoretic generalization of on-line learning and an application to boosting.* Journal of Computer and System Sciences, 55(1), 119-139.
+41. **Breiman, L. (2001).** *Random forests.* Machine Learning, 45(1), 5-32.
+42. **Friedman, J. H. (2001).** *Greedy function approximation: A gradient boosting machine.* Annals of Statistics, 29(5), 1189-1232.
+43. **Surowiecki, J. (2004).** *The Wisdom of Crowds: Why the Many Are Smarter Than the Few and How Collective Wisdom Shapes Business, Economies, Societies and Nations.* Doubleday, New York.
+44. **Chen, T., & Guestrin, C. (2016).** *XGBoost: A scalable tree boosting system.* KDD 2016, 785-794.
 

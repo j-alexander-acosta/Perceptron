@@ -1,6 +1,6 @@
-# Suite Educativa de Ciencia de Datos y Redes Neuronales (14 Unidades Académicas • 880 Diapositivas • 57 Laboratorios)
+# Suite Educativa de Ciencia de Datos y Redes Neuronales (15 Unidades Académicas • 939 Diapositivas • 61 Laboratorios)
 
-Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al. y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD13`–`CD18`)**:
+Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al., Hastie, Tibshirani & Friedman ESL y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD13`–`CD18`)**:
 
 * **CD01 (Primera en orden) — Introducción al Curso (63 Diapositivas):** Laboratorios 0.1 a 0.4 ([`introduccion_curso.py`](introduccion_curso.py)).
 * **CD02 (Segunda en orden) — Preprocesamiento y Análisis Exploratorio de Datos (74 Diapositivas):** Laboratorios 02.1 a 02.4 ([`preprocesamiento_eda.py`](preprocesamiento_eda.py)).
@@ -10,7 +10,8 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 * **CD06 (Sexta en orden) — Clustering: Agrupamiento No Supervisado (57 Diapositivas):** Laboratorios 06.1 a 06.4 ([`clustering.py`](clustering.py)).
 * **CD07 (Séptima en orden) — Reducción de Dimensionalidad (73 Diapositivas):** Laboratorios 07.1 a 07.4 ([`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py)).
 * **CD08 (Octava en orden) — Modelos de Árboles de Clasificación y Regresión (68 Diapositivas):** Laboratorios 08.1 a 08.4 ([`arboles_decision.py`](arboles_decision.py)).
-* *(Espacio reservado en secuencia para las próximas unidades `CD09` a `CD12` según orden de cátedra).*
+* **CD09 (Novena en orden) — Ensamblaje de Modelos y Random Forests (59 Diapositivas):** Laboratorios 09.1 a 09.4 ([`ensambles_random_forest.py`](ensambles_random_forest.py)).
+* *(Espacio reservado en secuencia para las próximas unidades `CD10` a `CD12` según orden de cátedra).*
 * **CD13 (Unidad I) — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
 * **CD14 (Unidad II) — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
 * **CD15 (Unidad III) — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
@@ -246,6 +247,32 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 🟧 CD09 (NOVENA EN ORDEN): Ensamblaje de Modelos y Random Forests (59 Diapositivas)
+
+1. **Módulo 09.1 — Sabiduría de las Masas, Teorema de Condorcet y Experimento de Galton (Diaps. 1–16):**
+   * **El Experimento de Francis Galton (1907, Plymouth, Diaps. 3–6):** $N = 787$ personas apostaron sobre el peso de un buey faenado. La mediana colectiva ($1{,}207\text{ lbs}$) acertó el peso real ($1{,}198\text{ lbs}$) con un error de apenas **$0.751\% \approx 0.8\%$** ($+9\text{ lbs}$), superando con creces a matarifes y estimadores expertos individuales.
+   * **Teorema del Jurado del Marqués de Condorcet (1785, Diaps. 7–11):** Combinar $B$ clasificadores independientes con precisión $p > 0.5$ asegura que $P(\text{mayoría}) = \sum_{k} \binom{B}{k} p^k (1-p)^{B-k} \xrightarrow{B \to \infty} 1.0$. Con $p=0.70$: $B=3 \implies 0.784$, $B=5 \implies 0.837$, $B=15 \implies 0.950$, $B=101 \implies \approx 1.0$. Si $p < 0.5$, el ensamble converge a la certeza del error.
+   * **Condiciones de Surowiecki (2004) y Modos de Falla:** Diversidad, independencia y descentralización. Modelos idénticos o con sesgo correlacionado no reducen varianza.
+
+2. **Módulo 09.2 — Bagging y Bootstrap Resampling: Fracción $(1 - 1/e)$ y Validación OOB (Diaps. 17–28):**
+   * **Matemática del Remuestreo con Reemplazo (Breiman, 1996, Diaps. 18–21):** En una muestra de tamaño $N$, la probabilidad asintótica de que una observación quede fuera de la bolsa (*Out-Of-Bag*, OOB) es $(1 - 1/N)^N \xrightarrow{N \to \infty} e^{-1} \approx \mathbf{36.8\%}$, reteniendo el $\mathbf{63.2\%}$ de observaciones únicas en cada árbol. Para $N=10$, $P(\text{OOB}) = 0.349$.
+   * **Estimación del Error OOB (Diaps. 22–24):** Cada observación se valida evaluando únicamente sobre los árboles donde quedó fuera de la bolsa, proveyendo una validación cruzada gratuita y rigurosa sin apartar datos de prueba.
+   * **Reducción de Varianza en Estimadores Inestables:** Demostración en regresión continua sobre 30 puntos: el error cuadrático medio (MSE) cae de $3.25$ en un árbol CART sobreajustado a $1.12$ en un ensamble Bagging (reducción del $-65.5\%$).
+
+3. **Módulo 09.3 — Random Forests, Descorrelación y la Ecuación ESL 15.1 de Hastie et al. (Diaps. 29–43):**
+   * **Derivación de la Ecuación ESL 15.1:** La varianza del promedio de $B$ estimadores con correlación por pares $\rho$ y varianza individual $\sigma^2$ es:
+     $$\operatorname{var}(\bar{X}) = \mathbf{\rho \sigma^2 + \frac{1 - \rho}{B}\sigma^2} \xrightarrow{B \to \infty} \mathbf{\rho \sigma^2}$$
+   * **El Piso Irreducible de Bagging:** Con $\rho=0.60$, aumentar $B$ de 10 a 20 solo reduce la varianza de $0.640$ a $0.620$ ($0.020$). ¡Pero reducir la correlación $\rho$ a $0.30$ reduce la varianza drásticamente a $\mathbf{0.370}$!
+   * **Subespacios Aleatorios (Breiman, 2001):** Muestrear al azar $m = \lfloor \sqrt{J} \rfloor$ variables en cada split (ej. $m=6$ para $J=36$) reduce la probabilidad de elegir un predictor dominante de $100\%$ a $\mathbf{16.7\%}$, destruyendo activamente la correlación inter-árbol sin inflar el sesgo.
+
+4. **Módulo 09.4 — Boosting Adaptativo (AdaBoost), Gradient Boosting, Voting y Stacking (Diaps. 44–59):**
+   * **AdaBoost (Freund & Schapire, 1997, Diaps. 45–50):** Algoritmo secuencial que pondera muestras $w_n^{(m+1)} \propto w_n^{(m)} \exp(\alpha_m \mathbb{I}(y_n \neq T_m(x_n)))$ con peso de estimador $\alpha_m = \frac{1}{2}\ln \frac{1-\varepsilon_m}{\varepsilon_m}$. Trazado exacto sobre 13 clientes de crédito: Ronda 1 ($\alpha_1=1.242, \varepsilon_1=0.222$), Ronda 2 ($\alpha_2=1.203, \varepsilon_2=0.231$), Ronda 3 ($\alpha_3=1.153, \varepsilon_3=0.240$) convergiendo a $\mathbf{0\text{ errores}}$ ($100\%$ exactitud).
+   * **Gradient Boosting (Friedman, 2001, Diaps. 51–54):** Ajuste secuencial de árboles sobre los residuos pseudo-gradiente de la pérdida cuadrática, reduciendo el MSE continuo de $3.09 \to 1.16 \to 0.90 \to 0.55$.
+   * **Hard vs Soft Voting (Diap. 55):** Probabilidades $[0.45, 0.45, 0.90]$ producen colapso en Hard voting (gana $-1$ por mayoría de 2 votos) mientras que Soft voting predice correctamente $+1$ (probabilidad promedio $0.60$).
+   * **Stacking y Meta-Aprendizaje (Wolpert, 1992):** Ensamblaje heterogéneo con meta-modelo y validación obligatoria fuera de pliegue (*out-of-fold cross-validation*).
+
+---
+
 ### 🟦 CD13 (UNIDAD I): Representación y Aproximación Universal con Redes Neuronales
 
 1. **Módulo 1.1 — Compuertas de Umbral y Arquitecturas XOR (Diaps. 6–15):**
@@ -373,7 +400,7 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-### 1. 🌐 Suite Web Educativa Interactiva (14 Unidades: CD01–CD08 y CD13–CD18 • 57 Laboratorios en Navegador)
+### 1. 🌐 Suite Web Educativa Interactiva (15 Unidades: CD01–CD09 y CD13–CD18 • 61 Laboratorios en Navegador)
 ```bash
 open web/index.html
 # O desde Python:
@@ -382,7 +409,7 @@ python3 perceptron_xor.py --web
 
 ### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro, Orden de Cátedra)
 ```bash
-# Ejecutar TODAS las verificaciones de CD01–CD08 y CD13–CD18 automáticamente (14 Unidades):
+# Ejecutar TODAS las verificaciones de CD01–CD09 y CD13–CD18 automáticamente (15 Unidades):
 python3 perceptron_xor.py --auto
 
 # Laboratorio interactivo de CD01 (Primera en orden — Introducción al Curso):
@@ -408,6 +435,9 @@ python3 reduccion_dimensionalidad.py
 
 # Laboratorio interactivo de CD08 (Octava en orden — Árboles CART e ID3, Impureza, Poda y Regresión):
 python3 arboles_decision.py
+
+# Laboratorio interactivo de CD09 (Novena en orden — Ensambles, Bagging, Random Forest y Boosting):
+python3 ensambles_random_forest.py
 
 # Laboratorio interactivo de CD13 / Unidad I (Aproximación Universal):
 python3 aproximacion_universal.py
@@ -435,9 +465,9 @@ python3 perceptron_xor.py
 
 ## 📁 Estructura del Proyecto
 ```
-├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD08, luego CD13 a CD18)
-├── INFORME.md                   # Informe académico detallado de las 14 unidades (CD01–CD08 y CD13–CD18)
-├── perceptron_xor.py            # Lanzador central y verificador integrado (14 unidades • 57 laboratorios)
+├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD09, luego CD13 a CD18)
+├── INFORME.md                   # Informe académico detallado de las 15 unidades (CD01–CD09 y CD13–CD18)
+├── perceptron_xor.py            # Lanzador central y verificador integrado (15 unidades • 61 laboratorios)
 ├── introduccion_curso.py        # CD01 (Primera en orden): Pandemia, SIR (Diap. 13), Netflix Prize, 3 Relatos IA y LLMs
 ├── preprocesamiento_eda.py      # CD02 (Segunda en orden): Sesgos Gallup/Yelp/QR, CRISP-DM, Pandas epl_mini (23 jug.) y Anscombe
 ├── visualizacion_datos.py       # CD03 (Tercera en orden): Datasaurus, Burtin 1951 (16 bacterias), Tufte Lie Factor, Stevens, Correll y Mirages
@@ -446,6 +476,7 @@ python3 perceptron_xor.py
 ├── clustering.py                # CD06 (Sexta en orden): Lloyd 1D/2D, Codo K=3, Rand Index vs ARI, Dendrogramas y DBSCAN vs HDBSCAN
 ├── reduccion_dimensionalidad.py # CD07 (Séptima en orden): Maldición Dim P_d, PCA Paso a Paso (6 pts), Fisher LDA (8 pts), t-SNE y UMAP
 ├── arboles_decision.py          # CD08 (Octava en orden): Particionado Ortogonal, Impureza Error/Gini/Entropía, ID3, Weakest Link y CART Regresión
+├── ensambles_random_forest.py   # CD09 (Novena en orden): Galton 1907 (787 votos), Condorcet, Bagging (1-1/e), ESL 15.1, Random Forest m=√J y AdaBoost
 ├── aproximacion_universal.py    # CD13 (Unidad I): DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
 ├── aprendizaje_redes.py         # CD14 (Unidad II): Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
 ├── descenso_gradiente.py        # CD15 (Unidad III): Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
@@ -454,6 +485,6 @@ python3 perceptron_xor.py
 ├── sgd_lotes.py                 # CD18 (Unidad VI): SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, Nesterov, RMSprop y Adam
 ├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html               # Suite Web Interactiva (14 Unidades: CD01–CD08 y CD13–CD18 • 57 Laboratorios)
-└── contexto/                    # Historial secuencial de planes de trabajo (context1..context20)
+│   └── index.html               # Suite Web Interactiva (15 Unidades: CD01–CD09 y CD13–CD18 • 61 Laboratorios)
+└── contexto/                    # Historial secuencial de planes de trabajo (context1..context21)
 ```
