@@ -708,6 +708,8 @@
     .unit-btn.u08 .u-tag { color: #10b981; }
     .unit-btn.u09 .u-tag { color: #f97316; }
     .unit-btn.u10 .u-tag { color: #06b6d4; }
+    .unit-btn.u11 .u-tag { color: #f59e0b; }
+    .unit-btn.u12 .u-tag { color: #c084fc; }
     .unit-btn.u1 .u-tag { color: var(--accent); }
     .unit-btn.u2 .u-tag { color: var(--purple); }
     .unit-btn.u3 .u-tag { color: var(--amber); }
@@ -769,6 +771,18 @@
       background: linear-gradient(135deg, rgba(6, 182, 212, 0.22), rgba(17, 24, 39, 0.9));
       border-color: #06b6d4;
       box-shadow: 0 0 18px rgba(6, 182, 212, 0.26);
+    }
+
+    .unit-btn.active-unit-11 {
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.22), rgba(17, 24, 39, 0.9));
+      border-color: #f59e0b;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.26);
+    }
+
+    .unit-btn.active-unit-12 {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(17, 24, 39, 0.9));
+      border-color: #8b5cf6;
+      box-shadow: 0 0 18px rgba(139, 92, 246, 0.26);
     }
 
     .unit-btn .u-name {
@@ -846,6 +860,18 @@
       color: #67e8f9;
       border-bottom-color: #06b6d4;
       background: rgba(6, 182, 212, 0.16);
+    }
+
+    .tab-btn.unit11-tab.active {
+      color: #fde68a;
+      border-bottom-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.16);
+    }
+
+    .tab-btn.unit12-tab.active {
+      color: #c4b5fd;
+      border-bottom-color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.16);
     }
 
     .tab-btn.unit2-tab.active {
@@ -978,6 +1004,18 @@
       border: 1px solid rgba(6, 182, 212, 0.48);
     }
 
+    .unit-pill.u11 {
+      background: rgba(217, 119, 6, 0.20);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.48);
+    }
+
+    .unit-pill.u12 {
+      background: rgba(139, 92, 246, 0.20);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.48);
+    }
+
     .unit-pill.u1 {
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent);
@@ -1041,18 +1079,18 @@
   <header>
     <div class="header-top">
       <div class="header-title">
-        <h1>Ciencia de Datos: Fundamentos (CD01–CD10) y Redes Neuronales (CD13–CD19)</h1>
-        <p>Suite Educativa Interactiva Ordenada por Código de Cátedra (CD01, CD02, CD03, CD04, ..., CD10, CD13–CD19) • Doctorado UCN (CMU 15-388, Stanford CS221, Harvard CS109 &amp; CMU 11-785)</p>
+        <h1>Ciencia de Datos: Fundamentos (CD01–CD12) y Redes Neuronales (CD13–CD20)</h1>
+        <p>Suite Educativa Interactiva Ordenada por Código de Cátedra (CD01 a CD12, CD13 a CD20) • Doctorado UCN (CMU 15-388, Stanford CS221, Harvard CS109, CS109b &amp; CMU 11-785)</p>
       </div>
-      <div class="badge-course">17 Unidades Académicas • 1050 Diapositivas → 69 Laboratorios</div>
+      <div class="badge-course">20 Unidades Académicas • 1260 Diapositivas → 81 Laboratorios</div>
     </div>
 
     <!-- Barra de Navegación por Fases y Control de Desaturación -->
     <div class="phase-nav-container">
       <div class="phase-tabs">
-        <button class="phase-btn active" id="phaseBtnAll" onclick="filterPhase('all')">🌟 Todas las Unidades (17)</button>
-        <button class="phase-btn" id="phaseBtn1" onclick="filterPhase(1)">📊 Fase 1: Clásica y Estadística (CD01–CD10)</button>
-        <button class="phase-btn" id="phaseBtn2" onclick="filterPhase(2)">🧠 Fase 2: Redes Neuronales (CD13–CD19)</button>
+        <button class="phase-btn active" id="phaseBtnAll" onclick="filterPhase('all')">🌟 Todas las Unidades (20)</button>
+        <button class="phase-btn" id="phaseBtn1" onclick="filterPhase(1)">📊 Fase 1: Clásica y Práctica (CD01–CD12)</button>
+        <button class="phase-btn" id="phaseBtn2" onclick="filterPhase(2)">🧠 Fase 2: Redes Neuronales (CD13–CD20)</button>
       </div>
       <button class="switcher-toggle-btn" id="btnToggleSwitcher" onclick="toggleUnitSwitcher()">
         <span id="toggleSwitcherIcon">▲</span> <span id="toggleSwitcherText">Contraer Selector</span>
@@ -1146,6 +1184,20 @@
           <span class="u-name">Modelos No Lineales y Support Vector Machines (kNN, Feature Maps, SVM y Truco del Kernel)</span>
         </div>
         <span class="u-meta">Labs 10.1–10.4 (65 Diaps.)</span>
+      </button>
+      <button class="unit-btn u11" id="unitBtn11" onclick="selectUnit('11')">
+        <div>
+          <span class="u-tag">CD11 • Cierre Práctico Fase 1 • Depuración, Imputación y Evaluación</span>
+          <span class="u-name">Aspectos Prácticos y Evaluación de Modelos (Ley de Kolter, Rubin, Triage ROC y COST)</span>
+        </div>
+        <span class="u-meta">Labs 11.1–11.4 (93 Diaps.)</span>
+      </button>
+      <button class="unit-btn u12" id="unitBtn12" onclick="selectUnit('12')">
+        <div>
+          <span class="u-tag">CD12 • Puente Histórico y Conceptual • De la Mente a la Red</span>
+          <span class="u-name">Redes Neuronales y Conexionismo (Asociacionismo, Bain 1873, Hebb vs Oja, XOR y Universalidad)</span>
+        </div>
+        <span class="u-meta">Labs 12.1–12.4 (60 Diaps.)</span>
       </button>
       <button class="unit-btn u1" id="unitBtn1" onclick="selectUnit(1)">
         <div>
@@ -1362,6 +1414,38 @@
       </button>
       <button class="tab-btn unit10-tab" data-tab="64" onclick="switchTab(64)">
         <span>10.4 Truco del Kernel y Conexión con Redes: Polinomial, RBF Gaussiano y Redes ReLU (Diaps. 49–65)</span>
+      </button>
+    </nav>
+
+    <!-- Pestañas de la Unidad CD11 (Undécima en orden: Labs 11.1 a 11.4) -->
+    <nav class="nav-tabs" id="unit11Tabs" style="display:none;">
+      <button class="tab-btn unit11-tab" data-tab="73" onclick="switchTab(73)">
+        <span>11.1 Debugging en Ciencia de Datos, Ley de Kolter y Telemetría de Discos Duros (Diaps. 1–25)</span>
+      </button>
+      <button class="tab-btn unit11-tab" data-tab="74" onclick="switchTab(74)">
+        <span>11.2 Datos Faltantes (Rubin MCAR/MAR/MNAR) y 5 Métodos de Imputación (Diaps. 26–45)</span>
+      </button>
+      <button class="tab-btn unit11-tab" data-tab="75" onclick="switchTab(75)">
+        <span>11.3 Evaluación de Clasificadores, Triage en Pandemia (251 Pacientes) y Curva ROC (Diaps. 46–66)</span>
+      </button>
+      <button class="tab-btn unit11-tab" data-tab="76" onclick="switchTab(76)">
+        <span>11.4 Ética por Subgrupos, Receta de 7 Pasos y Métricas Big Data (COST McSherry) (Diaps. 67–93)</span>
+      </button>
+    </nav>
+
+    <!-- Pestañas de la Unidad CD12 (Duodécima en orden: Labs 12.1 a 12.4) -->
+    <nav class="nav-tabs" id="unit12Tabs" style="display:none;">
+      <button class="tab-btn unit12-tab" data-tab="77" onclick="switchTab(77)">
+        <span>12.1 Raíces Filosóficas, Bain 1873 y Escala Biológica (Diaps. 5–22)</span>
+      </button>
+      <button class="tab-btn unit12-tab" data-tab="78" onclick="switchTab(78)">
+        <span>12.2 McCulloch-Pitts 1943, Hebb 1949 y Regla de Oja 1982 (Diaps. 23–38)</span>
+      </button>
+      <button class="tab-btn unit12-tab" data-tab="79" onclick="switchTab(79)">
+        <span>12.3 Rosenblatt 1958, Límite de Minsky-Papert XOR y MLP (Diaps. 39–48)</span>
+      </button>
+      <button class="tab-btn unit12-tab" data-tab="80" onclick="switchTab(80)">
+        <span>12.4 Clasificador y Regresor Universal, Tamaño vs Activación y Quiz XII (Diaps. 49–60)</span>
       </button>
     </nav>
 
@@ -8605,10 +8689,689 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       </div>
     </div>
 
+    <!-- =================================================================== -->
+    <!-- UNIDAD XI (CD11): ASPECTOS PRÁCTICOS Y EVALUACIÓN DE MODELOS (LABS 73–76) -->
+    <!-- =================================================================== -->
+
+    <!-- PANEL 73: DEBUGGING Y LA LEY DE KOLTER -->
+    <div class="module-panel" id="panel-73">
+      <div class="grid-2">
+        <!-- Left: Kolter Matrix & Diagnostic Tree -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🔍 Depuración en Ciencia de Datos y la Ley de Kolter</div>
+            <span class="card-tag">Diaps. 5–25 • CMU 15-388/688 (Z. Kolter)</span>
+          </div>
+
+          <div class="edu-callout tip" style="margin-top:0; margin-bottom:0.8rem;">
+            <strong>La Ley de Kolter:</strong> «Lo que distingue a los expertos en ciencia de datos del resto no es lo que hacen primero, sino lo que hacen después, cuando lo primero no funciona.»
+          </div>
+
+          <div style="font-size:0.8rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            En ML, el error rara vez es un bug de sintaxis o excepción de puntero; el error reside en el problema, la ausencia de señal o los datos. Selecciona las capacidades para clasificar en la Matriz 2×2:
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.8rem;">
+            <div style="flex:1; min-width:180px;">
+              <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.2rem;">¿Un humano/experto predice la señal?</div>
+              <div style="display:flex; gap:0.3rem;">
+                <button class="btn active" id="btnKolterHumYes" onclick="setKolterHuman(true)">Sí (Señal existe)</button>
+                <button class="btn" id="btnKolterHumNo" onclick="setKolterHuman(false)">No (A ciegas)</button>
+              </div>
+            </div>
+            <div style="flex:1; min-width:180px;">
+              <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.2rem;">¿El modelo ML aprende la frontera?</div>
+              <div style="display:flex; gap:0.3rem;">
+                <button class="btn" id="btnKolterMlYes" onclick="setKolterMl(true)">Sí (Acierta)</button>
+                <button class="btn active" id="btnKolterMlNo" onclick="setKolterMl(false)">No (Falla)</button>
+              </div>
+            </div>
+          </div>
+
+          <canvas id="canvasCd11KolterMatrix" width="480" height="170" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.8rem;"></canvas>
+
+          <div id="cd11KolterDiagBox" style="background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.3); border-radius:8px; padding:0.75rem; font-size:0.78rem; color:#cbd5e1;">
+            <!-- Dynamic Diagnostic Text -->
+          </div>
+        </section>
+
+        <!-- Right: Hard Drive Failure Proxy Case -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">💾 El Proxy Humano y Telemetría SMART de Discos Duros</div>
+            <span class="card-tag">Diaps. 10–24 • Google FAST 2007 vs Backblaze 2025</span>
+          </div>
+
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:0.6rem;">
+            <strong>El Proxy de Kolter:</strong> <em>«Juega tú el rol del predictor».</em> Inspecciona los atributos a ciegas. Si un experto humano no distingue la muestra que fallará, el modelo tampoco podrá:
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+            <span style="font-size:0.75rem; color:#f59e0b; font-weight:700;">Telemetría de 6 Discos (Muestra Simulada):</span>
+            <button class="btn" id="btnToggleSmartLabels" onclick="toggleSmartLabels()">Revelar Estado Real</button>
+          </div>
+
+          <div style="overflow-x:auto; margin-bottom:0.8rem;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.75rem; font-family:var(--font-mono); text-align:center;">
+              <thead>
+                <tr style="background:rgba(255,255,255,0.05); color:#94a3b8; border-bottom:1px solid rgba(255,255,255,0.1);">
+                  <th style="padding:0.4rem;">Disco</th>
+                  <th>SMART 5 (Reallocated)</th>
+                  <th>SMART 187 (Uncorrectable)</th>
+                  <th>SMART 197 (Pending)</th>
+                  <th>¿Fallará?</th>
+                </tr>
+              </thead>
+              <tbody id="cd11SmartTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="edu-callout" style="font-size:0.75rem; margin-bottom:0.6rem;">
+            <strong>Hallazgos Fundacionales en Data Centers:</strong><br>
+            • <strong>Google (Pinheiro et al., FAST 2007, 100k discos):</strong> &gt;56% de los discos con falla tenían cero absoluto en los 4 atributos SMART críticos; con todos los atributos, &gt;36% seguía en cero.<br>
+            • <strong>Backblaze (2025):</strong> Tasa base anual = <strong>1.36%</strong>. Aunque 76.7% muestra alguna señal previa, 1 de cada 4 falla sin aviso.<br>
+            • <strong>Acción ante problema «imposible»:</strong> Cambiar entrada (vibración física) o cambiar salida (cuantificar riesgo relativo: predecir 5% casi cuadruplica la tasa base y prioriza el reemplazo proactivo).
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL 74: DATOS FALTANTES E IMPUTACIÓN -->
+    <div class="module-panel" id="panel-74">
+      <div class="grid-2">
+        <!-- Left: Rubin Taxonomy (MCAR, MAR, MNAR) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧩 Datos Faltantes: Taxonomía de Rubin (1976)</div>
+            <span class="card-tag">Diaps. 26–33 • Donald Rubin (Biometrika)</span>
+          </div>
+
+          <div class="edu-callout danger" style="margin-top:0; margin-bottom:0.7rem;">
+            <strong>Las dos salidas fáciles y sus vicios:</strong><br>
+            • <code>dropna()</code>: Desecha filas completas, induce sesgo de selección severo si la ausencia no es al azar.<br>
+            • <code>fillna(mean())</code>: Aplana la varianza y distorsiona covarianzas artificialmente.
+          </div>
+
+          <div style="font-size:0.78rem; color:#94a3b8; margin-bottom:0.5rem;">
+            Selecciona el mecanismo de ausencia estocástica para visualizar el sesgo inducido:
+          </div>
+
+          <div style="display:flex; gap:0.4rem; margin-bottom:0.7rem;">
+            <button class="btn active" id="btnRubinMcar" onclick="setRubinMechanism('MCAR')">MCAR (Completely at Random)</button>
+            <button class="btn" id="btnRubinMar" onclick="setRubinMechanism('MAR')">MAR (at Random)</button>
+            <button class="btn" id="btnRubinMnar" onclick="setRubinMechanism('MNAR')">MNAR (Not at Random)</button>
+          </div>
+
+          <canvas id="canvasCd11RubinTaxonomy" width="480" height="170" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.7rem;"></canvas>
+
+          <div id="cd11RubinDescBox" style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.65rem; font-size:0.76rem; color:#cbd5e1;">
+            <!-- Injected via JS -->
+          </div>
+
+          <div style="margin-top:0.6rem; font-size:0.76rem; color:#f59e0b;">
+            💡 <strong>Variable Indicadora de Ausencia:</strong> Para cada predictor \(X_j\), imputar valor base y agregar columna binaria \(X_{j,\text{miss}} \in \{0, 1\}\). El modelo aprende si el hecho de no reportar es en sí mismo una señal de riesgo.
+          </div>
+        </section>
+
+        <!-- Right: 5 Imputation Methods on Lecture Data -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📐 Comparador de 5 Métodos de Imputación</div>
+            <span class="card-tag">Diaps. 34–45 • Puntos Exactos de Cátedra</span>
+          </div>
+
+          <div style="font-size:0.77rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            Dataset de 8 observaciones \((x_1, x_2)\): \(\sum x_2 = 31.3\). Puntos con valor ausente en \(x_1 = 3.5\) y \(x_1 = 6.5\):
+          </div>
+
+          <canvas id="canvasCd11Imputation" width="480" height="180" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.7rem;"></canvas>
+
+          <div style="overflow-x:auto; margin-bottom:0.7rem;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.74rem; font-family:var(--font-mono); text-align:center;">
+              <thead>
+                <tr style="background:rgba(255,255,255,0.05); color:#94a3b8; border-bottom:1px solid rgba(255,255,255,0.1);">
+                  <th style="padding:0.35rem;">Método</th>
+                  <th>Fórmula / Regla</th>
+                  <th>\(x_1 = 3.5\)</th>
+                  <th>\(x_1 = 6.5\)</th>
+                  <th>Comportamiento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="color:#f59e0b; font-weight:700;">1. Media Global</td>
+                  <td>\(\bar{x}_2 = 31.3 / 8\)</td>
+                  <td><strong>3.91</strong></td>
+                  <td><strong>3.91</strong></td>
+                  <td style="color:#ef4444;">Ignora covarianza</td>
+                </tr>
+                <tr>
+                  <td style="color:#06b6d4; font-weight:700;">2. kNN (\(k=2\))</td>
+                  <td>Promedio de vecinos</td>
+                  <td><strong>3.15</strong></td>
+                  <td><strong>5.10</strong></td>
+                  <td style="color:#22c55e;">Local y adaptativo</td>
+                </tr>
+                <tr>
+                  <td style="color:#10b981; font-weight:700;">3. Regresión</td>
+                  <td>\(1.12 + 0.62 x_1\)</td>
+                  <td><strong>3.29</strong></td>
+                  <td><strong>5.15</strong></td>
+                  <td style="color:#f59e0b;">Sin varianza residual</td>
+                </tr>
+                <tr>
+                  <td style="color:#a855f7; font-weight:700;">4. Estocástica</td>
+                  <td>\(\hat{y} + \mathcal{N}(0, 0.11)\)</td>
+                  <td id="cd11StochVal1"><strong>3.29 &plusmn; &epsilon;</strong></td>
+                  <td id="cd11StochVal2"><strong>5.15 &plusmn; &epsilon;</strong></td>
+                  <td style="color:#22c55e;">Preserva incertidumbre</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:0.75rem; color:#94a3b8;">
+              Vecinos kNN: \(k=\) <span id="cd11KVal" style="color:#06b6d4; font-weight:700;">2</span>
+              <input type="range" id="cd11KSlider" min="1" max="4" value="2" style="width:70px; margin-left:0.4rem; vertical-align:middle;" oninput="updateCd11ImputationMethodsLab()">
+            </div>
+            <button class="btn" onclick="resampleCd11Stochastic()">Remuestrear Ruido &epsilon; (&sigma;=0.33)</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL 75: EVALUACIÓN DE CLASIFICADORES, TRIAGE Y ROC -->
+    <div class="module-panel" id="panel-75">
+      <div class="grid-2">
+        <!-- Left: Confusion Matrix & Triage Metrics -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🏥 Matriz de Confusión y Triage en Pandemia</div>
+            <span class="card-tag">Diaps. 46–60 • Harvard CS109 / UCN (251 Pacientes)</span>
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            Caso clínico: Admisión hospitalaria urgente sobre <strong>251 pacientes reservados</strong> (134 urgencia Alta / Positivos, 117 urgencia Baja / Negativos).
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.7rem;">
+            <div style="display:flex; gap:0.4rem;">
+              <button class="btn active" id="btnTriageModelLog" onclick="setTriageModel('logistic')">Regresión Logística</button>
+              <button class="btn" id="btnTriageModelKnn" onclick="setTriageModel('knn')">Clasificador kNN</button>
+            </div>
+            <div style="display:flex; gap:0.3rem;">
+              <button class="btn" onclick="setTriageThresholdPreset(0.40)">Bajo (0.4)</button>
+              <button class="btn active" id="btnThresh05" onclick="setTriageThresholdPreset(0.50)">Cátedra (0.5)</button>
+              <button class="btn" onclick="setTriageThresholdPreset(0.60)">Alto (0.6)</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:0.7rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#94a3b8; margin-bottom:0.2rem;">
+              <span>Perilla del Umbral de Decisión \(\theta\):</span>
+              <span id="cd11ThreshVal" style="color:#f59e0b; font-weight:700;">0.50</span>
+            </div>
+            <input type="range" id="cd11ThreshSlider" min="0.20" max="0.80" step="0.05" value="0.50" style="width:100%;" oninput="updateCd11ConfusionMatrixLab()">
+          </div>
+
+          <div class="grid-2" style="gap:0.7rem; margin-bottom:0.7rem;">
+            <!-- 2x2 Matrix Table -->
+            <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem;">
+              <div style="font-size:0.73rem; color:#94a3b8; text-align:center; margin-bottom:0.4rem; font-weight:700;">Matriz de Confusión (251 Pacientes)</div>
+              <table style="width:100%; border-collapse:collapse; font-size:0.73rem; font-family:var(--font-mono); text-align:center;">
+                <tr>
+                  <td></td>
+                  <td style="color:#94a3b8; font-size:0.68rem;">Pred. Baja</td>
+                  <td style="color:#94a3b8; font-size:0.68rem;">Pred. Alta</td>
+                </tr>
+                <tr>
+                  <td style="color:#94a3b8; font-size:0.68rem;">Real Baja</td>
+                  <td style="background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); padding:0.4rem;" id="cd11MatTN">TN: 58</td>
+                  <td style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); padding:0.4rem;" id="cd11MatFP">FP: 59</td>
+                </tr>
+                <tr>
+                  <td style="color:#94a3b8; font-size:0.68rem;">Real Alta</td>
+                  <td style="background:rgba(239,68,68,0.25); border:1px solid #ef4444; padding:0.4rem; font-weight:700; color:#fca5a5;" id="cd11MatFN">FN: 37</td>
+                  <td style="background:rgba(34,197,94,0.20); border:1px solid rgba(34,197,94,0.4); padding:0.4rem;" id="cd11MatTP">TP: 97</td>
+                </tr>
+              </table>
+              <div style="font-size:0.67rem; color:#f87171; margin-top:0.3rem; text-align:center;">* FN = Error crítico de mayor costo (urgente enviado a casa).</div>
+            </div>
+
+            <!-- Metrics List -->
+            <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.75rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                <span style="color:#94a3b8;">Accuracy:</span>
+                <strong id="cd11MetricAcc" style="color:#fff;">0.62 (155/251)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                <span style="color:#94a3b8;">Recall / TPR:</span>
+                <strong id="cd11MetricRec" style="color:#38bdf8;">0.72 (97/134)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                <span style="color:#94a3b8;">Especificidad:</span>
+                <strong id="cd11MetricSpec" style="color:#4ade80;">0.50 (58/117)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                <span style="color:#94a3b8;">FPR (1 - Esp):</span>
+                <strong id="cd11MetricFpr" style="color:#f87171;">0.50 (59/117)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                <span style="color:#94a3b8;">Precision:</span>
+                <strong id="cd11MetricPrec" style="color:#facc15;">0.62 (97/156)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.1); padding-top:0.25rem;">
+                <span style="color:#94a3b8;">F1-Score:</span>
+                <strong id="cd11MetricF1" style="color:#e879f9;">0.67</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: ROC Curve & Country Scenarios -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📡 Curva ROC y Escenarios Geopolíticos Multipaís</div>
+            <span class="card-tag">Diaps. 61–66 • Radar SGM Bawdsey & Triage Pandemia</span>
+          </div>
+
+          <div style="font-size:0.78rem; color:#94a3b8; margin-bottom:0.6rem;">
+            No existe métrica universal. El contexto de salud y las restricciones operativas dictan el modelo y umbral:
+          </div>
+
+          <div style="display:flex; gap:0.4rem; margin-bottom:0.7rem;">
+            <button class="btn" id="btnScenBrasil" onclick="selectCountryScenario('Brasil')">🇧🇷 Brasil (Saturación &le; 0.5)</button>
+            <button class="btn" id="btnScenAlemania" onclick="selectCountryScenario('Alemania')">🇩🇪 Alemania (TPR &ge; 0.85)</button>
+            <button class="btn" id="btnScenIndia" onclick="selectCountryScenario('India')">🇮🇳 India (Capacidad &le; 1.0)</button>
+          </div>
+
+          <canvas id="canvasCd11Roc" width="480" height="190" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.7rem;"></canvas>
+
+          <div id="cd11RocScenarioBox" style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.65rem; font-size:0.76rem; color:#cbd5e1;">
+            <!-- Injected via JS -->
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL 76: ÉTICA POR SUBGRUPOS, RECETA Y BIG DATA COST + QUIZ XI -->
+    <div class="module-panel" id="panel-76">
+      <div class="grid-2">
+        <!-- Left: Subgroups & McSherry COST -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚖️ Auditoría por Subgrupos y el COST de McSherry</div>
+            <span class="card-tag">Diaps. 67–93 • Ética, Equidad y Escalabilidad</span>
+          </div>
+
+          <div class="edu-callout tip" style="margin-top:0; margin-bottom:0.7rem;">
+            <strong>Intención vs. Impacto:</strong> El daño en sistemas sociotécnicos ocurre con mayor frecuencia por negligencia metódica que por mala intención. El rigor técnico protege a los usuarios.
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.5rem;">
+            <strong>El Peligro del Promedio Global (Diap. 70):</strong> Un modelo con 94.6% de exactitud global puede ocultar un colapso inaceptable en una minoría vulnerable:
+          </div>
+
+          <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.75rem; margin-bottom:0.7rem;">
+            <div>• <strong>Población Mayoritaria (n=900):</strong> 890 aciertos &rarr; <span style="color:#22c55e; font-weight:700;">98.9% Accuracy</span></div>
+            <div>• <strong>Población Minoritaria (n=100):</strong> 70 aciertos &rarr; <span style="color:#ef4444; font-weight:700;">70.0% Accuracy (¡30% de error!)</span></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.1); margin-top:0.3rem; padding-top:0.3rem; color:#f59e0b;">
+              &rarr; <em>Principio Minimax:</em> Minimizar la peor pérdida grupal en vez de maximizar el promedio.
+            </div>
+          </div>
+
+          <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:0.6rem;">
+            <div style="font-size:0.78rem; font-weight:700; color:#38bdf8; margin-bottom:0.3rem;">
+              Benchmark de Escalabilidad: McSherry et al. (HotOS 2015, Twitter PageRank):
+            </div>
+            <canvas id="canvasCd11CostBenchmark" width="480" height="150" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.5rem;"></canvas>
+            <div style="font-size:0.72rem; color:#94a3b8;">
+              <strong>Métrica COST:</strong> Hardware mínimo para que un clúster distribuido supere a un hilo único en RAM. Un hilo de laptop tardó 275s superando a 128 núcleos de Spark (857s) por costos de serialización y red.
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: 7 Steps Recipe & Quiz XI -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📝 La Receta de 7 Pasos y Autoevaluación XI</div>
+            <span class="card-tag">Diaps. 76–93 • Cierre de Fase 1</span>
+          </div>
+
+          <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.74rem; color:#cbd5e1; margin-bottom:0.8rem;">
+            <div style="color:#f59e0b; font-weight:700; margin-bottom:0.3rem;">La Receta de 7 Pasos del Modelador:</div>
+            <div><strong>1. Datos & Representación:</strong> Limpiar y congelar división test antes de imputar.</div>
+            <div><strong>2. Modelo:</strong> Elegir sesgo inductivo según cantidad de datos y costo de cómputo.</div>
+            <div><strong>3. Función de Pérdida:</strong> Alinear el gradiente con la asimetría de costos del negocio.</div>
+            <div><strong>4. Regularización:</strong> L1/L2, dropout, early stopping para acotar capacidad.</div>
+            <div><strong>5. Optimizador:</strong> Ajustar tasa de aprendizaje (&eta;) adaptativa (SGD, Adam).</div>
+            <div><strong>6. Hiperparámetros:</strong> Búsqueda cruzada en validación (¡NUNCA en test!).</div>
+            <div><strong>7. Evaluación Única:</strong> Ejecutar una sola vez en test ciego y reportar por subgrupo.</div>
+          </div>
+
+          <!-- Quizzes 73 to 76 -->
+          <div class="quiz-item" id="quiz-item-73">
+            <div class="quiz-q">1 (Diaps. 5–25). «Según la Ley de Kolter y el estudio de Google en 100,000 discos duros, si un humano que inspecciona los atributos a ciegas no puede predecir la falla porque más del 56% de los discos dañados muestran cero en señales SMART, el problema es 'imposible' en las entradas actuales y se debe depurar el problema (cambiar entradas o predecir riesgo relativo) antes de culpar al algoritmo.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q73-btn-true" onclick="answerQuiz(73, true)">Verdadero</button>
+              <button class="btn" id="q73-btn-false" onclick="answerQuiz(73, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-73"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-74">
+            <div class="quiz-q">2 (Diaps. 26–45). «En la taxonomía de Rubin, no es posible demostrar si los datos son MAR o MNAR examinando únicamente las columnas observadas, y la imputación por regresión estocástica \(\hat{y} + \mathcal{N}(0, \text{MSE})\) preserva la varianza residual evitando el colapso artificial inducido por la imputación determinista.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q74-btn-true" onclick="answerQuiz(74, true)">Verdadero</button>
+              <button class="btn" id="q74-btn-false" onclick="answerQuiz(74, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-74"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-75">
+            <div class="quiz-q">3 (Diaps. 46–66). «En el caso de triage de 251 pacientes, tanto la Regresión Logística como kNN alcanzan 0.62 de exactitud global a umbral 0.5, pero kNN ofrece mayor sensibilidad (0.75 vs 0.72); y ante restricciones geopolíticas distintas (Brasil con TPR+FPR&le;0.5 vs Alemania con TPR&ge;0.85), el modelo y umbral óptimos cambian radicalmente.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q75-btn-true" onclick="answerQuiz(75, true)">Verdadero</button>
+              <button class="btn" id="q75-btn-false" onclick="answerQuiz(75, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-75"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-76">
+            <div class="quiz-q">4 (Diaps. 67–93). «El benchmark de McSherry et al. (HotOS 2015) demostró que un solo hilo en la RAM de una laptop (275s) superó en PageRank a un clúster de Spark con 128 núcleos (857s), y la métrica de equidad ética exige evaluar la pérdida minimax por subgrupo en vez de conformarse con un 94.6% de exactitud global engañosa.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q76-btn-true" onclick="answerQuiz(76, true)">Verdadero</button>
+              <button class="btn" id="q76-btn-false" onclick="answerQuiz(76, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-76"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- UNIDAD XII (CD12): REDES NEURONALES Y CONEXIONISMO (LABS 77–80) -->
+    <!-- =================================================================== -->
+
+    <!-- PANEL 77: ASOCIACIONISMO, ALEXANDER BAIN (1873) Y ESCALA BIOLÓGICA -->
+    <div class="module-panel" id="panel-77">
+      <div class="grid-2">
+        <!-- Left: Philosophical Roots & PDP Ingredients -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📜 Raíces Filosóficas, Asociacionismo y Alexander Bain (1873)</div>
+            <span class="card-tag">Diaps. 5–22 • Filosofía a la Neurocomputación</span>
+          </div>
+
+          <div class="edu-callout tip" style="margin-top:0; margin-bottom:0.8rem;">
+            <strong>La Intuición Fundacional (Alexander Bain, 1873, <em>Mind and Body</em>):</strong> «El conocimiento y la memoria no residen en neuronas aisladas, sino en la fuerza y multiplicidad de las conexiones (sinapsis).» Planteado décadas antes de la doctrina neuronal de Ramón y Cajal (1888) y el concepto de sinapsis de Sherrington (1897).
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.7rem;">
+            <strong>Línea del Asociacionismo al Conexionismo:</strong>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem; margin-top:0.4rem;">
+              <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0.45rem;">
+                <span style="color:#c084fc; font-weight:700;">1. Aristóteles, Locke y Hume:</span><br>
+                4 Leyes: <em>Contigüidad, Frecuencia, Similitud y Contraste</em>.
+              </div>
+              <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0.45rem;">
+                <span style="color:#c084fc; font-weight:700;">2. David Hartley (1749):</span><br>
+                Vibraciones físicas en nervios como sustrato asociativo.
+              </div>
+              <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0.45rem;">
+                <span style="color:#c084fc; font-weight:700;">3. Alan Turing (1948):</span><br>
+                Máquinas Tipo B con modificadores sinápticos entrenables.
+              </div>
+              <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0.45rem;">
+                <span style="color:#c084fc; font-weight:700;">4. Rumelhart & Hinton (1986):</span><br>
+                PDP: 8 ingredientes de cómputo masivamente paralelo.
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:0.6rem;">
+            <div style="font-size:0.78rem; font-weight:700; color:#c084fc; margin-bottom:0.3rem;">
+              Los 8 Ingredientes de un Sistema PDP (Rumelhart, Hinton & McClelland 1986):
+            </div>
+            <div style="font-size:0.73rem; color:#94a3b8; line-height:1.4;">
+              1. Conjunto de unidades de procesamiento &bull; 2. Estado de activación \(a_i(t)\) &bull; 3. Función de salida \(o_i(t)\) &bull; 4. Patrón de conectividad \(w_{ij}\) &bull; 5. Regla de propagación de señales &bull; 6. Regla de activación (integración neta) &bull; 7. Regla de aprendizaje (modificación de \(w_{ij}\)) &bull; 8. Entorno operativo.
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Brain Scale Simulation Bain vs Reality -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧠 El Cerebro en Cifras: Bain (1873) vs. Neurobiología Real</div>
+            <span class="card-tag">Diaps. 17–22 • Escala Logarítmica</span>
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            Alexander Bain estimó la capacidad del cerebro humano en 1873. Compara sus estimaciones con la escala biológica real y organismos modelo:
+          </div>
+
+          <div style="display:flex; gap:0.4rem; margin-bottom:0.8rem;">
+            <button class="btn active" id="btnScaleHuman" onclick="setBrainScaleTarget('human')">Humano Real (86B / 100T)</button>
+            <button class="btn" id="btnScaleBain" onclick="setBrainScaleTarget('bain')">Bain 1873 (1M / 5B)</button>
+            <button class="btn" id="btnScaleMouse" onclick="setBrainScaleTarget('mouse')">Ratón (71M / 100B)</button>
+            <button class="btn" id="btnScaleElegans" onclick="setBrainScaleTarget('elegans')">C. elegans (302 / 7K)</button>
+          </div>
+
+          <canvas id="canvasCd12BrainScale" width="480" height="180" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.7rem;"></canvas>
+
+          <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.75rem;">
+            <div id="scaleStatsBox" style="color:#cbd5e1;">
+              Cargando estadísticas cerebrales...
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL 78: McCULLOCH-PITTS (1943), REGLA DE HEBB (1949) Y REGLA DE OJA (1982) -->
+    <div class="module-panel" id="panel-78">
+      <div class="grid-2">
+        <!-- Left: McCulloch & Pitts Simulator -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚡ La Neurona de McCulloch & Pitts (1943)</div>
+            <span class="card-tag">Diaps. 23–30 • Umbral e Inhibición Absoluta</span>
+          </div>
+
+          <div class="edu-callout tip" style="margin-top:0; margin-bottom:0.8rem;">
+            <strong>McCulloch & Pitts (1943):</strong> La neurona suma entradas excitadoras (\(+1\)) y dispara (\(y=1\)) si \(\sum x_i \ge \theta\). Si alguna entrada <em>inhibidora absoluta</em> está activa, la neurona <strong>no dispara bajo ninguna circunstancia</strong>. Equivalente a lógica proposicional y a Máquinas de Turing.
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            Configura la Compuerta Lógica de McCulloch-Pitts:
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.8rem;">
+            <button class="btn active" id="btnMpAnd" onclick="setMpGate('AND')">AND (\(\theta=2\))</button>
+            <button class="btn" id="btnMpOr" onclick="setMpGate('OR')">OR (\(\theta=1\))</button>
+            <button class="btn" id="btnMpNot" onclick="setMpGate('NOT')">NOT (\(\theta=0\), Inh)</button>
+            <button class="btn" id="btnMpNand" onclick="setMpGate('NAND')">NAND (\(\theta=0\), Inh)</button>
+          </div>
+
+          <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.75rem; margin-bottom:0.7rem;">
+            <div style="display:flex; gap:1rem; align-items:center; margin-bottom:0.4rem;">
+              <span>Entrada \(x_1\): <button class="btn" id="btnX1Toggle" onclick="toggleMpInput(1)" style="padding:0.2rem 0.6rem;">0</button></span>
+              <span id="x2ControlSpan">Entrada \(x_2\): <button class="btn" id="btnX2Toggle" onclick="toggleMpInput(2)" style="padding:0.2rem 0.6rem;">0</button></span>
+            </div>
+            <div id="mpResultBox" style="color:#c084fc; font-weight:700; font-size:0.82rem;">
+              Evaluando compuerta...
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Hebb vs Oja Simulator -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📈 Regla de Hebb (1949) vs. Estabilización de Oja (1982)</div>
+            <span class="card-tag">Diaps. 31–38 • «Neurons that fire together wire together»</span>
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            La regla de Hebb pura \(w \leftarrow w + \eta x y\) diverge sin límite cuando las entradas están positivamente correlacionadas. La <strong>Regla de Oja (1982)</strong> introduce un término de olvido proporcional a \(y^2 w\):
+            \[\Delta w = \eta y (x - y w) \implies w \to 1.0 \text{ (Estable, norma unitaria y PCA)}\]
+          </div>
+
+          <div style="margin-bottom:0.6rem;">
+            <label style="font-size:0.75rem; color:#94a3b8;">Iteraciones de Entrenamiento: <span id="lblHebbSteps" style="color:#c084fc; font-weight:700;">100</span> pasos</label>
+            <input type="range" id="sliderHebbSteps" min="10" max="500" step="10" value="100" style="width:100%; accent-color:#8b5cf6;" oninput="updateCd12HebbOjaLab()">
+          </div>
+
+          <canvas id="canvasCd12HebbOja" width="480" height="170" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.6rem;"></canvas>
+
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; background:rgba(15,23,42,0.8); padding:0.5rem; border-radius:6px;">
+            <div>Hebb Puro: <span id="hebbFinalVal" style="color:#ef4444; font-weight:700;">10.0 (Diverge)</span></div>
+            <div>Regla de Oja: <span id="ojaFinalVal" style="color:#22c55e; font-weight:700;">1.000 (Convergente)</span></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL 79: ROSENBLATT (1958), LÍMITE XOR Y SOLUCIÓN MULTICAPA (MLP) -->
+    <div class="module-panel" id="panel-79">
+      <div class="grid-2">
+        <!-- Left: Rosenblatt OR Training & Minsky-Papert XOR Proof -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🤖 Perceptrón de Rosenblatt (1958) e Imposibilidad de XOR</div>
+            <span class="card-tag">Diaps. 39–44 • Minsky & Papert (1969)</span>
+          </div>
+
+          <div class="edu-callout tip" style="margin-top:0; margin-bottom:0.8rem;">
+            <strong>Prueba Analítica de Inconsistencia (Minsky & Papert 1969):</strong> Para resolver XOR con umbral \(T\), una sola neurona requeriría simultáneamente:
+            <br>1) \((0,0) \to 0 \implies 0 < T\)
+            <br>2) \((1,0) \to 1 \implies w_1 \ge T\)
+            <br>3) \((0,1) \to 1 \implies w_2 \ge T\)
+            <br>4) \((1,1) \to 0 \implies w_1 + w_2 < T\)
+            <br>Sumando (2) y (3): \(w_1 + w_2 \ge 2T\). Como \(T > 0\), se deduce \(w_1 + w_2 \ge 2T > T\), lo cual <strong>contradice directamente</strong> la desigualdad (4). ¡Es matemáticamente imposible con una sola neurona!
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.5rem;">
+            <strong>Entrenamiento de Rosenblatt en Compuerta OR:</strong>
+          </div>
+          <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.75rem;">
+            <div>• Inicial: \(w = [0, 0], b = 0\) &rarr; Errores en muestras positivas.</div>
+            <div>• Época 1: \(w = [1, 1], b = -1\) &rarr; \(\text{step}(x_1 + x_2 - 1)\).</div>
+            <div>• Verificación: \((0,0)\to 0, (1,0)\to 1, (0,1)\to 1, (1,1)\to 1\). <span style="color:#22c55e; font-weight:700;">¡100% Exactitud en 1 época!</span></div>
+          </div>
+        </section>
+
+        <!-- Right: Multilayer Solution (MLP with 3 Neurons) -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🧩 La Solución Multicapa XOR (MLP 2 Capas, 3 Neuronas)</div>
+            <span class="card-tag">Diaps. 45–48 • Deconstrucción Geométrica</span>
+          </div>
+
+          <div style="font-size:0.78rem; color:#cbd5e1; margin-bottom:0.6rem;">
+            Dos hiperplanos transforman el espacio original a un espacio oculto \((h_1, h_2)\) linealmente separable:
+            \[h_1 = x_1 \lor x_2, \quad h_2 = \overline{x_1 \land x_2}, \quad y = h_1 \land h_2\]
+          </div>
+
+          <canvas id="canvasCd12XorMlp" width="480" height="180" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; margin-bottom:0.6rem;"></canvas>
+
+          <div style="display:flex; justify-content:space-around; background:rgba(15,23,42,0.8); padding:0.5rem; border-radius:6px; font-size:0.75rem;">
+            <div>(0,0) &rarr; \(h=(0,1) \to \mathbf{0}\)</div>
+            <div>(1,0) &rarr; \(h=(1,1) \to \mathbf{1}\)</div>
+            <div>(0,1) &rarr; \(h=(1,1) \to \mathbf{1}\)</div>
+            <div>(1,1) &rarr; \(h=(1,0) \to \mathbf{0}\)</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- PANEL 80: CLASIFICADOR Y REGRESOR UNIVERSAL, TAMAÑO VS ACTIVACIÓN Y QUIZ XII -->
+    <div class="module-panel" id="panel-80">
+      <div class="grid-2">
+        <!-- Left: Disjoint Triangles 9-Neuron Classifier -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📐 Clasificador Universal de Regiones No Convexas / Disjuntas</div>
+            <span class="card-tag">Diaps. 49–56 • 9 Neuronas en 3 Capas</span>
+          </div>
+
+          <div class="edu-callout tip" style="margin-top:0; margin-bottom:0.7rem;">
+            <strong>Teorema de Clasificación en 3 Capas:</strong> Cualquier región arbitraria (incluso disjunta o no convexa) en \(\mathbb{R}^2\) se puede clasificar con 3 capas:
+            <br>&bull; <em>Capa 1 (6 neuronas):</em> Semiplanos lineales delimitadores.
+            <br>&bull; <em>Capa 2 (2 neuronas):</em> Compuertas AND para intersectar los 3 semiplanos de cada polígono convexo.
+            <br>&bull; <em>Capa 3 (1 neurona):</em> Compuerta OR para unir los polígonos disjuntos.
+          </div>
+
+          <div style="font-size:0.75rem; color:#cbd5e1; margin-bottom:0.5rem;">
+            Haz clic en el canvas para evaluar cualquier punto \((x, y)\) en vivo:
+          </div>
+
+          <canvas id="canvasCd12Triangles" width="480" height="180" style="width:100%; height:auto; background:#0b1120; border:1px solid rgba(255,255,255,0.08); border-radius:8px; cursor:crosshair; margin-bottom:0.6rem;"></canvas>
+
+          <div id="triangleEvalStatus" style="font-size:0.75rem; color:#cbd5e1; background:rgba(15,23,42,0.8); padding:0.5rem; border-radius:6px;">
+            Punto seleccionado: (0.3, 0.4) &rarr; <span style="color:#22c55e; font-weight:700;">¡Dentro del Triángulo 1! (Salida Red = 1)</span>
+          </div>
+        </section>
+
+        <!-- Right: Size vs Activation Theorem & Quiz XII -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Teorema de Tamaño vs. Activación y Autoevaluación XII</div>
+            <span class="card-tag">Diaps. 57–60 • Cierre de Fase 1</span>
+          </div>
+
+          <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.6rem; font-size:0.74rem; color:#cbd5e1; margin-bottom:0.8rem;">
+            <div style="color:#c084fc; font-weight:700; margin-bottom:0.3rem;">Teorema de Tamaño vs. Tipo de Activación:</div>
+            <div>&bull; <strong>Regresor de Riemann:</strong> Una suma de pulsos escalón aproxima cualquier función continua \(f(x)\), pero requiere \(N \to \infty\) neuronas para error \(\varepsilon \to 0\).</div>
+            <div>&bull; <strong>Funciones Periódicas:</strong> Representar \(\cos(2x)\) con escalones requiere infinitas neuronas; pero con activación sinusoidal \(\sigma(z)=\sin(z)\), <strong>1 sola neurona</strong> \(\sin(2x + \pi/2)\) la representa de forma exacta y perfecta.</div>
+          </div>
+
+          <!-- Quizzes 77 to 80 -->
+          <div class="quiz-item" id="quiz-item-77">
+            <div class="quiz-q">1 (Diaps. 5–22). «Alexander Bain en 1873 postuló que la memoria reside en las conexiones entre neuronas antes del descubrimiento biológico de la neurona y la sinapsis, y su estimación de 1 millón de neuronas y 5 mil millones de sinapsis fue superada por la neurobiología moderna por un factor de 20,000 en sinapsis.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q77-btn-true" onclick="answerQuiz(77, true)">Verdadero</button>
+              <button class="btn" id="q77-btn-false" onclick="answerQuiz(77, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-77"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-78">
+            <div class="quiz-q">2 (Diaps. 23–38). «La neurona de McCulloch y Pitts (1943) con umbral e inhibición absoluta es equivalente a una Máquina de Turing universal, y mientras la regla de Hebb pura \(w \leftarrow w + \eta x y\) diverge sin cota para datos correlacionados, la Regla de Oja (1982) estabiliza el peso a norma 1 extrayendo el primer componente principal.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q78-btn-true" onclick="answerQuiz(78, true)">Verdadero</button>
+              <button class="btn" id="q78-btn-false" onclick="answerQuiz(78, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-78"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-79">
+            <div class="quiz-q">3 (Diaps. 39–48). «Minsky y Papert (1969) demostraron analíticamente que ninguna neurona lineal de umbral puede resolver XOR porque la suma de las condiciones de activación \(w_1 \ge T\) y \(w_2 \ge T\) implica \(w_1+w_2 \ge 2T > T\), contradiciendo que para (1,1) debe ser \(w_1+w_2 < T\); problema que se resuelve con un MLP de 2 capas y 3 neuronas.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q79-btn-true" onclick="answerQuiz(79, true)">Verdadero</button>
+              <button class="btn" id="q79-btn-false" onclick="answerQuiz(79, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-79"></div>
+          </div>
+
+          <div class="quiz-item" id="quiz-item-80">
+            <div class="quiz-q">4 (Diaps. 49–60). «Con una red de 3 capas y 9 neuronas de umbral es posible clasificar exactamente regiones disjuntas como dos triángulos en \(\mathbb{R}^2\), y el teorema de tamaño vs activación demuestra que mientras aproximar \(\cos(2x)\) con escalones requiere infinitas neuronas, con activación periódica se logra con exactamente una sola neurona.»</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn" id="q80-btn-true" onclick="answerQuiz(80, true)">Verdadero</button>
+              <button class="btn" id="q80-btn-false" onclick="answerQuiz(80, false)">Falso</button>
+            </div>
+            <div class="quiz-ans" id="quiz-ans-80"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
   </main>
 
   <footer>
-    Ciencia de Datos — Doctorado UCN • Suite Educativa Interactiva (Ordenada por Código): CD01 (Introducción al Curso) • CD02 (Preprocesamiento y EDA) • CD03 (Visualización Efectiva y Engañosa) • CD04 (Introducción a Machine Learning) • CD05 (Generalización y Validación) • CD06 (Clustering) • CD07 (Reducción Dimensional) • CD08 (Árboles de Decisión) • CD09 (Ensambles y Random Forests) • CD10 (Modelos No Lineales y SVM) • CD13 (Aproximación Universal) • CD14 (Aprendizaje) • CD15 (Descenso por Gradiente) • CD16 (Backpropagation) • CD17 (Problemas de Convergencia) • CD18 (SGD, Mini-lotes y Optimizadores) • CD19 (Regularización de Redes Neuronales) • CD20 (Redes Neuronales Convolucionales)
+    Ciencia de Datos — Doctorado UCN • Suite Educativa Interactiva (Ordenada por Código): CD01 (Introducción al Curso) • CD02 (Preprocesamiento y EDA) • CD03 (Visualización Efectiva y Engañosa) • CD04 (Introducción a Machine Learning) • CD05 (Generalización y Validación) • CD06 (Clustering) • CD07 (Reducción Dimensional) • CD08 (Árboles de Decisión) • CD09 (Ensambles y Random Forests) • CD10 (Modelos No Lineales y SVM) • CD11 (Aspectos Prácticos y Evaluación) • CD12 (Redes Neuronales y Conexionismo) • CD13 (Aproximación Universal) • CD14 (Aprendizaje) • CD15 (Descenso por Gradiente) • CD16 (Backpropagation) • CD17 (Problemas de Convergencia) • CD18 (SGD, Mini-lotes y Optimizadores) • CD19 (Regularización de Redes Neuronales) • CD20 (Redes Neuronales Convolucionales)
   </footer>
 
   <!-- ===================================================================== -->
@@ -8688,11 +9451,19 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       { unit: 8, pill: 'CD20 • UNIDAD VIII • CONVOLUCIÓN', title: 'Módulo 8.1: ¿Por qué las Imágenes Rompen a los MLP? (Explosión y Localidad)', slides: 'Temario: Aplanamiento 1D • ImageNet 19,267,712 pesos (128 neuronas) • Falta de Invarianza • Historia del Cisne • Diaps. 5–13' },
       { unit: 8, pill: 'CD20 • UNIDAD VIII • CONVOLUCIÓN', title: 'Módulo 8.2: Convolución 2D Paso a Paso, Padding y Stride', slides: 'Temario: Micro-ejemplo 5×5 y filtro vertical [1,0,-1] (salida [0,9,9]) • O = ⌊(W-K+2P)/S⌋+1 • Gato 19,044 paradas • Diaps. 14–28' },
       { unit: 8, pill: 'CD20 • UNIDAD VIII • CONVOLUCIÓN', title: 'Módulo 8.3: Simulador de Pooling (Max vs Mean en 4×4) y ReLU', slides: 'Temario: Matriz 4×4 de cátedra (Max [[7,8],[3,4]], Mean [[3.5,5.5],[1.75,2.0]]) • 0 parámetros • Factor 64× • Diaps. 29–35' },
-      { unit: 8, pill: 'CD20 • UNIDAD VIII • CONVOLUCIÓN', title: 'Módulo 8.4: Conteo de Parámetros (99.8% FC), Transfer Learning y Quiz VIII', slides: 'Temario: Red 32×32×3 (Total 2,103,156, 99.8% denso) • Matriz TL 2×2 (Fauna, Industria, Sismos) • LeNet, AlexNet, ResNet • Diaps. 36–57' }
+      { unit: 8, pill: 'CD20 • UNIDAD VIII • CONVOLUCIÓN', title: 'Módulo 8.4: Conteo de Parámetros (99.8% FC), Transfer Learning y Quiz VIII', slides: 'Temario: Red 32×32×3 (Total 2,103,156, 99.8% denso) • Matriz TL 2×2 (Fauna, Industria, Sismos) • LeNet, AlexNet, ResNet • Diaps. 36–57' },
+      { unit: '11', pill: 'CD11 • ASPECTOS PRÁCTICOS Y EVALUACIÓN', title: 'Módulo 11.1: Debugging en Ciencia de Datos, Ley de Kolter y Telemetría de Discos Duros', slides: 'Temario: Ley de Kolter • Proxy Humano a ciegas • Google FAST 2007 (>56% en 0) vs Backblaze 2025 • Problema Imposible vs Factible • Diaps. 5–25' },
+      { unit: '11', pill: 'CD11 • ASPECTOS PRÁCTICOS Y EVALUACIÓN', title: 'Módulo 11.2: Datos Faltantes (Taxonomía de Rubin) y 5 Métodos de Imputación', slides: 'Temario: Vicios dropna/fillna • Indicador X_miss • MCAR, MAR, MNAR e Incomprobabilidad • Media 3.91, kNN 3.15/5.10, Regresión 3.29/5.15 y Ruido σ=0.33 • Diaps. 26–45' },
+      { unit: '11', pill: 'CD11 • ASPECTOS PRÁCTICOS Y EVALUACIÓN', title: 'Módulo 11.3: Evaluación de Clasificadores, Triage en Pandemia (251 Pacientes) y Curva ROC', slides: 'Temario: Matriz de Confusión • Logística vs kNN (Acc 0.62, Recall 0.72 vs 0.75, F1 0.67 vs 0.68) • Perilla de Umbral • Curva ROC, Radar SGM y Escenarios Brasil/Alemania/India • Diaps. 46–66' },
+      { unit: '11', pill: 'CD11 • ASPECTOS PRÁCTICOS Y EVALUACIÓN', title: 'Módulo 11.4: Ética, Auditoría por Subgrupos, Receta de 7 Pasos y Métricas Big Data (COST McSherry)', slides: 'Temario: Intención vs Impacto • Pérdida Minimax Subgrupos (98.9% vs 70%) • Receta 7 Pasos y Fuga de Datos • Big Data 4 Puntos y COST (Laptop 275s vs Spark 857s) • Quiz XI • Diaps. 67–93' },
+      { unit: '12', pill: 'CD12 • REDES Y CONEXIONISMO', title: 'Módulo 12.1: Raíces Filosóficas, Asociacionismo, Alexander Bain (1873) y Escala Biológica', slides: 'Temario: Aristóteles a Pavlov (4 Leyes) • Bain (1873): «La información está en las conexiones» • Turing Máquinas A/B • 8 Ingredientes PDP (1986) • Diaps. 5–22' },
+      { unit: '12', pill: 'CD12 • REDES Y CONEXIONISMO', title: 'Módulo 12.2: Neurona de McCulloch & Pitts (1943), Regla de Hebb (1949) y Regla de Oja (1982)', slides: 'Temario: Umbral e Inhibición Absoluta • AND, OR, NOT, NAND y Turing-completitud • Hebb divergente vs Oja convergente (PCA) • Diaps. 23–38' },
+      { unit: '12', pill: 'CD12 • REDES Y CONEXIONISMO', title: 'Módulo 12.3: Perceptrón de Rosenblatt (1958), Demostración Analítica del Límite XOR y Solución MLP', slides: 'Temario: Aprendizaje online OR • Prueba de Minsky-Papert 1969 (w1+w2 ≥ 2T > T) • MLP 2 Capas 3 Neuronas (h1, h2) • Diaps. 39–48' },
+      { unit: '12', pill: 'CD12 • REDES Y CONEXIONISMO', title: 'Módulo 12.4: Clasificador Universal (Dos Triángulos Disjuntos), Regresor de Riemann, Tamaño vs Activación y Quiz XII', slides: 'Temario: 9 Neuronas en 3 Capas • Aproximador de Riemann con Pulsos • cos(2x) con 1 neurona sin(2x+π/2) • Quiz XII • Diaps. 49–60' }
     ];
 
-    const ORDERED_UNITS = [0, '02', '03', '04', '05', '06', '07', '08', '09', '10', 1, 2, 3, 4, 5, 6, 7, 8];
-    const ORDERED_TABS = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 65, 66, 67, 68, 69, 70, 71, 72];
+    const ORDERED_UNITS = [0, '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', 1, 2, 3, 4, 5, 6, 7, 8];
+    const ORDERED_TABS = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 73, 74, 75, 76, 77, 78, 79, 80, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 65, 66, 67, 68, 69, 70, 71, 72];
 
     let currentActiveTabIdx = 25;
     let currentPhaseFilter = 'all';
@@ -8724,7 +9495,7 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       document.getElementById('phaseBtn1').classList.toggle('active', phase === 1);
       document.getElementById('phaseBtn2').classList.toggle('active', phase === 2);
 
-      const f1Btns = ['unitBtn0', 'unitBtn02', 'unitBtn03', 'unitBtn04', 'unitBtn05', 'unitBtn06', 'unitBtn07', 'unitBtn08', 'unitBtn09', 'unitBtn10'];
+      const f1Btns = ['unitBtn0', 'unitBtn02', 'unitBtn03', 'unitBtn04', 'unitBtn05', 'unitBtn06', 'unitBtn07', 'unitBtn08', 'unitBtn09', 'unitBtn10', 'unitBtn11', 'unitBtn12'];
       const f2Btns = ['unitBtn1', 'unitBtn2', 'unitBtn3', 'unitBtn4', 'unitBtn5', 'unitBtn6', 'unitBtn7', 'unitBtn8'];
 
       f1Btns.forEach(id => {
@@ -8780,6 +9551,8 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       else if (unitNum === '08') switchTab(53);
       else if (unitNum === '09') switchTab(57);
       else if (unitNum === '10' || unitNum === 10) switchTab(61);
+      else if (unitNum === '11' || unitNum === 11) switchTab(73);
+      else if (unitNum === '12' || unitNum === 12) switchTab(77);
       else if (unitNum === 1) switchTab(0);
       else if (unitNum === 2) switchTab(5);
       else if (unitNum === 3) switchTab(9);
@@ -8804,6 +9577,8 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       const u08Btn = document.getElementById('unitBtn08');
       const u09Btn = document.getElementById('unitBtn09');
       const u10Btn = document.getElementById('unitBtn10');
+      const u11Btn = document.getElementById('unitBtn11');
+      const u12Btn = document.getElementById('unitBtn12');
       const u1Btn = document.getElementById('unitBtn1');
       const u2Btn = document.getElementById('unitBtn2');
       const u3Btn = document.getElementById('unitBtn3');
@@ -8822,6 +9597,8 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       const u08Tabs = document.getElementById('unit08Tabs');
       const u09Tabs = document.getElementById('unit09Tabs');
       const u10Tabs = document.getElementById('unit10Tabs');
+      const u11Tabs = document.getElementById('unit11Tabs');
+      const u12Tabs = document.getElementById('unit12Tabs');
       const u1Tabs = document.getElementById('unit1Tabs');
       const u2Tabs = document.getElementById('unit2Tabs');
       const u3Tabs = document.getElementById('unit3Tabs');
@@ -8841,6 +9618,8 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       if (u08Btn) u08Btn.classList.toggle('active-unit-08', meta.unit === '08');
       if (u09Btn) u09Btn.classList.toggle('active-unit-09', meta.unit === '09');
       if (u10Btn) u10Btn.classList.toggle('active-unit-10', meta.unit === '10');
+      if (u11Btn) u11Btn.classList.toggle('active-unit-11', meta.unit === '11');
+      if (u12Btn) u12Btn.classList.toggle('active-unit-12', meta.unit === '12');
       u1Btn.classList.toggle('active-unit-1', meta.unit === 1);
       u2Btn.classList.toggle('active-unit-2', meta.unit === 2);
       u3Btn.classList.toggle('active-unit-3', meta.unit === 3);
@@ -8860,6 +9639,8 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       if (u08Tabs) u08Tabs.style.display = meta.unit === '08' ? 'flex' : 'none';
       if (u09Tabs) u09Tabs.style.display = meta.unit === '09' ? 'flex' : 'none';
       if (u10Tabs) u10Tabs.style.display = meta.unit === '10' ? 'flex' : 'none';
+      if (u11Tabs) u11Tabs.style.display = meta.unit === '11' ? 'flex' : 'none';
+      if (u12Tabs) u12Tabs.style.display = meta.unit === '12' ? 'flex' : 'none';
       u1Tabs.style.display = meta.unit === 1 ? 'flex' : 'none';
       u2Tabs.style.display = meta.unit === 2 ? 'flex' : 'none';
       u3Tabs.style.display = meta.unit === 3 ? 'flex' : 'none';
@@ -8967,6 +9748,14 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       if (idx === 70) { updateCd20ConvStepperLab(); updateCd20DimCalcLab(); }
       if (idx === 71) { updateCd20PoolingLab(); updateCd20DownsamplingLab(); }
       if (idx === 72) { updateCd20ParamBreakdownLab(); updateCd20TransferLearningLab(); }
+      if (idx === 73) { updateCd11KolterLab(); updateCd11HardDriveProxyLab(); }
+      if (idx === 74) { updateCd11RubinTaxonomyLab(); updateCd11ImputationMethodsLab(); }
+      if (idx === 75) { updateCd11ConfusionMatrixLab(); updateCd11RocScenarioLab(); }
+      if (idx === 76) { updateCd11SubgroupAuditLab(); updateCd11McsherryCostLab(); }
+      if (idx === 77) { updateCd12BrainScaleLab(); }
+      if (idx === 78) { updateCd12MpLab(); updateCd12HebbOjaLab(); }
+      if (idx === 79) { updateCd12XorMlpLab(); }
+      if (idx === 80) { updateCd12TrianglesLab(); }
     }
 
     // =========================================================================
@@ -9999,6 +10788,38 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
       72: {
         correctAnswer: true,
         explanation: 'En las Diapositivas 39–41 y 43–57 (CD20) esta afirmación es <strong>VERDADERA</strong>: En la red completa de cátedra, las convoluciones aportan solo 3,440 parámetros (224 en Conv1 + 3,216 en Conv2), mientras que el bloque denso aporta 2,099,716 parámetros (2,097,664 en FC1 + 2,052 en FC2), representando el 99.8% del total (2,103,156). Con datasets pequeños de dominio similar (como 600 fotos de fauna altiplánica), la estrategia idónea es congelar el extractor convolucional y entrenar únicamente la cabeza clasificadora final.'
+      },
+      73: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 5–25 (CD11) esta afirmación es <strong>VERDADERA</strong>: La Ley de Kolter enseña que lo que distingue a los expertos es qué hacen cuando lo primero no funciona. El estudio de Google FAST 2007 comprobó que más del 56% de los discos con falla tenían cero en señales SMART fuertes (y más del 36% en cero absoluto). Al no existir la señal en las entradas, el problema es «imposible» y se debe depurar el problema (cambiar entradas a sensores de vibración o cambiar la salida a riesgo relativo/priorización) antes de alterar el algoritmo.'
+      },
+      74: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 26–45 (CD11) esta afirmación es <strong>VERDADERA</strong>: La taxonomía de Rubin demuestra que es imposible comprobar empíricamente si la ausencia es MAR o MNAR mirando únicamente las variables observadas (las causas de MNAR no fueron registradas). La imputación estocástica y = ŷ + N(0, MSE) preserva la varianza residual muestral, evitando el achatamiento artificial de varianza que inducen la media o la regresión determinista.'
+      },
+      75: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 46–66 (CD11) esta afirmación es <strong>VERDADERA</strong>: En los 251 pacientes de triage, a umbral 0.5 ambos modelos empatan en 0.62 de accuracy (155/251 vs 156/251), pero kNN alcanza mayor recall (0.75 vs 0.72 con 101/134 vs 97/134) reduciendo los falsos negativos críticos. La curva ROC demuestra que para Brasil (TPR+FPR≤0.5) domina la Regresión Logística con umbral alto en (0.15, 0.35); para Alemania (TPR≥0.85) domina Logística con umbral bajo en (0.75, 0.86); y para India (capacidad ≤ 1.0) domina kNN con umbral medio en (0.38, 0.62).'
+      },
+      76: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 67–93 (CD11) esta afirmación es <strong>VERDADERA</strong>: En el benchmark de McSherry et al. (HotOS 2015), un solo hilo en RAM de laptop completó PageRank en 275s, superando a 128 núcleos de Spark (857s) al eliminar la sobrecarga de serialización distribuida. Asimismo, en la auditoría ética, una exactitud global del 94.6% puede enmascarar un 98.9% en mayoría y un 70.0% en minoría, requiriendo optimización minimax para minimizar el peor error por subgrupo.'
+      },
+      77: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 5–22 (CD12) esta afirmación es <strong>VERDADERA</strong>: Alexander Bain en 1873 (*Mind and Body*) intuyó que los recuerdos se forman por la combinación y fuerza de las conexiones mucho antes del trabajo de Ramón y Cajal (1888) y Sherrington (1897). Su estimación de 1 millón de neuronas y 5 mil millones de sinapsis quedó corta por un factor de 20,000 frente a los ~86 mil millones de neuronas y ~100 billones de sinapsis reales en el cerebro humano.'
+      },
+      78: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 23–38 (CD12) esta afirmación es <strong>VERDADERA</strong>: McCulloch y Pitts (1943) demostraron que redes de neuronas con umbrales e inhibición absoluta son equivalentes a Máquinas de Turing. Por otro lado, la regla de Hebb clásica w ← w + η x y diverge sin límite para co-activaciones positivas (crece como η t), mientras que la Regla de Oja (1982) Δw = η y(x - yw) incorpora un término proporcional a y²w que estabiliza el peso exactamente en la norma unitaria (w → 1.0) y extrae el primer vector propio de PCA.'
+      },
+      79: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 39–48 (CD12) esta afirmación es <strong>VERDADERA</strong>: Minsky y Papert (1969) probaron rigurosamente que XOR es irresoluble por un perceptrón lineal: si w1 ≥ T y w2 ≥ T, sumando se tiene w1 + w2 ≥ 2T > T (con T>0), lo cual contradice que en (1,1) debe ser w1 + w2 < T. La solución requiere al menos 2 capas: dos neuronas ocultas h1 = OR y h2 = NAND proyectan los puntos a un espacio donde son separables por una neurona final AND.'
+      },
+      80: {
+        correctAnswer: true,
+        explanation: 'En las Diapositivas 49–60 (CD12) esta afirmación es <strong>VERDADERA</strong>: Con 3 capas (6 semiplanos en Capa 1 → 2 AND en Capa 2 → 1 OR en Capa 3) se clasifica con exactitud matemática una región no convexa y disjunta de dos triángulos. Además, el teorema de tamaño vs activación prueba que funciones armónicas como cos(2x) requieren infinitos escalones de Riemann pero exactamente 1 sola neurona con activación periódica sin(2x + π/2).'
       }
     };
 
@@ -21042,6 +21863,1049 @@ abla_w J(w) = 0 \implies w^* \propto S_W^{-1}(m_2 - m_1)$$
 
     function updateCd20TransferLearningLab() {
       selectCd20TlScenario('altiplano');
+    }
+
+    // =========================================================================
+    // UNIDAD XI (CD11): ASPECTOS PRÁCTICOS Y EVALUACIÓN DE MODELOS (LABS 73–76)
+    // =========================================================================
+
+    // --- LAB 73: DEBUGGING Y LEY DE KOLTER ---
+    let kolterHumanAbility = true;
+    let kolterMlAbility = false;
+    let smartLabelsRevealed = false;
+
+    function setKolterHuman(val) {
+      kolterHumanAbility = val;
+      const bY = document.getElementById('btnKolterHumYes');
+      const bN = document.getElementById('btnKolterHumNo');
+      if (bY) bY.classList.toggle('active', val);
+      if (bN) bN.classList.toggle('active', !val);
+      updateCd11KolterLab();
+    }
+
+    function setKolterMl(val) {
+      kolterMlAbility = val;
+      const bY = document.getElementById('btnKolterMlYes');
+      const bN = document.getElementById('btnKolterMlNo');
+      if (bY) bY.classList.toggle('active', val);
+      if (bN) bN.classList.toggle('active', !val);
+      updateCd11KolterLab();
+    }
+
+    function updateCd11KolterLab() {
+      const canvas = document.getElementById('canvasCd11KolterMatrix');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const halfW = cW / 2;
+      const halfH = cH / 2;
+
+      // 4 Quadrants
+      // Q1: Humano SÍ, ML SÍ (Top-Left)
+      // Q2: Humano SÍ, ML NO (Top-Right)
+      // Q3: Humano NO, ML SÍ (Bottom-Left)
+      // Q4: Humano NO, ML NO (Bottom-Right)
+
+      const quads = [
+        { h: true,  m: true,  x: 10, y: 10, w: halfW - 15, hgt: halfH - 15, title: 'Tú bien / ML bien', sub: 'Éxito Estándar (Escepticismo)', col: '#22c55e' },
+        { h: true,  m: false, x: halfW + 5, y: 10, w: halfW - 15, hgt: halfH - 15, title: 'Tú bien / ML mal', sub: 'Problema FACTIBLE (Depurar Modelo)', col: '#f59e0b' },
+        { h: false, m: true,  x: 10, y: halfH + 5, w: halfW - 15, hgt: halfH - 15, title: 'Tú mal / ML bien', sub: 'ALERTA: Fuga de Datos / Tasa Engañosa', col: '#ef4444' },
+        { h: false, m: false, x: halfW + 5, y: halfH + 5, w: halfW - 15, hgt: halfH - 15, title: 'Tú mal / ML mal', sub: 'Problema IMPOSIBLE (Depurar Problema)', col: '#a855f7' }
+      ];
+
+      quads.forEach(q => {
+        const isSelected = (q.h === kolterHumanAbility && q.m === kolterMlAbility);
+        ctx.fillStyle = isSelected ? 'rgba(30, 41, 59, 0.95)' : 'rgba(15, 23, 42, 0.6)';
+        ctx.fillRect(q.x, q.y, q.w, q.hgt);
+
+        ctx.strokeStyle = isSelected ? q.col : 'rgba(255, 255, 255, 0.1)';
+        ctx.lineWidth = isSelected ? 2.5 : 1;
+        ctx.strokeRect(q.x, q.y, q.w, q.hgt);
+
+        if (isSelected) {
+          ctx.fillStyle = q.col;
+          ctx.beginPath();
+          ctx.arc(q.x + 15, q.y + 16, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = isSelected ? '#fff' : '#94a3b8';
+        ctx.font = isSelected ? 'bold 12px sans-serif' : '11px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(q.title, q.x + (isSelected ? 26 : 12), q.y + 20);
+
+        ctx.fillStyle = isSelected ? q.col : '#64748b';
+        ctx.font = '10px monospace';
+        ctx.fillText(q.sub, q.x + 12, q.y + 45);
+      });
+
+      // Update diagnostic text box
+      const box = document.getElementById('cd11KolterDiagBox');
+      if (box) {
+        if (kolterHumanAbility && !kolterMlAbility) {
+          box.innerHTML = `<strong style="color:#f59e0b;">Diagnóstico: Problema FACTIBLE (La señal física existe en los datos).</strong><br>` +
+            `El modelo no aprende lo que un humano sí logra distinguir. <em>Árbol de Diagnósticos de Kolter:</em><br>` +
+            `1. <strong>Sesgo vs. Varianza:</strong> Trazar curvas de aprendizaje variando el tamaño de muestra \(N\).<br>` +
+            `2. <strong>Optimización Inacabada:</strong> Verificar curva de pérdida vs iteraciones (si la pendiente desciende, iterar más; si hizo meseta, revisar capacidad).<br>` +
+            `3. <strong>Pérdida Desacoplada:</strong> La función matemática no penaliza el costo real de los falsos negativos.`;
+        } else if (!kolterHumanAbility && !kolterMlAbility) {
+          box.innerHTML = `<strong style="color:#a855f7;">Diagnóstico: Problema IMPOSIBLE (La señal no existe en las entradas actuales).</strong><br>` +
+            `Ni un experto humano ni el algoritmo pueden predecir. <em>No depures el modelo, depura el problema:</em><br>` +
+            `• <strong>Opción A (Cambiar la Entrada):</strong> Incorporar sensores físicos complementarios (ej. acelerómetro de vibración del rodamiento en discos).<br>` +
+            `• <strong>Opción B (Cambiar la Salida):</strong> Simplificar la tarea o predecir riesgo relativo (ej. tasa base Backblaze 1.36% &rarr; predecir 5% cuadruplica el riesgo base y prioriza reemplazos).`;
+        } else if (!kolterHumanAbility && kolterMlAbility) {
+          box.innerHTML = `<strong style="color:#ef4444;">ALERTA SEVERA: Desempeño Sospechoso Sobrehumano.</strong><br>` +
+            `Si un experto no puede ver la señal pero el modelo da 99% de acierto, desconfía de inmediato:<br>` +
+            `• <strong>Data Leakage (Fuga de Datos):</strong> Verificar columnas generadas post-reemplazo o id de evento contaminado.<br>` +
+            `• <strong>Trampa de Tasa Base:</strong> En eventos raros (1.36%), un modelo trivial que prediga siempre "No Falla" da 98.64% de exactitud aparente.`;
+        } else {
+          box.innerHTML = `<strong style="color:#22c55e;">Diagnóstico: Éxito Estándar (Mantener Escepticismo).</strong><br>` +
+            `Humano y modelo coinciden en la capacidad predictiva. Verificar estabilidad temporal y ausencia de fuga en split ciego.`;
+        }
+      }
+    }
+
+    const SMART_DISKS_SAMPLE = [
+      { id: 'HD-001', s5: 0, s187: 0, s197: 0, fail: false },
+      { id: 'HD-002', s5: 2, s187: 0, s197: 0, fail: false },
+      { id: 'HD-003', s5: 0, s187: 0, s197: 0, fail: true, note: 'Google 56% cero absoluto' },
+      { id: 'HD-004', s5: 0, s187: 0, s197: 0, fail: false },
+      { id: 'HD-005', s5: 18, s187: 4, s197: 3, fail: true, note: 'Señal precursora Backblaze' },
+      { id: 'HD-006', s5: 0, s187: 0, s197: 0, fail: false }
+    ];
+
+    function toggleSmartLabels() {
+      smartLabelsRevealed = !smartLabelsRevealed;
+      const btn = document.getElementById('btnToggleSmartLabels');
+      if (btn) btn.textContent = smartLabelsRevealed ? 'Ocultar Etiquetas' : 'Revelar Estado Real';
+      updateCd11HardDriveProxyLab();
+    }
+
+    function updateCd11HardDriveProxyLab() {
+      const tbody = document.getElementById('cd11SmartTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = SMART_DISKS_SAMPLE.map(d => {
+        let statusBadge = '';
+        if (!smartLabelsRevealed) {
+          statusBadge = `<span style="background:rgba(255,255,255,0.08); padding:0.2rem 0.5rem; border-radius:4px; color:#94a3b8;">? Oculto ?</span>`;
+        } else if (d.fail) {
+          statusBadge = `<span style="background:rgba(239,68,68,0.25); border:1px solid #ef4444; color:#fca5a5; padding:0.2rem 0.5rem; border-radius:4px; font-weight:700;">¡FALLA!</span>`;
+        } else {
+          statusBadge = `<span style="background:rgba(34,197,94,0.18); border:1px solid rgba(34,197,94,0.3); color:#86efac; padding:0.2rem 0.5rem; border-radius:4px;">OK (Sano)</span>`;
+        }
+
+        return `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <td style="padding:0.4rem; font-weight:700; color:#cbd5e1;">${d.id}</td>
+          <td>${d.s5}</td>
+          <td>${d.s187}</td>
+          <td>${d.s197}</td>
+          <td>${statusBadge}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // --- LAB 74: DATOS FALTANTES (RUBIN) E IMPUTACIÓN ---
+    let rubinMechanism = 'MCAR';
+    let cd11StochasticNoise1 = 0.08;
+    let cd11StochasticNoise2 = -0.12;
+
+    function setRubinMechanism(mech) {
+      rubinMechanism = mech;
+      const b1 = document.getElementById('btnRubinMcar');
+      const b2 = document.getElementById('btnRubinMar');
+      const b3 = document.getElementById('btnRubinMnar');
+      if (b1) b1.classList.toggle('active', mech === 'MCAR');
+      if (b2) b2.classList.toggle('active', mech === 'MAR');
+      if (b3) b3.classList.toggle('active', mech === 'MNAR');
+      updateCd11RubinTaxonomyLab();
+    }
+
+    function updateCd11RubinTaxonomyLab() {
+      const canvas = document.getElementById('canvasCd11RubinTaxonomy');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      // Draw synthetic scatter points representing (X1, X2)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.strokeRect(30, 20, cW - 50, cH - 45);
+
+      const rng = (seed) => {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+      };
+
+      let observedCount = 0;
+      let missingCount = 0;
+
+      for (let i = 0; i < 60; i++) {
+        const x1 = 1 + rng(i * 3 + 1) * 8;
+        const noise = (rng(i * 3 + 2) - 0.5) * 1.5;
+        const x2 = 1.0 + 0.65 * x1 + noise;
+
+        let isMissing = false;
+        if (rubinMechanism === 'MCAR') {
+          isMissing = rng(i * 7 + 3) < 0.30;
+        } else if (rubinMechanism === 'MAR') {
+          isMissing = (x1 > 5.5 && rng(i * 5 + 4) < 0.65);
+        } else {
+          // MNAR: missingness depends on the high value of X2 itself
+          isMissing = (x2 > 4.8 && rng(i * 9 + 5) < 0.75);
+        }
+
+        const px = 30 + ((x1 - 1) / 8) * (cW - 60);
+        const py = (cH - 25) - ((x2 - 1) / 6.5) * (cH - 50);
+
+        if (isMissing) {
+          missingCount++;
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
+          ctx.beginPath();
+          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.stroke(); // empty circle for missing
+        } else {
+          observedCount++;
+          ctx.fillStyle = '#38bdf8';
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace'; ctx.textAlign = 'left';
+      ctx.fillText(`Mecanismo: ${rubinMechanism} • Observados: ${observedCount} (Azul) • Ausentes: ${missingCount} (Círculo rojo)`, 35, 15);
+
+      const desc = document.getElementById('cd11RubinDescBox');
+      if (desc) {
+        if (rubinMechanism === 'MCAR') {
+          desc.innerHTML = `<strong>MCAR (Missing Completely at Random):</strong> La probabilidad de ausencia es idéntica e independiente de cualquier valor (observado u oculto).<br>` +
+            `Impacto: Los estimadores de regresión \(\hat{\beta}\) se mantienen <strong>insesgados</strong>; solo se pierde precisión muestral (mayor error estándar).`;
+        } else if (rubinMechanism === 'MAR') {
+          desc.innerHTML = `<strong>MAR (Missing at Random):</strong> La ausencia depende de variables observadas (ej. \(X_1\)), pero no del valor ausente condicionado a ellas.<br>` +
+            `Impacto: Eliminar filas con <code>dropna()</code> sesga la muestra; sin embargo, el sesgo <strong>se elimina por completo</strong> al modelar la ausencia desde los predictores observados.`;
+        } else {
+          desc.innerHTML = `<strong>MNAR (Missing Not at Random):</strong> La probabilidad de ausencia depende del valor mismo que falta (ej. disco que se apaga al fallar o ingresos muy altos omitidos).<br>` +
+            `Impacto: <strong>Sesgo sistemático e inevitable</strong>. Teorema de Rubin: <em>No se puede demostrar si es MAR o MNAR mirando únicamente los datos</em>. La variable indicadora \(X_{\text{miss}}\) es obligatoria.`;
+        }
+      }
+    }
+
+    const LECTURE_OBSERVED_POINTS = [
+      [1.0, 1.8], [2.0, 2.3], [3.0, 2.4], [4.0, 3.9],
+      [5.0, 4.1], [6.0, 5.2], [7.0, 5.0], [8.0, 6.6]
+    ];
+
+    function resampleCd11Stochastic() {
+      // Gaussian Box-Muller sample with sigma = sqrt(0.11) ~ 0.33
+      const sampleNorm = (sigma) => {
+        let u = 0, v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * sigma;
+      };
+      cd11StochasticNoise1 = sampleNorm(0.3316);
+      cd11StochasticNoise2 = sampleNorm(0.3316);
+      updateCd11ImputationMethodsLab();
+    }
+
+    function updateCd11ImputationMethodsLab() {
+      const canvas = document.getElementById('canvasCd11Imputation');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const kSlider = document.getElementById('cd11KSlider');
+      const kVal = kSlider ? parseInt(kSlider.value) : 2;
+      const kLabel = document.getElementById('cd11KVal');
+      if (kLabel) kLabel.textContent = kVal;
+
+      // Coordinate mapping: X in [0.5, 8.5], Y in [1.0, 7.5]
+      const mapX = (x) => 35 + ((x - 0.5) / 8.0) * (cW - 55);
+      const mapY = (y) => (cH - 25) - ((y - 1.0) / 6.5) * (cH - 45);
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, cH - 25); ctx.lineTo(cW - 15, cH - 25);
+      ctx.moveTo(35, 15); ctx.lineTo(35, cH - 25);
+      ctx.stroke();
+
+      // Grid labels
+      ctx.fillStyle = '#64748b'; ctx.font = '9px monospace'; ctx.textAlign = 'center';
+      for (let x = 1; x <= 8; x++) {
+        ctx.fillText(x, mapX(x), cH - 12);
+      }
+
+      // 1. Mean Line (y = 3.91)
+      ctx.strokeStyle = '#f59e0b';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(0.5), mapY(3.91));
+      ctx.lineTo(mapX(8.5), mapY(3.91));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 2. Linear Regression Line (y = 1.12 + 0.62x)
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(mapX(0.5), mapY(1.12 + 0.62 * 0.5));
+      ctx.lineTo(mapX(8.5), mapY(1.12 + 0.62 * 8.5));
+      ctx.stroke();
+
+      // Plot observed points
+      LECTURE_OBSERVED_POINTS.forEach(pt => {
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(mapX(pt[0]), mapY(pt[1]), 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Target missing points: 3.5 and 6.5
+      const targets = [3.5, 6.5];
+      targets.forEach(tx => {
+        // Find kNN
+        const sorted = [...LECTURE_OBSERVED_POINTS].sort((a, b) => Math.abs(a[0] - tx) - Math.abs(b[0] - tx));
+        const kNeighbors = sorted.slice(0, kVal);
+        const knnPred = kNeighbors.reduce((acc, p) => acc + p[1], 0) / kVal;
+
+        // Draw dotted lines to neighbors
+        ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 2]);
+        kNeighbors.forEach(nb => {
+          ctx.beginPath();
+          ctx.moveTo(mapX(tx), mapY(knnPred));
+          ctx.lineTo(mapX(nb[0]), mapY(nb[1]));
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+
+        // Draw kNN marker (cyan)
+        ctx.fillStyle = '#06b6d4';
+        ctx.beginPath();
+        ctx.arc(mapX(tx), mapY(knnPred), 5.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw Regression marker (emerald)
+        const regPred = 1.12 + 0.62 * tx;
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(mapX(tx), mapY(regPred), 4.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw Stochastic marker (purple)
+        const noise = (tx === 3.5 ? cd11StochasticNoise1 : cd11StochasticNoise2);
+        const stochPred = regPred + noise;
+        ctx.fillStyle = '#a855f7';
+        ctx.beginPath();
+        ctx.arc(mapX(tx), mapY(stochPred), 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Vertical whisker
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.6)';
+        ctx.beginPath();
+        ctx.moveTo(mapX(tx), mapY(regPred - 0.33));
+        ctx.lineTo(mapX(tx), mapY(regPred + 0.33));
+        ctx.stroke();
+      });
+
+      // Update stochastic table cells
+      const st1 = document.getElementById('cd11StochVal1');
+      const st2 = document.getElementById('cd11StochVal2');
+      if (st1) st1.innerHTML = `<strong>${(3.29 + cd11StochasticNoise1).toFixed(2)}</strong> <span style="color:#a855f7; font-size:0.65rem;">(${cd11StochasticNoise1 >= 0 ? '+' : ''}${cd11StochasticNoise1.toFixed(2)})</span>`;
+      if (st2) st2.innerHTML = `<strong>${(5.15 + cd11StochasticNoise2).toFixed(2)}</strong> <span style="color:#a855f7; font-size:0.65rem;">(${cd11StochasticNoise2 >= 0 ? '+' : ''}${cd11StochasticNoise2.toFixed(2)})</span>`;
+    }
+
+    // --- LAB 75: TRIAGE EN PANDEMIA Y CURVA ROC ---
+    let triageModel = 'logistic';
+    let triageThreshold = 0.50;
+
+    function setTriageModel(mod) {
+      triageModel = mod;
+      const bL = document.getElementById('btnTriageModelLog');
+      const bK = document.getElementById('btnTriageModelKnn');
+      if (bL) bL.classList.toggle('active', mod === 'logistic');
+      if (bK) bK.classList.toggle('active', mod === 'knn');
+      updateCd11ConfusionMatrixLab();
+      updateCd11RocScenarioLab();
+    }
+
+    function setTriageThresholdPreset(th) {
+      triageThreshold = th;
+      const slider = document.getElementById('cd11ThreshSlider');
+      if (slider) slider.value = th;
+      updateCd11ConfusionMatrixLab();
+      updateCd11RocScenarioLab();
+    }
+
+    function updateCd11ConfusionMatrixLab() {
+      const slider = document.getElementById('cd11ThreshSlider');
+      if (slider) triageThreshold = parseFloat(slider.value);
+      const thVal = document.getElementById('cd11ThreshVal');
+      if (thVal) thVal.textContent = triageThreshold.toFixed(2);
+
+      // Base matrix at 0.50
+      // Total 251: 134 Positives (Alta), 117 Negatives (Baja)
+      let tn, fp, fn, tp;
+
+      if (triageModel === 'logistic') {
+        if (Math.abs(triageThreshold - 0.50) < 0.02) {
+          tn = 58; fp = 59; fn = 37; tp = 97;
+        } else if (triageThreshold < 0.50) {
+          // Low threshold admits more: TP rises, FN drops, FP rises, TN drops
+          const delta = Math.round((0.50 - triageThreshold) * 30);
+          tp = Math.min(134, 97 + delta);
+          fn = 134 - tp;
+          fp = Math.min(117, 59 + delta);
+          tn = 117 - fp;
+        } else {
+          // High threshold admits less: TP drops, FN rises, FP drops, TN rises
+          const delta = Math.round((triageThreshold - 0.50) * 30);
+          tp = Math.max(0, 97 - delta);
+          fn = 134 - tp;
+          fp = Math.max(0, 59 - delta);
+          tn = 117 - fp;
+        }
+      } else {
+        // kNN model
+        if (Math.abs(triageThreshold - 0.50) < 0.02) {
+          tn = 55; fp = 62; fn = 33; tp = 101;
+        } else if (triageThreshold < 0.50) {
+          const delta = Math.round((0.50 - triageThreshold) * 28);
+          tp = Math.min(134, 101 + delta);
+          fn = 134 - tp;
+          fp = Math.min(117, 62 + delta);
+          tn = 117 - fp;
+        } else {
+          const delta = Math.round((triageThreshold - 0.50) * 28);
+          tp = Math.max(0, 101 - delta);
+          fn = 134 - tp;
+          fp = Math.max(0, 62 - delta);
+          tn = 117 - fp;
+        }
+      }
+
+      // Update table cells
+      document.getElementById('cd11MatTN').textContent = `TN: ${tn}`;
+      document.getElementById('cd11MatFP').textContent = `FP: ${fp}`;
+      document.getElementById('cd11MatFN').textContent = `FN: ${fn}`;
+      document.getElementById('cd11MatTP').textContent = `TP: ${tp}`;
+
+      // Calculate exact metrics
+      const total = tn + fp + fn + tp;
+      const acc = (tp + tn) / total;
+      const rec = tp / (tp + fn);
+      const spec = tn / (tn + fp);
+      const fpr = fp / (tn + fp);
+      const prec = (tp + fp) > 0 ? tp / (tp + fp) : 0;
+      const f1 = (prec + rec) > 0 ? (2 * prec * rec) / (prec + rec) : 0;
+
+      document.getElementById('cd11MetricAcc').textContent = `${acc.toFixed(2)} (${tp + tn}/${total})`;
+      document.getElementById('cd11MetricRec').textContent = `${rec.toFixed(2)} (${tp}/134)`;
+      document.getElementById('cd11MetricSpec').textContent = `${spec.toFixed(2)} (${tn}/117)`;
+      document.getElementById('cd11MetricFpr').textContent = `${fpr.toFixed(2)} (${fp}/117)`;
+      document.getElementById('cd11MetricPrec').textContent = `${prec.toFixed(2)} (${tp}/${tp + fp})`;
+      document.getElementById('cd11MetricF1').textContent = `${f1.toFixed(2)}`;
+    }
+
+    function selectCountryScenario(country) {
+      const b1 = document.getElementById('btnScenBrasil');
+      const b2 = document.getElementById('btnScenAlemania');
+      const b3 = document.getElementById('btnScenIndia');
+      if (b1) b1.classList.toggle('active', country === 'Brasil');
+      if (b2) b2.classList.toggle('active', country === 'Alemania');
+      if (b3) b3.classList.toggle('active', country === 'India');
+
+      if (country === 'Brasil') {
+        setTriageModel('logistic');
+        setTriageThresholdPreset(0.65);
+      } else if (country === 'Alemania') {
+        setTriageModel('logistic');
+        setTriageThresholdPreset(0.35);
+      } else {
+        setTriageModel('knn');
+        setTriageThresholdPreset(0.50);
+      }
+
+      const box = document.getElementById('cd11RocScenarioBox');
+      if (!box) return;
+
+      if (country === 'Brasil') {
+        box.innerHTML = `<strong style="color:#f59e0b;">🇧🇷 Contexto Brasil: Presión política para evitar colapso aparente de camas</strong><br>` +
+          `• <strong>Restricción:</strong> \(\\text{TPR} + \\text{FPR} \\le 0.5\). Punto ROC operativo: \((0.15, 0.35)\).<br>` +
+          `• <strong>Modelo Óptimo:</strong> <em>Regresión Logística con Umbral Alto</em>.<br>` +
+          `• <strong>Fundamento:</strong> Prioriza máxima especificidad para admitir solo casos severos incuestionables.`;
+      } else if (country === 'Alemania') {
+        box.innerHTML = `<strong style="color:#22c55e;">🇩🇪 Contexto Alemania: Letalidad domiciliaria mínima prevenible</strong><br>` +
+          `• <strong>Restricción:</strong> \(\\text{TPR} \\ge 0.85\). Punto ROC operativo: \((0.75, 0.86)\).<br>` +
+          `• <strong>Modelo Óptimo:</strong> <em>Regresión Logística con Umbral Bajo</em>.<br>` +
+          `• <strong>Fundamento:</strong> El costo de un falso negativo (muerte en casa) es inaceptable; se saturan camas para capturar a casi todos los urgentes.`;
+      } else {
+        box.innerHTML = `<strong style="color:#38bdf8;">🇮🇳 Contexto India: Capacidad fija crítica (admitir a lo más el 50% de pacientes)</strong><br>` +
+          `• <strong>Restricción:</strong> \(\\text{TPR} + \\text{FPR} \\le 1.0\). Punto ROC operativo: \((0.38, 0.62)\).<br>` +
+          `• <strong>Modelo Óptimo:</strong> <em>k-Nearest Neighbors (kNN) con Umbral Moderado</em>.<br>` +
+          `• <strong>Fundamento:</strong> En la diagonal secundaria de equilibrio estricto, kNN domina a la regresión logística.`;
+      }
+    }
+
+    function updateCd11RocScenarioLab() {
+      const canvas = document.getElementById('canvasCd11Roc');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const mapX = (fpr) => 40 + fpr * (cW - 60);
+      const mapY = (tpr) => (cH - 25) - tpr * (cH - 45);
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(40, cH - 25); ctx.lineTo(cW - 15, cH - 25);
+      ctx.moveTo(40, 15); ctx.lineTo(40, cH - 25);
+      ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('FPR (1 - Especificidad)', cW / 2, cH - 8);
+      ctx.save();
+      ctx.translate(15, cH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('TPR (Recall / Sensibilidad)', 0, 0);
+      ctx.restore();
+
+      // Diagonal random classifier (AUC = 0.5)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(0), mapY(0));
+      ctx.lineTo(mapX(1), mapY(1));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Logistic ROC curve (passing through (0,0), (0.15, 0.35), (0.50, 0.72), (0.75, 0.86), (1,1))
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(mapX(0), mapY(0));
+      ctx.quadraticCurveTo(mapX(0.15), mapY(0.50), mapX(0.50), mapY(0.72));
+      ctx.quadraticCurveTo(mapX(0.75), mapY(0.86), mapX(1.0), mapY(1.0));
+      ctx.stroke();
+
+      // kNN ROC curve (crossing at (0.38, 0.62) and (0.53, 0.75))
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(mapX(0), mapY(0));
+      ctx.quadraticCurveTo(mapX(0.25), mapY(0.45), mapX(0.38), mapY(0.62));
+      ctx.quadraticCurveTo(mapX(0.53), mapY(0.75), mapX(1.0), mapY(1.0));
+      ctx.stroke();
+
+      // Country points
+      const pts = [
+        { name: 'Brasil (0.15, 0.35)', fpr: 0.15, tpr: 0.35, col: '#f59e0b' },
+        { name: 'Alemania (0.75, 0.86)', fpr: 0.75, tpr: 0.86, col: '#22c55e' },
+        { name: 'India (0.38, 0.62)', fpr: 0.38, tpr: 0.62, col: '#e879f9' }
+      ];
+
+      pts.forEach(p => {
+        ctx.fillStyle = p.col;
+        ctx.beginPath();
+        ctx.arc(mapX(p.fpr), mapY(p.tpr), 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#fff'; ctx.font = '9px monospace'; ctx.textAlign = 'left';
+        ctx.fillText(p.name, mapX(p.fpr) + 8, mapY(p.tpr) + 3);
+      });
+    }
+
+    // --- LAB 76: ÉTICA POR SUBGRUPOS Y McSHERRY COST ---
+    function updateCd11SubgroupAuditLab() {
+      // Static elements in panel-76 render cleanly
+    }
+
+    function updateCd11McsherryCostLab() {
+      const canvas = document.getElementById('canvasCd11CostBenchmark');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const benchmarks = [
+        { name: 'Spark (128 cores)', time: 857.0, col: '#ef4444' },
+        { name: 'GraphX (128 cores)', time: 419.0, col: '#f97316' },
+        { name: 'GraphLab (128 cores)', time: 249.0, col: '#06b6d4' },
+        { name: 'Laptop 1 hilo RAM', time: 275.0, col: '#22c55e', note: '¡Supera a 128 cores de Spark!' }
+      ];
+
+      const maxTime = 900.0;
+      const startX = 140;
+      const barHeight = 22;
+
+      benchmarks.forEach((b, idx) => {
+        const y = 20 + idx * 30;
+        const barWidth = ((b.time) / maxTime) * (cW - startX - 70);
+
+        ctx.fillStyle = '#cbd5e1'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText(b.name, startX - 10, y + 15);
+
+        ctx.fillStyle = b.col;
+        ctx.fillRect(startX, y, barWidth, barHeight);
+
+        ctx.fillStyle = '#fff'; ctx.font = '10px monospace'; ctx.textAlign = 'left';
+        ctx.fillText(`${b.time}s`, startX + barWidth + 8, y + 15);
+
+        if (b.note) {
+          ctx.fillStyle = '#4ade80'; ctx.font = 'bold 9px sans-serif';
+          ctx.fillText(`⭐ ${b.note}`, startX + barWidth + 50, y + 15);
+        }
+      });
+    }
+
+    // =========================================================================
+    // UNIDAD XII (CD12): REDES NEURONALES Y CONEXIONISMO (LABS 77–80)
+    // =========================================================================
+
+    // --- LAB 77: ASOCIACIONISMO, ALEXANDER BAIN (1873) Y ESCALA BIOLÓGICA ---
+    let brainScaleTarget = 'human';
+
+    function setBrainScaleTarget(target) {
+      brainScaleTarget = target;
+      ['btnScaleHuman', 'btnScaleBain', 'btnScaleMouse', 'btnScaleElegans'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+      });
+      if (target === 'human') document.getElementById('btnScaleHuman')?.classList.add('active');
+      if (target === 'bain') document.getElementById('btnScaleBain')?.classList.add('active');
+      if (target === 'mouse') document.getElementById('btnScaleMouse')?.classList.add('active');
+      if (target === 'elegans') document.getElementById('btnScaleElegans')?.classList.add('active');
+      updateCd12BrainScaleLab();
+    }
+
+    function updateCd12BrainScaleLab() {
+      const canvas = document.getElementById('canvasCd12BrainScale');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const data = [
+        { key: 'human', name: 'Humano Real', n: 8.6e10, s: 1.0e14, logN: Math.log10(8.6e10), logS: Math.log10(1.0e14), col: '#8b5cf6' },
+        { key: 'bain', name: 'Bain (1873)', n: 1.0e6, s: 5.0e9, logN: 6.0, logS: Math.log10(5e9), col: '#f59e0b' },
+        { key: 'mouse', name: 'Ratón', n: 7.1e7, s: 1.0e11, logN: Math.log10(7.1e7), logS: 11.0, col: '#06b6d4' },
+        { key: 'elegans', name: 'C. elegans', n: 302, s: 7000, logN: Math.log10(302), logS: Math.log10(7000), col: '#22c55e' }
+      ];
+
+      const maxLog = 15; // 10^15
+      const startX = 110;
+      const barH = 14;
+
+      data.forEach((item, idx) => {
+        const yBase = 15 + idx * 40;
+        const isSelected = (item.key === brainScaleTarget);
+
+        ctx.fillStyle = isSelected ? '#fff' : '#94a3b8';
+        ctx.font = isSelected ? 'bold 11px sans-serif' : '10px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(item.name, startX - 10, yBase + 16);
+
+        // Neuronas (Barra superior)
+        const wN = Math.max(4, (item.logN / maxLog) * (cW - startX - 90));
+        ctx.fillStyle = item.col;
+        ctx.fillRect(startX, yBase, wN, barH);
+        ctx.fillStyle = '#e2e8f0'; ctx.font = '9px monospace'; ctx.textAlign = 'left';
+        ctx.fillText(`N: 10^${item.logN.toFixed(1)}`, startX + wN + 5, yBase + 11);
+
+        // Sinapsis (Barra inferior con opacidad)
+        const wS = Math.max(4, (item.logS / maxLog) * (cW - startX - 90));
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.fillRect(startX, yBase + barH + 2, wS, barH);
+        ctx.fillStyle = '#cbd5e1'; ctx.font = '9px monospace'; ctx.textAlign = 'left';
+        ctx.fillText(`S: 10^${item.logS.toFixed(1)}`, startX + wS + 5, yBase + barH + 13);
+      });
+
+      // Update text box
+      const box = document.getElementById('scaleStatsBox');
+      if (box) {
+        if (brainScaleTarget === 'human') {
+          box.innerHTML = '<strong>Cerebro Humano Real:</strong> ~86 mil millones de neuronas (\(8.6\\times 10^{10}\)) y ~100 billones de sinapsis (\(10^{14}\)). Con una media de 1,160 sinapsis por neurona. La memoria yace en la densidad combinatoria sináptica.';
+        } else if (brainScaleTarget === 'bain') {
+          box.innerHTML = '<strong>Alexander Bain (1873, <em>Mind and Body</em>):</strong> Estimó 1 millón de neuronas (\(10^6\)) y 5 mil millones de sinapsis (\(5\\times 10^9\)). Su intuición asociativa fue revolucionaria, pero subestimó la sinapsis real por un factor de <span style="color:#f59e0b; font-weight:700;">20,000×</span>.';
+        } else if (brainScaleTarget === 'mouse') {
+          box.innerHTML = '<strong>Ratón (Mus musculus):</strong> ~71 millones de neuronas y 100 mil millones de sinapsis (\(10^{11}\)). Modelo biológico estándar para neurocomputación y mapeo cortical.';
+        } else {
+          box.innerHTML = '<strong>Caenorhabditis elegans:</strong> Conectoma completamente mapeado (White et al., 1986). Exactamente 302 neuronas y ~7,000 conexiones sinápticas. Prueba de concepto de circuito neuronal determinista.';
+        }
+      }
+    }
+
+    // --- LAB 78: McCULLOCH & PITTS (1943) Y HEBB VS OJA ---
+    let mpSelectedGate = 'AND';
+    let mpInputX1 = 0;
+    let mpInputX2 = 0;
+
+    function setMpGate(gate) {
+      mpSelectedGate = gate;
+      ['btnMpAnd', 'btnMpOr', 'btnMpNot', 'btnMpNand'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+      });
+      if (gate === 'AND') document.getElementById('btnMpAnd')?.classList.add('active');
+      if (gate === 'OR') document.getElementById('btnMpOr')?.classList.add('active');
+      if (gate === 'NOT') document.getElementById('btnMpNot')?.classList.add('active');
+      if (gate === 'NAND') document.getElementById('btnMpNand')?.classList.add('active');
+
+      const x2Span = document.getElementById('x2ControlSpan');
+      if (x2Span) x2Span.style.display = (gate === 'NOT') ? 'none' : 'inline';
+      updateCd12MpLab();
+    }
+
+    function toggleMpInput(num) {
+      if (num === 1) {
+        mpInputX1 = 1 - mpInputX1;
+        const b = document.getElementById('btnX1Toggle');
+        if (b) { b.textContent = mpInputX1; b.classList.toggle('active', mpInputX1 === 1); }
+      } else {
+        mpInputX2 = 1 - mpInputX2;
+        const b = document.getElementById('btnX2Toggle');
+        if (b) { b.textContent = mpInputX2; b.classList.toggle('active', mpInputX2 === 1); }
+      }
+      updateCd12MpLab();
+    }
+
+    function updateCd12MpLab() {
+      const box = document.getElementById('mpResultBox');
+      if (!box) return;
+
+      let net = 0;
+      let threshold = 0;
+      let output = 0;
+      let explanation = '';
+
+      if (mpSelectedGate === 'AND') {
+        threshold = 2;
+        net = mpInputX1 + mpInputX2;
+        output = net >= threshold ? 1 : 0;
+        explanation = `AND: Excitatorias w=[1, 1], Umbral &theta;=2 &rarr; Suma = ${net} &ge; 2 &implies; Disparo y = ${output}`;
+      } else if (mpSelectedGate === 'OR') {
+        threshold = 1;
+        net = mpInputX1 + mpInputX2;
+        output = net >= threshold ? 1 : 0;
+        explanation = `OR: Excitatorias w=[1, 1], Umbral &theta;=1 &rarr; Suma = ${net} &ge; 1 &implies; Disparo y = ${output}`;
+      } else if (mpSelectedGate === 'NOT') {
+        threshold = 0;
+        if (mpInputX1 === 1) {
+          output = 0;
+          explanation = 'NOT: Entrada x1 es Inhibidora Absoluta &rarr; Bloquea el axón por completo &implies; y = 0';
+        } else {
+          output = 1;
+          explanation = 'NOT: Entrada x1 inactiva (sin inhibición) y sesgo basal &rarr; Disparo y = 1';
+        }
+      } else if (mpSelectedGate === 'NAND') {
+        threshold = 0;
+        if (mpInputX1 === 1 && mpInputX2 === 1) {
+          output = 0;
+          explanation = 'NAND: Ambas excitatorias disparan el lazo inhibidor &rarr; Bloqueo absoluto &implies; y = 0';
+        } else {
+          output = 1;
+          explanation = 'NAND: Al menos una inactiva &rarr; Sin inhibición total &implies; y = 1';
+        }
+      }
+
+      box.innerHTML = `<span style="color:${output === 1 ? '#22c55e' : '#ef4444'}; font-weight:700;">Resultado Neurona: ${output}</span> &bull; <span style="color:#cbd5e1; font-weight:normal;">${explanation}</span>`;
+    }
+
+    function updateCd12HebbOjaLab() {
+      const canvas = document.getElementById('canvasCd12HebbOja');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const slider = document.getElementById('sliderHebbSteps');
+      const steps = slider ? parseInt(slider.value) : 100;
+      const lbl = document.getElementById('lblHebbSteps');
+      if (lbl) lbl.textContent = steps;
+
+      const eta = 0.05;
+      const x = 1.0;
+      const y = 1.0;
+
+      // Hebb: w(t) = w0 + eta * t * x * y
+      let wHebb = 0.0;
+      const hebbVals = [];
+      for (let t = 0; t <= steps; t++) {
+        hebbVals.push(wHebb);
+        wHebb += eta * x * y;
+      }
+
+      // Oja: w(t+1) = w(t) + eta * y * (x - y * w(t))
+      let wOja = 0.1;
+      const ojaVals = [];
+      for (let t = 0; t <= steps; t++) {
+        ojaVals.push(wOja);
+        const yAct = wOja * x;
+        wOja += eta * yAct * (x - yAct * wOja);
+      }
+
+      const maxVal = Math.max(12, hebbVals[hebbVals.length - 1] * 1.1);
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(40, cH - 25); ctx.lineTo(cW - 20, cH - 25);
+      ctx.moveTo(40, 15); ctx.lineTo(40, cH - 25);
+      ctx.stroke();
+
+      // Horizontal target line w = 1.0
+      const yNorm = (cH - 25) - (1.0 / maxVal) * (cH - 45);
+      ctx.strokeStyle = 'rgba(34,197,94,0.4)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(40, yNorm); ctx.lineTo(cW - 20, yNorm); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#22c55e'; ctx.font = '9px monospace'; ctx.fillText('w = 1.0 (Oja)', cW - 85, yNorm - 4);
+
+      // Plot Hebb
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const px = 40 + (i / steps) * (cW - 60);
+        const py = (cH - 25) - (hebbVals[i] / maxVal) * (cH - 45);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Plot Oja
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const px = 40 + (i / steps) * (cW - 60);
+        const py = (cH - 25) - (ojaVals[i] / maxVal) * (cH - 45);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('0', 40, cH - 10);
+      ctx.fillText(`Paso t = ${steps}`, cW / 2, cH - 10);
+
+      // Final values display
+      const finalHebb = hebbVals[hebbVals.length - 1];
+      const finalOja = ojaVals[ojaVals.length - 1];
+      const hEl = document.getElementById('hebbFinalVal');
+      const oEl = document.getElementById('ojaFinalVal');
+      if (hEl) hEl.textContent = `${finalHebb.toFixed(1)} (Diverge hacia +∞)`;
+      if (oEl) oEl.textContent = `${finalOja.toFixed(3)} (Norma 1.0, PCA)`;
+    }
+
+    // --- LAB 79: LÍMITE XOR Y SOLUCIÓN MULTICAPA (MLP) ---
+    function updateCd12XorMlpLab() {
+      const canvas = document.getElementById('canvasCd12XorMlp');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      const halfW = cW / 2;
+
+      // Left panel: Espacio de Entrada (x1, x2)
+      ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Espacio de Entrada (x1, x2) • 2 Hiperplanos', halfW / 2, 16);
+
+      const ox1 = 35, oy1 = cH - 30, sz1 = 110;
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(ox1, oy1); ctx.lineTo(ox1 + sz1 + 10, oy1);
+      ctx.moveTo(ox1, oy1); ctx.lineTo(ox1, oy1 - sz1 - 10);
+      ctx.stroke();
+
+      // Line h1: x1 + x2 = 0.5 (OR boundary)
+      ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(ox1, oy1 - sz1 * 0.5);
+      ctx.lineTo(ox1 + sz1 * 0.5, oy1);
+      ctx.stroke();
+
+      // Line h2: x1 + x2 = 1.5 (NAND boundary)
+      ctx.strokeStyle = '#06b6d4';
+      ctx.beginPath();
+      ctx.moveTo(ox1, oy1 - sz1 * 1.5);
+      ctx.lineTo(ox1 + sz1 * 1.5, oy1);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Points in Input Space
+      const pts = [
+        { x: 0, y: 0, label: '(0,0)', cls: 0 },
+        { x: 1, y: 0, label: '(1,0)', cls: 1 },
+        { x: 0, y: 1, label: '(0,1)', cls: 1 },
+        { x: 1, y: 1, label: '(1,1)', cls: 0 }
+      ];
+
+      pts.forEach(p => {
+        const px = ox1 + p.x * sz1;
+        const py = oy1 - p.y * sz1;
+        ctx.fillStyle = p.cls === 1 ? '#22c55e' : '#ef4444';
+        ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e2e8f0'; ctx.font = '9px monospace';
+        ctx.fillText(p.label, px + 8, py + 3);
+      });
+
+      // Right panel: Espacio Oculto (h1, h2)
+      const ox2 = halfW + 35, oy2 = cH - 30, sz2 = 110;
+      ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('Espacio Oculto (h1, h2) • ¡Linealmente Separable!', halfW + halfW / 2, 16);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(ox2, oy2); ctx.lineTo(ox2 + sz2 + 10, oy2);
+      ctx.moveTo(ox2, oy2); ctx.lineTo(ox2, oy2 - sz2 - 10);
+      ctx.stroke();
+
+      // Separating line in hidden space: h1 + h2 = 1.5
+      ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(ox2 + sz2 * 0.5, oy2 - sz2);
+      ctx.lineTo(ox2 + sz2, oy2 - sz2 * 0.5);
+      ctx.stroke();
+
+      // Mapped points in hidden space:
+      // (0,0) -> h=(0,1) cls 0
+      // (1,0) -> h=(1,1) cls 1
+      // (0,1) -> h=(1,1) cls 1
+      // (1,1) -> h=(1,0) cls 0
+      const hiddenPts = [
+        { h1: 0, h2: 1, label: 'h=(0,1)', cls: 0 },
+        { h1: 1, h2: 1, label: 'h=(1,1)', cls: 1 },
+        { h1: 1, h2: 0, label: 'h=(1,0)', cls: 0 }
+      ];
+
+      hiddenPts.forEach(p => {
+        const px = ox2 + p.h1 * sz2;
+        const py = oy2 - p.h2 * sz2;
+        ctx.fillStyle = p.cls === 1 ? '#22c55e' : '#ef4444';
+        ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e2e8f0'; ctx.font = '9px monospace';
+        ctx.fillText(p.label, px + (p.h1 === 1 ? -35 : 10), py - 6);
+      });
+    }
+
+    // --- LAB 80: CLASIFICADOR UNIVERSAL DE DOS TRIÁNGULOS DISJUNTOS ---
+    let probeTrianglePoint = { x: 0.3, y: 0.4 };
+
+    function initCd12TriangleCanvas() {
+      const canvas = document.getElementById('canvasCd12Triangles');
+      if (!canvas || canvas._hasListener) return;
+      canvas._hasListener = true;
+
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX - rect.left;
+        const clientY = e.clientY - rect.top;
+        const normX = Math.max(0, Math.min(1, clientX / canvas.width));
+        const normY = Math.max(0, Math.min(1, 1 - clientY / canvas.height));
+        probeTrianglePoint = { x: parseFloat(normX.toFixed(2)), y: parseFloat(normY.toFixed(2)) };
+        updateCd12TrianglesLab();
+      });
+    }
+
+    function isPointInTriangle(p, a, b, c) {
+      const area = 0.5 * (-b.y * c.x + a.y * (-b.x + c.x) + a.x * (b.y - c.y) + b.x * c.y);
+      const sign = area < 0 ? -1 : 1;
+      const s = (a.y * c.x - a.x * c.y + (c.y - a.y) * p.x + (a.x - c.x) * p.y) * sign;
+      const t = (a.x * b.y - a.y * b.x + (a.y - b.y) * p.x + (b.x - a.x) * p.y) * sign;
+      return s > 0 && t > 0 && (s + t) < 2 * area * sign;
+    }
+
+    function updateCd12TrianglesLab() {
+      initCd12TriangleCanvas();
+      const canvas = document.getElementById('canvasCd12Triangles');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cW = canvas.width;
+      const cH = canvas.height;
+      ctx.clearRect(0, 0, cW, cH);
+
+      // Triangles definition
+      const t1 = [{ x: 0.15, y: 0.2 }, { x: 0.45, y: 0.2 }, { x: 0.2, y: 0.75 }];
+      const t2 = [{ x: 0.55, y: 0.4 }, { x: 0.85, y: 0.4 }, { x: 0.75, y: 0.85 }];
+
+      const toPx = (normPt) => ({
+        x: normPt.x * cW,
+        y: (1 - normPt.y) * cH
+      });
+
+      // Draw grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo((i / 10) * cW, 0); ctx.lineTo((i / 10) * cW, cH);
+        ctx.moveTo(0, (i / 10) * cH); ctx.lineTo(cW, (i / 10) * cH);
+        ctx.stroke();
+      }
+
+      // Draw T1
+      ctx.fillStyle = 'rgba(139, 92, 246, 0.25)';
+      ctx.strokeStyle = '#8b5cf6';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      const p1a = toPx(t1[0]), p1b = toPx(t1[1]), p1c = toPx(t1[2]);
+      ctx.moveTo(p1a.x, p1a.y); ctx.lineTo(p1b.x, p1b.y); ctx.lineTo(p1c.x, p1c.y); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#c084fc'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('Triángulo 1 (AND₁)', p1a.x + 20, p1a.y - 15);
+
+      // Draw T2
+      ctx.fillStyle = 'rgba(6, 182, 212, 0.25)';
+      ctx.strokeStyle = '#06b6d4';
+      ctx.beginPath();
+      const p2a = toPx(t2[0]), p2b = toPx(t2[1]), p2c = toPx(t2[2]);
+      ctx.moveTo(p2a.x, p2a.y); ctx.lineTo(p2b.x, p2b.y); ctx.lineTo(p2c.x, p2c.y); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#67e8f9'; ctx.fillText('Triángulo 2 (AND₂)', p2a.x + 20, p2a.y - 15);
+
+      // Check membership
+      const inT1 = isPointInTriangle(probeTrianglePoint, t1[0], t1[1], t1[2]);
+      const inT2 = isPointInTriangle(probeTrianglePoint, t2[0], t2[1], t2[2]);
+      const isInside = inT1 || inT2;
+
+      // Draw Probe Point
+      const probePx = toPx(probeTrianglePoint);
+      ctx.fillStyle = isInside ? '#22c55e' : '#ef4444';
+      ctx.shadowColor = isInside ? 'rgba(34,197,94,0.8)' : 'rgba(239,68,68,0.8)';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(probePx.x, probePx.y, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Status text
+      const statusBox = document.getElementById('triangleEvalStatus');
+      if (statusBox) {
+        const t1Str = inT1 ? '<span style="color:#22c55e; font-weight:700;">1 (Activo)</span>' : '0';
+        const t2Str = inT2 ? '<span style="color:#22c55e; font-weight:700;">1 (Activo)</span>' : '0';
+        const finalStr = isInside ? '<span style="color:#22c55e; font-weight:700;">y = 1 (Dentro de la región disjunta)</span>' : '<span style="color:#ef4444; font-weight:700;">y = 0 (Exterior)</span>';
+        statusBox.innerHTML = `Punto: (${probeTrianglePoint.x}, ${probeTrianglePoint.y}) &bull; Capa 2: [AND₁ = ${t1Str}, AND₂ = ${t2Str}] &bull; Capa 3: ${finalStr}`;
+      }
     }
 
   </script>

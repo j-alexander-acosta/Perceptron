@@ -1,6 +1,6 @@
-# Suite Educativa de Ciencia de Datos y Redes Neuronales (18 Unidades Académicas • 1107 Diapositivas • 73 Laboratorios)
+# Suite Educativa de Ciencia de Datos y Redes Neuronales (20 Unidades Académicas • 1260 Diapositivas • 81 Laboratorios)
 
-Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al., Hastie, Tibshirani & Friedman ESL, Vapnik SVM y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD10`, `CD13`–`CD20`)**:
+Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al., Hastie, Tibshirani & Friedman ESL, Vapnik SVM y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD12`, `CD13`–`CD20`)**:
 
 * **CD01 (Primera en orden) — Introducción al Curso (63 Diapositivas):** Laboratorios 0.1 a 0.4 ([`introduccion_curso.py`](introduccion_curso.py)).
 * **CD02 (Segunda en orden) — Preprocesamiento y Análisis Exploratorio de Datos (74 Diapositivas):** Laboratorios 02.1 a 02.4 ([`preprocesamiento_eda.py`](preprocesamiento_eda.py)).
@@ -11,8 +11,9 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 * **CD07 (Séptima en orden) — Reducción de Dimensionalidad (73 Diapositivas):** Laboratorios 07.1 a 07.4 ([`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py)).
 * **CD08 (Octava en orden) — Modelos de Árboles de Clasificación y Regresión (68 Diapositivas):** Laboratorios 08.1 a 08.4 ([`arboles_decision.py`](arboles_decision.py)).
 * **CD09 (Novena en orden) — Ensamblaje de Modelos y Random Forests (59 Diapositivas):** Laboratorios 09.1 a 09.4 ([`ensambles_random_forest.py`](ensambles_random_forest.py)).
-* **CD10 (Décima en orden — Culminación Fase 1) — Modelos No Lineales y Support Vector Machines (65 Diapositivas):** Laboratorios 10.1 a 10.4 ([`modelos_no_lineales.py`](modelos_no_lineales.py)).
-* *(Espacio reservado en secuencia para las próximas unidades `CD11` a `CD12` según orden de cátedra).*
+* **CD10 (Décima en orden) — Modelos No Lineales y Support Vector Machines (65 Diapositivas):** Laboratorios 10.1 a 10.4 ([`modelos_no_lineales.py`](modelos_no_lineales.py)).
+* **CD11 (Undécima en orden — Cierre Práctico Fase 1) — Aspectos Prácticos y Evaluación de Modelos (93 Diapositivas):** Laboratorios 11.1 a 11.4 ([`aspectos_practicos.py`](aspectos_practicos.py)).
+* **CD12 (Duodécima en orden — Puente Histórico y Conceptual) — Redes Neuronales y Conexionismo (60 Diapositivas):** Laboratorios 12.1 a 12.4 ([`redes_conexionismo.py`](redes_conexionismo.py)).
 * **CD13 (Unidad I) — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
 * **CD14 (Unidad II) — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
 * **CD15 (Unidad III) — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
@@ -26,7 +27,7 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
-## 🏛️ Organización Temática por Unidades (Orden de Cátedra `CD01` → `CD18`)
+## 🏛️ Organización Temática por Unidades (Orden de Cátedra `CD01` → `CD20`, 20 Unidades)
 
 ### indigo CD01 (UNIDAD INICIAL — PRIMERA EN ORDEN): Introducción al Curso de Ciencia de Datos
 
@@ -304,6 +305,68 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 🟨 CD11 (UNDÉCIMA EN ORDEN — CIERRE PRÁCTICO FASE 1): Aspectos Prácticos y Evaluación de Modelos (93 Diapositivas)
+
+1. **Módulo 11.1 — Depuración de Modelos ML, Ley de Kolter y el Proxy Ciego (Diaps. 1–28):**
+   * **Ley de Depuración de Zico Kolter (CMU 15-388/688):** *«Cada vez que evalúas tu algoritmo y no funciona como esperabas, hay un 95% de probabilidad de que sea un bug en tu código o tus datos, no en tu modelo.»*
+   * **Matriz 2×2 de Depuración de ML (Diap. 8):** Fallo en implementación del algoritmo, fallo en código de evaluación, datos sucios/corruptos, y solo como último recurso clase de hipótesis inadecuada.
+   * **El Desastre del Proxy Humano Ciego — Google FAST 2007 (Pinheiro et al., Diaps. 24–28):** En >100,000 discos duros, **más del 56% de los discos que fallaron reportaron cero alertas SMART**; y los discos con errores de escaneo tenían 39× mayor tasa de fallo pero el 64% de los discos sobrevivientes jamás presentaron un solo error SMART.
+   * **Backblaze 2025 (Diap. 27):** Más de 270,000 discos monitoreados confirman la asimetría predictiva. El humano que decide "cambiar el disco cuando SMART > 0" comete falsos negativos masivos.
+2. **Módulo 11.2 — Taxonomía de Rubin (1976), No Comprobabilidad Empírica y 5 Métodos de Imputación (Diaps. 29–52):**
+   * **Taxonomía Formal de Donald Rubin (1976):**
+     * **MCAR (*Missing Completely at Random*):** $P(M \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(M)$. La falta no depende de ninguna variable observada ni latente.
+     * **MAR (*Missing at Random*):** $P(M \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(M \mid Y_{\text{obs}})$. La falta depende sistemáticamente de variables observadas (ej. los hombres reportan menos depresión que las mujeres).
+     * **MNAR (*Missing Not at Random*):** $P(M \mid Y_{\text{obs}}, Y_{\text{mis}})$ depende del valor faltante mismo (ej. personas con depresión severa abandonan el estudio; o ingresos altos no declaran su salario).
+   * **Teorema de No Comprobabilidad Empírica:** Es *matemáticamente imposible* distinguir empíricamente entre MAR y MNAR a partir de los datos observados, requiriendo conocimiento sustantivo del dominio.
+   * **Indicador de Falta ($X_{\text{miss}}$):** Variable binaria obligatoria $M \in \{0, 1\}$ para preservar el patrón de ausencia antes de imputar.
+   * **Cinco Métodos de Imputación sobre el Micro-Dataset de Cátedra (Diaps. 42–49):**
+     * (1) **Media Incondicional:** Imputa $\bar{y} = \mathbf{3.91}$. Colapsa la varianza artificialmente ($s^2$ cae de $1.29$ a $0.84$).
+     * (2) **k-Nearest Neighbors ($k=2$):** Imputa $\mathbf{3.15}$ (fila 4) y $\mathbf{5.10}$ (fila 8) preservando geometría local.
+     * (3) **Regresión OLS Condicional:** $\hat{y} = \beta_0 + \beta_1 x_1$ imputa $\mathbf{3.29}$ y $\mathbf{5.15}$ (exagera la correlación a $r=1.00$).
+     * (4) **Regresión Estocástica:** Añade ruido residual $\varepsilon \sim \mathcal{N}(0, \sigma^2)$ ($\sigma \approx 0.33$), restaurando la distribución condicional real.
+     * (5) **MICE (*Multiple Imputation by Chained Equations*, Van Buuren):** Imputación multivariada iterativa $M$ veces para cuantificar la incertidumbre del dato ausente.
+3. **Módulo 11.3 — Evaluación de Clasificadores Clínicos, Matriz de Confusión, Calibración y Curvas ROC (Diaps. 53–75):**
+   * **Caso de Estudio Clínico Real (251 Pacientes de Triaje Hospitalario, Diaps. 54–68):** Regresión Logística frente a k-NN ($k=5$) a umbral estándar $\tau = 0.50$.
+     * Logística: $\text{TN}=58, \text{FP}=59, \text{FN}=37, \text{TP}=97$. Exactitud $\mathbf{0.62}$, Sensibilidad/Recall $\mathbf{0.72}$, Especificidad $\mathbf{0.50}$, Precisión $\mathbf{0.62}$, $F_1 = \mathbf{0.67}$.
+     * k-NN ($k=5$): $\text{TN}=55, \text{FP}=62, \text{FN}=33, \text{TP}=101$. Exactitud $\mathbf{0.62}$, Sensibilidad/Recall $\mathbf{0.75}$, Especificidad $\mathbf{0.47}$, Precisión $\mathbf{0.62}$, $F_1 = \mathbf{0.68}$.
+   * **Ajuste del Umbral de Decisión $\tau$ ante Costos Asimétricos (Diap. 69):** En urgencia médica, un falso negativo (muerte de paciente crítico) es 10× más costoso que un falso positivo. Bajar $\tau$ a $0.30$ dispara Recall a $\mathbf{0.92}$ reduciendo FN de $37$ a $11$.
+   * **Espacio ROC y Restricciones Hospitalarias por País (Diaps. 70–75):**
+     * **Brasil (Sistema Mixto SUS/Privado):** Restricción de balance $\text{FPR} \le 0.35, \text{TPR} \ge 0.75 \implies \tau \in [0.42, 0.48]$.
+     * **Alemania (Sistema G-BA Altamente Regulado):** Estricta especificidad $\text{FPR} \le 0.15 \implies \tau \ge 0.65$.
+     * **India (Alta Carga de Pacientes / Triage Masivo):** Máxima cobertura $\text{TPR} \ge 0.90 \implies \tau \le 0.32$.
+4. **Módulo 11.4 — Auditoría de Subgrupos, Receta de 7 Pasos, Data Leakage y Benchmark COST de McSherry (Diaps. 76–93):**
+   * **Auditoría de Subgrupos y Falacia del Promedio Global (Diaps. 77–80):** En un modelo con exactitud global de **96.0%**, la desagregación revela **98.9%** en el subgrupo mayoritario ($n=900$) frente a un desastroso **70.0%** en el subgrupo minoritario ($n=100$). Principio de Equidad Minimax (*Worst-case Subgroup Loss*).
+   * **Receta de 7 Pasos para Proyectos ML Exitosos (Diaps. 81–84):** Formulación del problema, métrica alineada al negocio, baseline simple/tonto, separación estricta de datos, ingeniería de features, iteración y auditoría de errores.
+   * **Taxonomía de Fuga de Datos (*Data Leakage*, Diaps. 85–88):** Fuga temporal (usar futuro para predecir pasado), fuga por normalización previa a la partición de folds, fuga por duplicados o identificadores residuales.
+   * **El Principio COST de Frank McSherry (HotOS 2015, Diaps. 89–93):** *Configuration that Outperforms a Single Thread*. Demostración en PageRank sobre grafo web de 128 millones de aristas: script C++ mono-hilo en un laptop común tarda **275 segundos**, mientras que Spark sobre un cluster distribuido de 128 núcleos tarda **857 segundos** (**Spark fue 3.1× más lento que un solo núcleo de laptop** debido al overhead de red, serialización y coordinación). Regla de oro: escalar verticalmente antes de distribuir prematuramente.
+
+---
+
+### 🟣 CD12 (DUODÉCIMA EN ORDEN — PUENTE HISTÓRICO Y CONCEPTUAL): Redes Neuronales y Conexionismo (60 Diapositivas)
+
+1. **Módulo 12.1 — Raíces Filosóficas, Asociacionismo, Alexander Bain (1873) y Escala Biológica (Diaps. 5–22):**
+   * Las 4 leyes del asociacionismo clásico: *Contigüidad, Frecuencia, Similitud y Contraste* (Aristóteles, Locke, Hume, Pavlov).
+   * David Hartley (1749) y las vibraciones fisiológicas nerviosas.
+   * **Alexander Bain (1873, *Mind and Body*):** La intuición fundacional de la neurocomputación: *«La memoria reside en las conexiones (sinapsis)»*, formulada décadas antes de Ramón y Cajal y Sherrington.
+   * **Bain vs. Neurobiología Humana Real:** Estimación de Bain ($10^6$ neuronas y $5\times 10^9$ sinapsis) frente a la biología real ($8.6\times 10^{10}$ neuronas y $10^{14}$ sinapsis, con una discrepancia sináptica de factor $\times \mathbf{20\,000}$).
+   * Alan Turing (1948) y las máquinas desorganizadas Tipo A (fijas) y Tipo B (conexiones con modificadores entrenables).
+   * Los 8 ingredientes de un modelo PDP (Rumelhart, Hinton & McClelland 1986).
+2. **Módulo 12.2 — La Neurona de McCulloch & Pitts (1943), Regla de Hebb (1949) y Regla de Oja (1982) (Diaps. 23–38):**
+   * Modelo M&P (1943): Entradas excitadoras ($+1$), entradas inhibidoras absolutas y umbral $\theta$. Demostración de compuertas lógicas (AND: $\theta=2$, OR: $\theta=1$, NOT: $\theta=0$ con inhibición) y equivalencia a Máquinas de Turing.
+   * **Regla de Hebb (1949):** $w_{t+1} = w_t + \eta x_t y_t$. Demostración de inestabilidad y divergencia sin cota hacia $+\infty$ ante co-activación continua ($w \to 100.0$).
+   * **Regla de Oja (1982):** $\Delta w = \eta y (x - yw)$. Término de decaimiento multiplicativo proporcional a $y^2 w$ que estabiliza la norma a $1.0$ ($w \to 1.0$) y extrae el primer componente principal (PCA).
+3. **Módulo 12.3 — El Perceptrón de Rosenblatt (1958), Inconsistencia de XOR y Solución MLP (Diaps. 39–48):**
+   * Algoritmo de aprendizaje supervisado en línea de Rosenblatt (1958) convergiendo en 1 época sobre la compuerta OR ($b=-1, w=[1,1]$).
+   * **Demostración Analítica del Teorema de Minsky & Papert (1969):** Sistema inconsistente de 4 desigualdades ($w_1 \ge T$ y $w_2 \ge T \implies w_1+w_2 \ge 2T > T$, contradiciendo que $w_1+w_2 < T$ para $(1,1)$).
+   * **Solución Multicapa XOR:** MLP de 2 capas con 3 neuronas ($h_1 = x_1 \lor x_2, h_2 = \overline{x_1 \land x_2}, y = h_1 \land h_2$), alcanzando 100% de exactitud mediante separación lineal en el espacio transformado $(h_1, h_2)$.
+4. **Módulo 12.4 — Clasificador Universal (Dos Triángulos Disjuntos), Regresor de Riemann y Tamaño vs. Activación (Diaps. 49–60):**
+   * **Clasificador Universal de 3 Capas y 9 Neuronas:** Dos triángulos disjuntos en $\mathbb{R}^2$ clasificados exactamente con 6 semiplanos en Capa 1 $\to$ 2 compuertas AND en Capa 2 $\to$ 1 compuerta OR en Capa 3.
+   * **Aproximador Continuo de Riemann:** Suma finita de pulsos escalón $u(x; T_1, T_2) = \text{step}(x-T_1) - \text{step}(x-T_2)$ para aproximar funciones continuas integrables.
+   * **Teorema de Tamaño vs. Activación:** Aproximar funciones armónicas como $\cos(2x)$ demanda $N \to \infty$ escalones de Heaviside, pero exactamente **1 sola neurona** con activación sinusoidal $\sin(2x + \pi/2)$.
+   * Línea de tiempo integral del conexionismo (1943–2016).
+
+---
+
 ### 🟦 CD13 (UNIDAD I): Representación y Aproximación Universal con Redes Neuronales
 
 1. **Módulo 1.1 — Compuertas de Umbral y Arquitecturas XOR (Diaps. 6–15):**
@@ -472,7 +535,7 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-### 1. 🌐 Suite Web Educativa Interactiva (18 Unidades: CD01–CD10 y CD13–CD20 • 73 Laboratorios en Navegador)
+### 1. 🌐 Suite Web Educativa Interactiva (19 Unidades: CD01–CD11 y CD13–CD20 • 77 Laboratorios en Navegador)
 ```bash
 open web/index.html
 # O desde Python:
@@ -481,7 +544,7 @@ python3 perceptron_xor.py --web
 
 ### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro, Orden de Cátedra)
 ```bash
-# Ejecutar TODAS las verificaciones de CD01–CD10 y CD13–CD20 automáticamente (18 Unidades):
+# Ejecutar TODAS las verificaciones de CD01–CD11 y CD13–CD20 automáticamente (19 Unidades):
 python3 perceptron_xor.py --auto
 
 # Laboratorio interactivo de CD01 (Primera en orden — Introducción al Curso):
@@ -513,6 +576,14 @@ python3 ensambles_random_forest.py
 
 # Laboratorio interactivo de CD10 (Décima en orden — kNN, Feature Maps, SVM y Truco del Kernel):
 python3 modelos_no_lineales.py
+
+# Laboratorio interactivo de CD11 (Undécima en orden — Aspectos Prácticos y Evaluación de Modelos):
+python3 aspectos_practicos.py
+# (Atajos directos desde el lanzador: python3 perceptron_xor.py --practica / --evaluacion / --eval / --roc / -c11)
+
+# Laboratorio interactivo de CD12 (Duodécima en orden — Redes Neuronales y Conexionismo):
+python3 redes_conexionismo.py
+# (Atajos directos desde el lanzador: python3 perceptron_xor.py --conexionismo / --conexion / --hebb / --mcculloch / -c12)
 
 # Laboratorio interactivo de CD13 / Unidad I (Aproximación Universal):
 python3 aproximacion_universal.py
@@ -546,9 +617,9 @@ python3 perceptron_xor.py
 
 ## 📁 Estructura del Proyecto
 ```
-├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD10, luego CD13 a CD20)
-├── INFORME.md                   # Informe académico detallado de las 18 unidades (CD01–CD10 y CD13–CD20)
-├── perceptron_xor.py            # Lanzador central y verificador integrado (18 unidades • 73 laboratorios)
+├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD12, luego CD13 a CD20)
+├── INFORME.md                   # Informe académico detallado de las 20 unidades (CD01–CD12 y CD13–CD20)
+├── perceptron_xor.py            # Lanzador central y verificador integrado (20 unidades • 81 laboratorios)
 ├── introduccion_curso.py        # CD01 (Primera en orden): Pandemia, SIR (Diap. 13), Netflix Prize, 3 Relatos IA y LLMs
 ├── preprocesamiento_eda.py      # CD02 (Segunda en orden): Sesgos Gallup/Yelp/QR, CRISP-DM, Pandas epl_mini (23 jug.) y Anscombe
 ├── visualizacion_datos.py       # CD03 (Tercera en orden): Datasaurus, Burtin 1951 (16 bacterias), Tufte Lie Factor, Stevens, Correll y Mirages
@@ -559,6 +630,8 @@ python3 perceptron_xor.py
 ├── arboles_decision.py          # CD08 (Octava en orden): Particionado Ortogonal, Impureza Error/Gini/Entropía, ID3, Weakest Link y CART Regresión
 ├── ensambles_random_forest.py   # CD09 (Novena en orden): Galton 1907 (787 votos), Condorcet, Bagging (1-1/e), ESL 15.1, Random Forest m=√J y AdaBoost
 ├── modelos_no_lineales.py       # CD10 (Décima en orden): kNN (Diap. 8), Feature Maps Cover N=2D, SVM Margen Máximo y Truco Kernel
+├── aspectos_practicos.py        # CD11 (Undécima en orden — Cierre Fase 1): Kolter, Rubin Imputación, Triage 251 Pacientes, ROC y McSherry COST
+├── redes_conexionismo.py        # CD12 (Duodécima en orden — Puente Histórico): Bain 1873, McCulloch-Pitts, Hebb vs Oja, Límite XOR y MLP
 ├── aproximacion_universal.py    # CD13 (Unidad I): DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
 ├── aprendizaje_redes.py         # CD14 (Unidad II): Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
 ├── descenso_gradiente.py        # CD15 (Unidad III): Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
@@ -569,6 +642,6 @@ python3 perceptron_xor.py
 ├── redes_convolucionales.py     # CD20 (Unidad VIII): MLP vs Convolución, Micro-ejemplo 5x5, Pooling 4x4, Parámetros (99.8% FC) e Hitos
 ├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html               # Suite Web Interactiva (18 Unidades: CD01–CD10 y CD13–CD20 • 73 Laboratorios)
-└── contexto/                    # Historial secuencial de planes de trabajo (context1..context24)
+│   └── index.html               # Suite Web Interactiva (20 Unidades: CD01–CD12 y CD13–CD20 • 81 Laboratorios)
+└── contexto/                    # Historial secuencial de planes de trabajo (context1..context26)
 ```

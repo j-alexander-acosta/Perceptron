@@ -886,6 +886,373 @@ Propuesto por Vladimir Vapnik (1995), SVM busca el hiperplano que maximiza la di
 
 ---
 
+## 0.14. Undécima Unidad CD11 (Undécima en Orden de Cátedra y Cierre Práctico de Fase 1): Aspectos Prácticos y Evaluación de Modelos (93 Diapositivas)
+
+La cátedra **Aspectos Prácticos y Evaluación** representa el cierre metodológico e ingenieril del bloque de modelos supervisados clásicos (Fase 1). Como se declara explícitamente en el programa: *"Seguimos en los modelos de reflejos: ya conocemos regresiones, clasificadores lineales, árboles, ensambles, SVM, kNN y Naive Bayes. Hoy no agregamos un modelo nuevo: agregamos el oficio alrededor de todos ellos: depurar, imputar, evaluar y escalar."* (Diapositiva 3). Esta unidad sintetiza la experiencia de Carnegie Mellon University (CMU 15-388 / 688 de Zico Kolter), Harvard CS109 (Pavlos Protopapas et al.) y CMU 11-785 (Bhiksha Raj et al.).
+
+```
+                                      ┌─────────────────────────────────────────────────────────┐
+                                      │              CD11: EL OFICIO DEL MODELADOR              │
+                                      │     CMU 15-388 (Kolter) • Harvard CS109 • HotOS 2015    │
+                                      └────────────────────────────┬────────────────────────────┘
+                                                                   │
+                  ┌────────────────────────┬───────────────────────┴───────────────────────┬────────────────────────┐
+                  ▼                        ▼                                               ▼                        ▼
+       ┌─────────────────────┐  ┌─────────────────────┐                         ┌─────────────────────┐  ┌─────────────────────┐
+       │   1. DEBUGGING EN   │  │   2. DATOS FALTANTES│                         │    3. EVALUACIÓN Y  │  │  4. ÉTICA, RECETA   │
+       │    DATA SCIENCE     │  │     E IMPUTACIÓN    │                         │   TRIAGE EN PANDEMIA│  │    Y BIG DATA COST  │
+       ├─────────────────────┤  ├─────────────────────┤                         ├─────────────────────┤  ├─────────────────────┤
+       │ • Ley de Kolter     │  │ • Rubin (1976):     │                         │ • Matriz Confusión  │  │ • Intención vs      │
+       │ • Matriz 2×2        │  │   MCAR, MAR, MNAR   │                         │   251 Pacientes     │  │   Impacto Negligente│
+       │ • El Proxy Humano   │  │ • Indicador X_miss  │                         │ • Logística vs kNN  │  │ • Auditoría Minimax │
+       │ • Google FAST 2007  │  │ • 5 Métodos a mano: │                         │   (Empate 0.62)     │  │   (98.9% vs 70.0%)  │
+       │   (56% SMART en 0)  │  │   Media (3.91)      │                         │ • Perilla de Umbral │  │ • Receta de 7 Pasos │
+       │ • Backblaze 2025    │  │   kNN (3.15, 5.10)  │                         │ • Curva ROC (SGM)   │  │ • Data Leakage      │
+       │   (Riesgo relativo) │  │   Regresión (3.29)  │                         │ • 3 Países: Brasil, │  │ • COST de McSherry  │
+       │ • Factible vs       │  │   Estocástica       │                         │   Alemania e India  │  │   Laptop 275s vs    │
+       │   Problema Imposible│  │   (σ=0.33) y MICE   │                         │   (Costo Asimétrico)│  │   Spark 128c 857s   │
+       └─────────────────────┘  └─────────────────────┘                         └─────────────────────┘  └─────────────────────┘
+```
+
+### 0.14.1. Debugging en Ciencia de Datos y la Ley de Kolter (Diapositivas 5–25)
+
+1. **La Naturaleza del Error en Machine Learning:**
+   A diferencia del desarrollo de software tradicional donde un bug produce excepciones de tiempo de ejecución, desbordamientos de pila o salidas determinísticamente erróneas, en Ciencia de Datos el código suele ejecutarse sin errores de sintaxis (`Exit code: 0`), pero las métricas de negocio fallan miserablemente. La causa rara vez es un defecto de control de flujo; el error reside en:
+   * La ausencia intrínseca de señal en las variables explicativas (*problema imposible*).
+   * La falta de capacidad o desajuste del modelo (*problema factible*).
+   * La discrepancia entre la función de costo optimizada y la métrica de utilidad real del dominio.
+2. **La Ley de Kolter (Zico Kolter, CMU 15-388 / 688):**
+   $$\text{«Lo que distingue a los expertos en ciencia de datos del resto no es lo que hacen primero, sino lo que hacen después, cuando lo primero no funciona.»}$$
+   Esta formulación es una heurística del oficio disciplinar: ante el colapso del desempeño inicial, el aficionado prueba algoritmos a ciegas (cambia de regresión logística a XGBoost o deep learning); el experto ejecuta diagnósticos para aislar si la falla proviene de los datos, de la optimización o del objetivo.
+3. **El Proxy Humano y la Matriz Factible/Imposible de Kolter (2×2):**
+   * **El Experimento a Ciegas:** Ocultar las etiquetas de salida e inspeccionar manualmente una muestra de vectores de características $X$. Si un analista o experto en el dominio es incapaz de discriminar la clase positiva a partir de las entradas, el modelo de ML tampoco podrá: el aprendizaje automático amplifica y automatiza el reconocimiento de patrones, pero rara vez crea señal ex nihilo en datos tabulares.
+   * **Matriz de Decisión 2×2:**
+
+   | Cuadrante | Humano Acierta | Modelo ML Acierta | Diagnóstico y Acción Prescrita |
+   | :--- | :---: | :---: | :--- |
+   | **Tú Bien / ML Bien** | Sí | Sí | **Éxito Estándar:** Mantener escepticismo saludable; verificar estabilidad temporal y generalización fuera de muestra (*out-of-distribution*). |
+   | **Tú Bien / ML Mal** | Sí | No | **Problema FACTIBLE:** La señal existe físicamente en las entradas. Depurar el modelo mediante diagnósticos de: (1) Sesgo/Varianza con curvas de aprendizaje $N$; (2) Optimización incompleta (¿hizo meseta la pérdida?); (3) Pérdida desacoplada del error del negocio. |
+   | **Tú Mal / ML Bien** | No | Sí | **ALERTA SEVERA:** Sospecha de *Data Leakage* (fuga de información por variables generadas post-evento) o trampa de tasa base (en eventos raros, predecir siempre negativo da exactitud engañosa). |
+   | **Tú Mal / ML Mal** | No | No | **Problema IMPOSIBLE:** La señal no está en las entradas actuales. Depurar el **problema**, no el modelo: (A) Cambiar la entrada (sensores físicos de vibración); (B) Cambiar la salida (cuantificar riesgo relativo o predecir a horizonte más corto). |
+
+4. **Evidencia Empírica de Telemetría SMART en Discos Duros:**
+   * **Estudio Google (Pinheiro, Weber & Barroso, USENIX FAST 2007, 100,000 discos):** Más del **56%** de los discos duros que experimentaron fallas catastróficas mostraron cero absoluto en los 4 atributos SMART considerados precursores críticos (sectores reasignados, errores de lectura no corregibles, etc.). Al considerar la totalidad de los atributos SMART, más del **36%** de los discos fallados se mantuvo en cero absoluto. Conclusión formal de Google: los atributos SMART no sirven para predecir fallas a nivel de disco individual sin falsas alarmas masivas.
+   * **Telemetría Backblaze (2025):** Tasa base de falla anual = **1.36%**. Aunque el 76.7% de los discos con falla muestra alguna señal SMART sobre cero, 1 de cada 4 discos falla sin aviso previo.
+   * **Reenfoque de Salida:** En vez de plantear una clasificación binaria dura a un año (imposible con SMART), predecir **riesgo relativo**: una probabilidad estimada de falla de $5\%$ casi cuadruplica la tasa base del $1.36\%$, permitiendo a los operadores priorizar el reemplazo preventivo antes de que ocurra la pérdida de redundancia en el arreglo RAID.
+
+---
+
+### 0.14.2. Datos Faltantes: Taxonomía de Rubin (1976) e Imputación Rigurosa (Diapositivas 26–45)
+
+1. **Vicios de las Salidas Simplistas:**
+   * `dropna(axis=0)` (Eliminación por lista): Reduce drásticamente el tamaño muestral y, salvo bajo supuestos muy restrictivos (MCAR), introduce un **sesgo de selección sistemático** en los coeficientes estimados.
+   * `fillna(mean())` (Imputación por la media): Aunque conserva las muestras, colapsa artificialmente la varianza de la variable imputada y atenúa espuriamente las covarianzas con el resto de los predictores.
+2. **Taxonomía Formal de Donald B. Rubin (1976, *Biometrika*):**
+   Sea $Y = (Y_{\text{obs}}, Y_{\text{mis}})$ la matriz de datos dividida en observaciones registradas y ausentes, y $M \in \{0, 1\}^{N \times P}$ la matriz indicadora de ausencia:
+   * **MCAR (Missing Completely at Random):**
+     $$P(M \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(M)$$
+     La probabilidad de que falte un dato es completamente independiente de los valores observados y de los valores ausentes.
+     * *Propiedad Matemática:* Los estimadores OLS $\hat{\beta}$ son **insesgados**, pero se pierde potencia y eficiencia estadística.
+   * **MAR (Missing at Random):**
+     $$P(M \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(M \mid Y_{\text{obs}})$$
+     La ausencia depende sistemáticamente de variables observadas en el dataset (ej. personas jóvenes reportan menos ingresos, pero la ausencia de ingreso no depende del ingreso mismo una vez controlada la edad).
+     * *Propiedad Matemática:* Descartar filas sesga los estimadores; no obstante, el sesgo se **elimina completamente** si se modela la probabilidad de ausencia condicionando en $Y_{\text{obs}}$.
+   * **MNAR (Missing Not at Random):**
+     $$P(M \mid Y_{\text{obs}}, Y_{\text{mis}}) \text{ depende intrínsecamente de } Y_{\text{mis}}$$
+     La ausencia depende de información no registrada o del propio valor que falta (ej. un sensor de temperatura se satura o se quema a $150^\circ\text{C}$ y deja de transmitir; pacientes con depresión severa abandonan el ensayo clínico por los efectos adversos no medidos).
+     * *Propiedad Matemática:* Introduce sesgo sistemático irremovible con métodos clásicos de regresión.
+   * **Teorema de Incomprobabilidad Empírica:** Es matemáticamente imposible demostrar si un mecanismo es MAR o MNAR examinando únicamente la porción observada $Y_{\text{obs}}$, pues la hipótesis nula de MNAR depende de la distribución condicional de los datos no observados.
+3. **La Variable Indicadora de Ausencia ($X_{\text{miss}}$):**
+   Para todo predictor $X_j$ con valores faltantes, se imputa un valor basal constante ($0$ para categorías o la media $\bar{X}_j$ para variables cuantitativas) y se genera una nueva columna binaria:
+   $$X_{j,\text{miss}} = \begin{cases} 1 & \text{si } X_j \text{ estaba ausente} \\ 0 & \text{si } X_j \text{ estaba presente} \end{cases}$$
+   El modelo recibe ambas columnas: $y = \beta_0 + \beta_1 X_j^{\text{imp}} + \beta_2 X_{j,\text{miss}} + \dots$ Esto permite al clasificador aprender si el hecho de omitir información constituye en sí mismo una señal diagnóstica.
+4. **Cinco Métodos de Imputación: Derivación Numérica Exacta (Diapositivas 34–45):**
+   Dataset de 8 observaciones $(x_1, x_2)$ con $\sum x_2 = 1.8 + 2.3 + 2.4 + 3.9 + 4.1 + 5.2 + 5.0 + 6.6 = \mathbf{31.3}$:
+   $$\{(1, 1.8), (2, 2.3), (3, 2.4), (4, 3.9), (5, 4.1), (6, 5.2), (7, 5.0), (8, 6.6)\}$$
+   Puntos objetivo con ausencia en $x_2$: $x_1 = 3.5$ y $x_1 = 6.5$.
+
+   * **Método 1: Imputación por Media Global:**
+     $$\bar{x}_2 = \frac{31.3}{8} = 3.9125 \approx \mathbf{3.91}$$
+     Para $x_1 = 3.5 \implies \mathbf{3.91}$; para $x_1 = 6.5 \implies \mathbf{3.91}$. Asigna un valor idéntico ignorando la fuerte correlación lineal con $x_1$.
+   * **Método 2: Imputación por $k$-Vecinos más Cercanos ($k=2$):**
+     * Para $x_1 = 3.5$: Los dos vecinos más cercanos en $x_1$ son $(3, 2.4)$ y $(4, 3.9)$.
+       $$\hat{x}_2(3.5) = \frac{2.4 + 3.9}{2} = \frac{6.3}{2} = \mathbf{3.15}$$
+     * Para $x_1 = 6.5$: Los dos vecinos más cercanos en $x_1$ son $(6, 5.2)$ y $(7, 5.0)$.
+       $$\hat{x}_2(6.5) = \frac{5.2 + 5.0}{2} = \frac{10.2}{2} = \mathbf{5.10}$$
+   * **Método 3: Imputación por Regresión Lineal Determinista:**
+     Modelo ajustado: $\hat{x}_2 = 1.12 + 0.62 x_1$.
+     * Para $x_1 = 3.5$: $\hat{x}_2 = 1.12 + 0.62(3.5) = 1.12 + 2.17 = \mathbf{3.29}$.
+     * Para $x_1 = 6.5$: $\hat{x}_2 = 1.12 + 0.62(6.5) = 1.12 + 4.03 = \mathbf{5.15}$.
+     * *Limitación:* Coloca todos los puntos imputados exactamente sobre la recta de regresión, subestimando la varianza de los residuos y generando intervalos de confianza espuriamente estrechos.
+   * **Método 4: Imputación con Incertidumbre Estocástica:**
+     $$\hat{x}_2 = \hat{\beta}_0 + \hat{\beta}_1 x_1 + \epsilon, \quad \text{donde } \epsilon \sim \mathcal{N}(0, \sigma^2) \text{ con } \sigma = \sqrt{\text{MSE}} = \sqrt{0.11} \approx \mathbf{0.33}$$
+     * Para $x_1 = 3.5 \implies \mathbf{3.29 + \epsilon}$.
+     * Para $x_1 = 6.5 \implies \mathbf{5.15 + \epsilon}$.
+     Restaura la dispersión natural de los datos observados alrededor de la recta.
+   * **Método 5: Imputación Iterativa Multivariada (MICE / Chained Equations):**
+     Cuando múltiples variables exhiben ausencias simultáneas, se imputa cada variable en un ciclo secuencial condicionando sobre las imputaciones temporales de las demás, repitiendo el proceso hasta convergencia estocástica.
+
+---
+
+### 0.14.3. Evaluación de Clasificadores y Triage en Pandemia (Diapositivas 46–66)
+
+1. **El Caso Clínico de Admisión Hospitalaria:**
+   Evaluación sobre un conjunto reservado de **251 pacientes** en contexto de crisis sanitaria:
+   * Positivos ($P = 134$): Pacientes con Urgencia Alta (requieren cama crítica).
+   * Negativos ($N = 117$): Pacientes con Urgencia Baja (pueden recuperarse en domicilio).
+2. **Matrices de Confusión a Umbral Estándar $\theta = 0.50$:**
+
+   $$\text{Regresión Logística: } M_{\text{Log}} = \begin{bmatrix} TN & FP \\ FN & TP \end{bmatrix} = \begin{bmatrix} 58 & 59 \\ 37 & 97 \end{bmatrix}, \quad \text{Total Admitidos} = TP + FP = 156$$
+
+   $$\text{Clasificador kNN: } M_{\text{kNN}} = \begin{bmatrix} 55 & 62 \\ 33 & 101 \end{bmatrix}, \quad \text{Total Admitidos} = TP + FP = 163$$
+
+3. **Cálculo Riguroso de Métricas y Comparación Formal:**
+
+   | Métrica | Definición Matemática | Regresión Logística | Clasificador kNN | Interpretación Clínica |
+   | :--- | :---: | :---: | :---: | :--- |
+   | **Accuracy (Exactitud)** | $\frac{TP + TN}{N}$ | $\frac{97 + 58}{251} = \frac{155}{251} \approx \mathbf{0.62}$ | $\frac{101 + 55}{251} = \frac{156}{251} \approx \mathbf{0.62}$ | **Empate técnico exacto.** La exactitud global oculta la asimetría de los errores. |
+   | **Recall / Sensibilidad (TPR)** | $\frac{TP}{TP + FN}$ | $\frac{97}{134} \approx \mathbf{0.7239} \approx \mathbf{0.72}$ | $\frac{101}{134} \approx \mathbf{0.7537} \approx \mathbf{0.75}$ | **kNN supera a Logística.** Reduce los Falsos Negativos (de 37 a 33 pacientes graves no admitidos). |
+   | **Especificidad (TNR)** | $\frac{TN}{TN + FP}$ | $\frac{58}{117} \approx \mathbf{0.4957} \approx \mathbf{0.50}$ | $\frac{55}{117} \approx \mathbf{0.4701} \approx \mathbf{0.47}$ | Logística filtra mejor los casos leves, enviando más pacientes no urgentes a casa. |
+   | **Tasa Falsas Alarmas (FPR)** | $\frac{FP}{TN + FP} = 1 - \text{TNR}$ | $\frac{59}{117} \approx \mathbf{0.5043} \approx \mathbf{0.50}$ | $\frac{62}{117} \approx \mathbf{0.5299} \approx \mathbf{0.53}$ | Proporción de no-urgentes que ocupan camas indebidamente. |
+   | **Precision (PPV)** | $\frac{TP}{TP + FP}$ | $\frac{97}{156} \approx \mathbf{0.6218} \approx \mathbf{0.62}$ | $\frac{101}{163} \approx \mathbf{0.6196} \approx \mathbf{0.62}$ | Fracción de pacientes admitidos que realmente requerían cuidados intensivos. |
+   | **F1-Score** | $\frac{2 \cdot P \cdot R}{P + R}$ | $\frac{2(0.6218)(0.7239)}{0.6218 + 0.7239} \approx \mathbf{0.669} \approx \mathbf{0.67}$ | $\frac{2(0.6196)(0.7537)}{0.6196 + 0.7537} \approx \mathbf{0.6798} \approx \mathbf{0.68}$ | Media armónica que penaliza desbalances extremos. |
+
+4. **La Perilla del Umbral de Decisión ($\theta$):**
+   Un clasificador probabilístico produce $\hat{p} = P(Y=1 \mid X)$. La asignación de clase binaria $\hat{y} = \mathbb{I}(\hat{p} \ge \theta)$ depende enteramente del umbral $\theta \in (0, 1)$:
+   * $\theta = 0.40$ (Umbral Bajo): Favorece el Recall. Admitidos $161$. $FN$ desciende a 35; $FP$ asciende a 62.
+   * $\theta = 0.50$ (Umbral Estándar): Admitidos $156$. $FN = 37$; $FP = 59$.
+   * $\theta = 0.60$ (Umbral Alto): Favorece la Especificidad. Admitidos $151$. Recall cae a $0.71$, pero Precision sube a $0.63$.
+5. **Curva ROC (Receiver Operating Characteristic) y Escenarios Geopolíticos:**
+   * **Origen Histórico:** Desarrollada durante la Batalla de Inglaterra (1940) en las estaciones de radar *Chain Home* (Bawdsey Research Station) para cuantificar la capacidad de los operadores de tubo de rayos catódicos de discriminar ecos de formaciones de bombarderos de la Luftwaffe frente al ruido atmosférico y bandadas de aves.
+   * **Geometría de la Curva:** Espacio $[0, 1] \times [0, 1]$ con eje de abscisas $\text{FPR} = 1 - \text{Especificidad}$ y eje de ordenadas $\text{TPR} = \text{Sensibilidad}$. La diagonal $(0,0) \to (1,1)$ representa el clasificador aleatorio ($\text{AUC} = 0.50$).
+   * **Tres Países, Tres Contextos y Elección Óptima:**
+     * **Brasil (Presión política, evitar saturación visible de camas):** Restricción operativa $\text{TPR} + \text{FPR} \le 0.5$. En esa región inferior izquierda, domina **Regresión Logística con Umbral Alto** en el punto operativo $(0.15, 0.35)$.
+     * **Alemania (Letalidad domiciliaria mínima prevenible):** Restricción médica $\text{TPR} \ge 0.85$. En la franja superior, domina **Regresión Logística con Umbral Bajo** en el punto operativo $(0.75, 0.86)$.
+     * **India (Capacidad estricta, admitir a lo más la mitad):** Restricción de recursos $\text{TPR} + \text{FPR} \le 1.0$. En la diagonal secundaria de balance estricto, kNN supera a la logística, operando en el punto $(0.38, 0.62) \implies$ **kNN con Umbral Moderado**.
+
+---
+
+### 0.14.4. Ética por Subgrupos, Receta de 7 Pasos y Big Data COST (Diapositivas 67–93)
+
+1. **Intención vs. Impacto y el Cuadrante de Negligencia:**
+   En sistemas de aprendizaje automático desplegados en producción, el daño ético o discriminatorio raramente se origina en intenciones malévolas; surge de la negligencia técnica (ej. no auditar distribuciones por subgrupo, usar proxies sesgados o tolerar data leakage). El rigor metodológico es el único escudo protector de los derechos de los usuarios.
+2. **Auditoría Desagregada y Pérdida Minimax (Diapositiva 70):**
+   * *El Fraude del Promedio Global:* Consideremos un modelo evaluado sobre $N = 1000$ pacientes con una exactitud global aparente del **94.6%** ($960$ aciertos).
+   * Desagregando por subpoblaciones:
+     * **Grupo Mayoritario ($n_1 = 900$):** $890$ aciertos $\implies \mathbf{98.88\% \text{ Accuracy}}$.
+     * **Grupo Minoritario ($n_2 = 100$):** $70$ aciertos $\implies \mathbf{70.00\% \text{ Accuracy}}$ (¡tasa de error del $30\%$, casi un tercio de falsos diagnósticos!).
+   * *Criterio Ético Minimax:* Maximizar el desempeño del peor grupo:
+     $$\min_\theta \max_{g \in \mathcal{G}} \mathcal{L}_g(\theta)$$
+3. **La Receta Metódica de 7 Pasos del Ingeniero de Machine Learning:**
+   1. **Datos y Representación:** Limpieza, codificación y partición inviolable train/val/test antes de cualquier cómputo de imputación o escalamiento.
+   2. **Elección de la Familia de Modelos:** Seleccionar el sesgo inductivo según la naturaleza geométrica y la dimensionalidad disponible.
+   3. **Definición de la Función de Pérdida:** Alinear matemáticamente el gradiente con la asimetría de costos del dominio de aplicación.
+   4. **Regularización y Heurísticas:** Acotar la capacidad efectiva mediante penalizaciones L1/L2, decaimiento de pesos, dropout o parada temprana.
+   5. **Configuración del Algoritmo de Optimización:** Seleccionar SGD con momentum, Adam o L-BFGS con política de tasa adaptativa.
+   6. **Búsqueda de Hiperparámetros:** Exploración en cuadrícula o bayesiana sobre el conjunto de validación (¡prohibido evaluar en test!).
+   7. **Evaluación Final Única:** Ejecutar una única vez sobre el conjunto de prueba ciego y reportar matrices desagregadas por subgrupo.
+4. **Data Leakage (Fuga de Datos):**
+   Ocurre cuando información del futuro o del conjunto de prueba contamina el proceso de entrenamiento:
+   * Imputar valores faltantes usando la media de todo el dataset (incluyendo el test set).
+   * Estandarizar $Z = (X - \mu)/\sigma$ con $\mu, \sigma$ calculados sobre la muestra completa.
+   * Seleccionar variables predictivas usando correlaciones estimadas con las etiquetas de prueba.
+5. **Big Data y el Benchmark COST de McSherry et al. (HotOS 2015):**
+   * **Los 4 Puntos de Inflexión de Cómputo:**
+     1. Los datos caben en la RAM de una sola máquina ($< 64\text{GB}$).
+     2. Los datos caben en el disco de una sola máquina ($< 2\text{TB}$, dominio de DuckDB / SQLite).
+     3. Clúster pequeño ($2$ a $16$ nodos).
+     4. Clúster masivo donde las fallas de hardware son la norma diaria.
+   * **Métrica COST (Configuration that Outperforms a Single Thread):**
+     Frank McSherry, Michael Isard y Derek G. Murray (*HotOS 2015*, «Scalability! But at what COST?»): el hardware y escala mínima necesaria para que una plataforma distribuida supere a una implementación bien optimizada en un solo hilo en memoria RAM local.
+   * **Benchmark Twitter PageRank (Grafo de Twitter: 41.7M nodos, 1.47B aristas, 20 iteraciones):**
+
+     | Sistema de Cómputo | Recursos Asignados | Tiempo de Ejecución (s) |
+     | :--- | :---: | :---: |
+     | **Spark** | 128 núcleos de CPU | **857 s** |
+     | **GraphX** | 128 núcleos de CPU | **419 s** |
+     | **GraphLab** | 128 núcleos de CPU | **249 s** |
+     | **Laptop (1 solo hilo en RAM)** | **1 núcleo / 1 hilo** | **275 s** |
+
+   * *Lección Fundacional:* Un único hilo en la memoria RAM de una laptop superó a un clúster de Spark de 128 núcleos por un factor superior a 3×. El costo de serialización, coordinación distribuida y latencia de red superaba ampliamente el beneficio del cómputo paralelo. Como sentenció Jordan Tigani en 2023 (*MotherDuck*): *«Big Data is Dead: la inmensa mayoría de las organizaciones no tiene Big Data; tiene datos medianos que caben perfectamente en RAM o en una sola base de datos columnar en disco.»*
+
+---
+
+## 0.15. Duodécima Unidad CD12 (Duodécima en Orden de Cátedra y Puente Histórico-Conceptual): Redes Neuronales y Conexionismo (60 Diapositivas)
+
+La duodécima unidad del curso, basada en las cátedras magistrales de Stanford CS221 (*Percy Liang et al.*) y CMU 11-785 (*Bhiksha Raj et al.*), constituye el **puente histórico, epistemológico y matemático** entre el Aprendizaje Automático Clásico (Fase 1: CD01 a CD11) y las Arquitecturas Neuronales Profundas (Fase 2: CD13 a CD20). A través de 60 diapositivas, se desglosa la transición desde el asociacionismo filosófico del siglo XVIII hasta los teoremas universales de clasificación y aproximación.
+
+```
+       FILOSOFÍA Y ASOCIACIONISMO (1749–1873)
+[Aristóteles, Locke, Hume, Hartley] ──► [Alexander Bain (1873): "Memoria en las Conexiones"]
+                                                       │
+                                                       ▼
+                             MODELOS FORMALES Y LÓGICA PROPOSICIONAL (1943–1949)
+[Turing Máquinas Tipo A/B (1948)] ◄─── [McCulloch & Pitts (1943): Umbral e Inhibición Absoluta]
+                                                       │
+                                                       ▼
+                                            REGLAS DE PLASTICIDAD
+           [Hebb (1949): Δw = η x y (Divergente)] ──► [Oja (1982): Δw = η y(x - yw) (Estable, PCA)]
+                                                       │
+                                                       ▼
+                                          ERA DEL PERCEPTRÓN Y SU CRISIS
+           [Rosenblatt (1958): Convergencia Lineal] ──► [Minsky & Papert (1969): Inconsistencia XOR]
+                                                       │
+                                                       ▼
+                                            RENACIMIENTO CONEXIONISTA
+         [Rumelhart, Hinton & McClelland (1986): PDP] ──► [MLP Universal: 3 Capas, 9 Neuronas (Triángulos)]
+```
+
+---
+
+### 0.15.1. Raíces Filosóficas, Asociacionismo, Alexander Bain (1873) y Escala Biológica (Diapositivas 5–22)
+
+1. **Las Cuatro Leyes del Asociacionismo Filosófico:**
+   Desde Aristóteles hasta los empiristas británicos (John Locke, David Hume), la cognición humana fue modelada a partir de cuatro principios de asociación mental:
+   * **Contigüidad:** Dos ideas u objetos experimentados juntos en tiempo o espacio quedan mutuamente enlazados.
+   * **Frecuencia:** La fuerza de la asociación crece monótonamente con la repetición del estímulo simultáneo.
+   * **Similitud:** Estímulos con rasgos morfológicos afines activan representaciones comunes.
+   * **Contraste:** Ideas diametralmente opuestas (luz/oscuridad, vida/muerte) se vinculan por oposición funcional.
+2. **David Hartley (1749) y las Primeras Hipótesis Fisiológicas:**
+   En *Observations on Man*, Hartley postuló que las ideas corresponden a vibraciones microscópicas en las fibras nerviosas, asociándose cuando las vibraciones resuenan sincrónicamente.
+3. **Alexander Bain (1873, *Mind and Body*) — La Intuición Fundacional de la Neurocomputación:**
+   Décadas antes de que Santiago Ramón y Cajal (1888) formulara la *Doctrina Neuronal* y de que Sir Charles Sherrington (1897) acuñara el término *Sinapsis*, Alexander Bain formuló el postulado central del conexionismo:
+   > *«El conocimiento y la memoria no residen en neuronas individuales aisladas, sino en la fuerza, multiplicidad y combinatoria de las conexiones entre ellas.»*
+4. **Comparación Cuantitativa: Estimación de Bain vs. Neurobiología Moderna:**
+   Bain intentó calcular si la capacidad del cerebro humano era suficiente para albergar todas las memorias adquiridas en una vida:
+
+   | Métrica Neuroanatómica | Estimación de Bain (1873) | Biología Humana Real | Discrepancia Cuantitativa |
+   | :--- | :---: | :---: | :---: |
+   | **Neuronas en Córtex / Encéfalo** | $10^6$ ($1$ millón) | $8.6 \times 10^{10}$ ($86$ mil millones) | **Factor $\times 86\,000$** |
+   | **Sinapsis Totales** | $5 \times 10^9$ ($5$ mil millones) | $1.0 \times 10^{14}$ ($100$ billones) | **Factor $\times \mathbf{20\,000}$** |
+   | **Sinapsis por Neurona** | $\approx 5\,000$ | $\approx 1\,160$ (media cortical) | Orden de magnitud similar |
+
+   *Conclusión:* Aunque Bain subestimó la cantidad absoluta por un factor de 20,000, su principio algebraico de que la capacidad asociativa escala con las aristas (sinapsis) y no con los vértices (somas) fue rigurosamente exacto.
+5. **Alan Turing (1948) — Máquinas Desorganizadas:**
+   En su reporte no publicado *Intelligent Machinery*, Turing propuso dos arquitecturas:
+   * **Tipo A:** Redes desorganizadas de compuertas NAND con conectividad fija no modificable.
+   * **Tipo B:** Redes con modificadores sinápticos entrenables en las conexiones intermedias (precursoras directas de los pesos adaptativos $w_{ij}$).
+6. **Los 8 Ingredientes de un Sistema PDP (Rumelhart, Hinton & McClelland 1986):**
+   1. Conjunto de unidades de procesamiento $u_i \in U$.
+   2. Estado de activación dinámico $a_i(t) \in \mathbb{R}$.
+   3. Función de salida $o_i(t) = f_i(a_i(t))$.
+   4. Patrón de conectividad matricial $W = [w_{ij}]$.
+   5. Regla de propagación de señales netas $\text{net}_i(t) = \sum_j w_{ij} o_j(t)$.
+   6. Regla de activación $a_i(t+1) = F(a_i(t), \text{net}_i(t))$.
+   7. Regla de aprendizaje para modificar $w_{ij}$ con la experiencia ($\Delta w_{ij}$).
+   8. Entorno operativo y función de error del sistema.
+
+---
+
+### 0.15.2. La Neurona de McCulloch & Pitts (1943), Regla de Hebb (1949) y Regla de Oja (1982) (Diapositivas 23–38)
+
+1. **La Neurona de McCulloch & Pitts (1943):**
+   Warren McCulloch y Walter Pitts publicaron *A logical calculus of the ideas immanent in nervous activity*, introduciendo el primer modelo formal de procesamiento:
+   * Entradas excitadoras $x_i \in \{0, 1\}$ con pesos positivos uniformes ($+1$).
+   * Entradas inhibidoras absolutas $z_k \in \{0, 1\}$: si cualquier $z_k = 1$, la neurona produce **cero estricto**, sin importar la suma de excitaciones.
+   * Umbral de disparo $\theta \in \mathbb{N}$:
+     $$y = \begin{cases} 1 & \text{si } \sum_{i=1}^n x_i \ge \theta \quad \text{y} \quad \forall k: z_k = 0 \\ 0 & \text{en cualquier otro caso} \end{cases}$$
+   * *Teorema:* Una red de neuronas de McCulloch-Pitts con retardos y lazos recurrentes es capaz de simular cualquier Máquina de Turing universal.
+2. **La Regla de Plasticidad de Hebb (1949):**
+   Donald Hebb enunció en *The Organization of Behavior*: *«When an axon of cell A is near enough to excite cell B and repeatedly takes part in firing it, some growth process or metabolic change takes place such that A's efficiency in firing B is increased.»*
+   * Formulación matemática incremental:
+     $$w_{t+1} = w_t + \eta \, x_t \, y_t$$
+   * **Inestabilidad y Divergencia sin Cota:**
+     Para estímulos positivamente correlacionados continuos ($x=1, y=1, \eta=0.1$):
+     * $t = 10 \implies w = 1.0$
+     * $t = 100 \implies w = 10.0$
+     * $t = 1000 \implies w = 100.0 \implies \lim_{t \to \infty} w_t = +\infty$
+     El peso crece sin límite superior, saturando cualquier sistema físico o biológico.
+3. **La Solución de Erkki Oja (1982) — Normalización y Extracción de PCA:**
+   Para estabilizar la regla hebbiana sin imponer un corte artificial por saturación, Erkki Oja introdujo un término de decaimiento multiplicativo proporcional a $y^2$:
+   $$\Delta w = \eta \, y \, (x - y \, w)$$
+   * Con $x=1, y = w x = w$:
+     $$\Delta w = \eta \, w \, (1 - w^2)$$
+   * *Puntos de Equilibrio:* $\Delta w = 0 \iff w \in \{-1, 0, 1\}$.
+   * Para cualquier condición inicial positiva $w_0 > 0$, el sistema converge asintóticamente hacia:
+     $$\lim_{t \to \infty} w_t = 1.0$$
+   * *Teorema de Oja (1982):* En dimensión múltiple, la regla de Oja normaliza el vector de pesos a norma unitaria ($\|w\|=1$) y hace que converja exactamente al **primer componente principal (PCA)** de la matriz de covarianza de las entradas.
+
+---
+
+### 0.15.3. El Perceptrón de Rosenblatt (1958), Límite XOR de Minsky-Papert y Solución MLP (Diapositivas 39–48)
+
+1. **El Perceptrón de Frank Rosenblatt (1958):**
+   Rosenblatt dotó al modelo de umbral de un algoritmo de aprendizaje supervisado en línea guiado por el error de predicción:
+   $$w \leftarrow w + \eta (y - \hat{y}) x, \quad b \leftarrow b + \eta (y - \hat{y})$$
+   * En problemas linealmente separables (como la compuerta OR), converge de forma demostrada en pocas épocas a $w = [1, 1], b = -1$.
+2. **La Demostración Analítica de Inconsistencia de XOR (Minsky & Papert 1969):**
+   Consideremos un perceptrón lineal con umbral $T$ y pesos $w_1, w_2$:
+   $$\hat{y} = \mathbb{I}(w_1 x_1 + w_2 x_2 \ge T)$$
+   Para satisfacer la tabla de verdad de XOR ($\text{XOR}(0,0)=0$, $\text{XOR}(1,0)=1$, $\text{XOR}(0,1)=1$, $\text{XOR}(1,1)=0$), se deben cumplir simultáneamente cuatro desigualdades lineales:
+   $$\begin{aligned}
+   \text{Paso 1: } & (x_1=0, x_2=0) \to y=0 \implies 0 < T \implies T > 0 \\
+   \text{Paso 2: } & (x_1=1, x_2=0) \to y=1 \implies w_1 \ge T \\
+   \text{Paso 3: } & (x_1=0, x_2=1) \to y=1 \implies w_2 \ge T \\
+   \text{Paso 4: } & (x_1=1, x_2=1) \to y=0 \implies w_1 + w_2 < T
+   \end{aligned}$$
+   Sumando las desigualdades (2) y (3):
+   $$w_1 + w_2 \ge 2T$$
+   Dado que por el Paso 1 se demostró que $T > 0$, se deduce rigurosamente que $2T > T$, por lo que:
+   $$w_1 + w_2 \ge 2T > T \implies w_1 + w_2 > T$$
+   Esta deducción **contradice directamente** la desigualdad (4), que exige que $w_1 + w_2 < T$.
+   $$\mathbf{w_1 + w_2 \ge 2T > T \quad \text{vs.} \quad w_1 + w_2 < T \implies \text{CONTRADICCIÓN ABSOLUTA}}$$
+   *Corolario:* Ningún clasificador lineal de una sola capa puede resolver el operador XOR.
+3. **La Solución con Perceptrón Multicapa (MLP de 2 Capas, 3 Neuronas):**
+   Descomponiendo la función mediante álgebra de Boole:
+   $$\text{XOR}(x_1, x_2) = (x_1 \lor x_2) \land \overline{(x_1 \land x_2)}$$
+   * Capa Oculta:
+     * Neurona 1 (OR): $h_1 = \text{step}(x_1 + x_2 - 0.5)$
+     * Neurona 2 (NAND): $h_2 = \text{step}(-x_1 - x_2 + 1.5)$
+   * Capa de Salida:
+     * Neurona 3 (AND): $y = \text{step}(h_1 + h_2 - 1.5)$
+   * Mapeo en el Espacio Oculto:
+     * $(0, 0) \to (h_1=0, h_2=1) \implies y = 0$
+     * $(1, 0) \to (h_1=1, h_2=1) \implies y = 1$
+     * $(0, 1) \to (h_1=1, h_2=1) \implies y = 1$
+     * $(1, 1) \to (h_1=1, h_2=0) \implies y = 0$
+   Los cuatro puntos se transforman en una configuración donde las dos clases quedan perfectamente separadas por el hiperplano $h_1 + h_2 = 1.5$ ($100\%$ de exactitud).
+
+---
+
+### 0.15.4. Clasificador y Regresor Universal, Tamaño vs. Activación y Cierre de Fase 1 (Diapositivas 49–60)
+
+1. **Clasificador Universal de Regiones No Convexas y Disjuntas en $\mathbb{R}^2$:**
+   ¿Puede un MLP clasificar geometrías arbitrariamente complejas compuestas por múltiples polígonos disjuntos?
+   * *Teorema de 3 Capas:*
+     * **Capa 1 (Semiplanos):** Cada neurona $i$ traza una recta $w_{i1} x_1 + w_{i2} x_2 + b_i = 0$.
+     * **Capa 2 (Intersección Convexa - AND):** Cada neurona $j$ calcula la conjunción lógica de los semiplanos que delimitan un polígono convexo cerrado.
+     * **Capa 3 (Unión Disjunta - OR):** La neurona de salida calcula la disyunción lógica de los polígonos de la Capa 2.
+   * **Caso Numérico de Cátedra: Dos Triángulos Disjuntos ($9$ neuronas en total):**
+     * $T_1$ delimitado por 3 semiplanos $\implies 3$ neuronas en Capa 1.
+     * $T_2$ delimitado por 3 semiplanos $\implies 3$ neuronas en Capa 1.
+     * Capa 2: $2$ neuronas AND (una para $T_1$ y otra para $T_2$).
+     * Capa 3: $1$ neurona OR ($T_1 \cup T_2$).
+     * *Total:* $6 + 2 + 1 = \mathbf{9 \text{ neuronas de umbral}}$ clasifican la región no conexa con 100% de precisión.
+2. **Aproximador Universal Continuo (Regresor de Riemann):**
+   Cualquier función continua $f(x)$ integrable en sentido de Riemann puede aproximarse con precisión arbitraria $\varepsilon > 0$ sumando pulsos escalón:
+   $$u(x; T_1, T_2) = \text{step}(x - T_1) - \text{step}(x - T_2)$$
+   $$\hat{f}(x) = \sum_{k=1}^K c_k \, u(x; T_k, T_{k+1})$$
+   Cada pulso se implementa con 2 neuronas en la capa oculta.
+3. **Teorema de Tamaño vs. Tipo de Activación:**
+   La capacidad de representación no solo depende del número de neuronas, sino de la riqueza funcional de la función de activación $\sigma(z)$:
+   * Con neuronas de umbral o escalón de Heaviside, aproximar funciones periódicas como $f(x) = \cos(2x)$ requiere $N \to \infty$ neuronas para que el error $\varepsilon \to 0$.
+   * Con una función de activación periódica o armónica $\sigma(z) = \sin(z)$, la identidad trigonométrica elemental:
+     $$\cos(2x) \equiv \sin\left(2x + \frac{\pi}{2}\right)$$
+     demuestra que **una sola neurona** ($w=2, b=\pi/2$) representa la función de manera exacta y perfecta en todo el dominio $\mathbb{R}$.
+4. **Línea de Tiempo del Conexionismo (1943–2016):**
+   * **1943:** McCulloch & Pitts (Cálculo lógico immanente).
+   * **1949:** Hebb (Plasticidad sináptica).
+   * **1958:** Rosenblatt (Perceptrón y convergencia).
+   * **1969:** Minsky & Papert (Límite XOR e inicio del primer invierno).
+   * **1982:** Hopfield (Memorias asociativas y energía) & Oja (Estabilización hebbiana).
+   * **1986:** Rumelhart, Hinton & Williams (Backpropagation y PDP).
+   * **1989:** Cybenko / Hornik (Teorema de Aproximación Universal).
+   * **2006:** Hinton, Osindero & Teh (Deep Belief Networks y renacimiento Deep Learning).
+   * **2012:** AlexNet / Krizhevsky et al. (Revolución ImageNet en GPUs).
+   * **2016:** AlphaGo (DeepMind) y consolidación moderna.
+
+---
+
 ## 1. Introducción y Contexto Histórico (Unidad CD13 / Unidad I)
 
 El estudio de las redes neuronales artificiales experimentó un hito fundacional en 1943 con el modelo de neurona formal de Warren McCulloch y Walter Pitts, y posteriormente en 1958 con el Perceptrón propuesto por Frank Rosenblatt. El perceptrón simple demostró ser capaz de aprender y clasificar patrones linealmente separables (como las funciones lógicas AND y OR).
@@ -1663,69 +2030,78 @@ $$\eta_{\text{temprana}} \approx \left(\frac{1}{3} \dots \frac{1}{10}\right) \cd
 10. **Modelos No Lineales y SVM (Unidad CD10):** Se verificó la memoria local y el dilema sesgo-varianza en kNN ($k=1$ varianza máxima vs $k=N$ sesgo máximo), la maldición dimensional en distancias relativas ($79.4\%$ a $97.7\%$ en $d=10$ a $100$), el Teorema de Cover para espacios proyectados polinomiales y de funciones base, la formulación de margen máximo de Vapnik con regularización de holguras $C$, el Truco del Kernel de Mercer con RBF gaussiano, y la red neuronal bi-capa ReLU como transformador adaptativo del espacio hacia separabilidad lineal.
 11. **Regularización de Redes Neuronales (Unidad VII / CD19):** Se verificó analítica y computacionalmente el desvanecimiento del gradiente $L_2$ bajo saturación sigmoidal ($\sigma'(6) \approx 0.0025 \implies \nabla_z \text{div} \approx 0.00246$) frente a la convexidad y preservación directa de error de Softmax + KL ($\nabla_z \text{div} = \mathbf{y} - \mathbf{d}$); la subespecificación en $\{0,1\}^{100}$ ($2^{100} \approx 10^{30}$) y el control de Lipschitz mediante la norma de los pesos; la regla de Weight Decay $(1 - \eta \lambda)W$ con contracción del $1\%$ por paso ($\eta = 0.1, \lambda = 0.1$); la interpretación estadística de Dropout como Bagging implícito de $2^N$ subredes con pesos compartidos y la equivalencia exacta de Dropout Invertido ($y_{\text{train}} = f(z)/\alpha \implies \mathbb{E}[y] = f(z)$) permitiendo inferencia sin escalamiento; y el algoritmo de Batch Normalization comprobado en los lotes $\{1,2,3,6\}$ y $\{2,4,6,8\}$ con corrección insesgada de Bessel $B/(B-1)$.
 12. **Redes Neuronales Convolucionales (Unidad VIII / CD20):** Se demostró matemática y numéricamente la inviabilidad de aplicar capas densas a imágenes masivas (ImageNet $224\times 224\times 3$ con 128 neuronas demandando $19\,267\,712$ parámetros en capa 1), comprobando la superioridad de la convolución con pesos compartidos y suma ponderada local; se validó el micro-ejemplo de detección de borde vertical $5\times 5$ produciendo filas exactas $[0, 9, 9]$; se evaluó la fórmula de dimensiones de salida $O = \lfloor(W-K+2P)/S\rfloor+1$ en los casos canónicos de MNIST ($24\times 24$, $28\times 28$, $14\times 14$) y las $19\,044$ paradas de filtro en $140\times 140$; se verificaron Max y Mean Pooling en la matriz $4\times 4$ ($\begin{bmatrix}7 & 8\\ 3 & 4\end{bmatrix}$ y $\begin{bmatrix}3.5 & 5.5\\ 1.75 & 2.0\end{bmatrix}$) con cero parámetros; se demostró que el $99.8\%$ de los parámetros de una CNN clásica ($2\,099\,716$ de $2\,103\,156$) reside en el bloque denso; y se formalizó la matriz $2\times 2$ de Transfer Learning y los tres hitos históricos (LeNet-5, AlexNet, ResNet).
-13. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`ensambles_random_forest.py`](ensambles_random_forest.py), [`modelos_no_lineales.py`](modelos_no_lineales.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py), [`regularizacion_redes.py`](regularizacion_redes.py), [`redes_convolucionales.py`](redes_convolucionales.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (18 Unidades Académicas • 1107 Diapositivas • 73 Laboratorios Interactivos).
+13. **Aspectos Prácticos y Evaluación de Modelos (Unidad CD11):** Se comprobó empíricamente la Ley de Kolter mediante el proxy de predicción a ciegas y la telemetría SMART de data centers (evidenciando con Google FAST 2007 que el $56\%$ de discos fallados no tiene precursores SMART, configurando un problema imposible en las entradas que demanda reenfoque de salida a riesgo relativo sobre la tasa base del $1.36\%$ de Backblaze); se verificó la taxonomía de Rubin (MCAR, MAR, MNAR) y la incomprobabilidad empírica, junto con los 5 métodos de imputación con exactitud numérica rigurosa (media $\bar{x}_2=3.91$, kNN $3.15$ y $5.10$, regresión determinista $3.29$ y $5.15$, e imputación con incertidumbre $\sigma=0.33$ preservando la varianza residual); se evaluó el caso clínico de triage de 251 pacientes a umbral $0.5$ (empate en exactitud $0.62$, sensibilidad de kNN $0.75$ vs $0.72$ de logística) y la optimización contextual en la curva ROC para Brasil ($\text{TPR}+\text{FPR}\le 0.5 \implies (0.15, 0.35)$ logística umbral alto), Alemania ($\text{TPR}\ge 0.85 \implies (0.75, 0.86)$ logística umbral bajo) e India ($\text{TPR}+\text{FPR}\le 1.0 \implies (0.38, 0.62)$ kNN umbral medio); y se demostró la métrica COST de McSherry et al. (HotOS 2015) donde 1 hilo en RAM de laptop ($275\text{s}$) superó a 128 núcleos de Spark ($857\text{s}$) en PageRank, junto con la auditoría minimax de subgrupos que desenmascara el $94.6\%$ de exactitud global ($98.9\%$ mayoría vs $70.0\%$ minoría).
+14. **Redes Neuronales y Conexionismo (Unidad CD12):** Se demostró empírica y conceptualmente el puente histórico desde las 4 leyes del asociacionismo (Aristóteles, Hartley) hasta Alexander Bain (1873, *Mind and Body*) quien formalizó que «la información está en las conexiones», verificando cuantitativamente su estimación ($10^6$ somas y $5\times 10^9$ sinapsis frente a los $8.6\times 10^{10}$ somas y $10^{14}$ sinapsis humanas reales, con una subestimación sináptica de factor $20\,000$); se validó la equivalencia de Turing de la neurona de McCulloch & Pitts (1943) con umbral e inhibición absoluta; se comprobó numéricamente la inestabilidad de la regla de Hebb (1949) pura ($w \to 100.0$ con co-activación continua) y su estabilización perfecta hacia la norma unitaria ($w \to 1.0$) y extracción de PCA mediante la Regla de Oja (1982); se desarrolló la demostración analítica rigurosa del Teorema de Minsky y Papert (1969) probando que $w_1+w_2 \ge 2T > T$ contradice $w_1+w_2 < T$, imposibilitando resolver XOR con una sola neurona; se comprobó la solución multicapa con un MLP de 2 capas y 3 neuronas ($100\%$ exactitud); se implementó el clasificador universal de 3 capas y 9 neuronas para dos triángulos disjuntos en $\mathbb{R}^2$ (6 semiplanos $\to$ 2 AND $\to$ 1 OR); y se verificó el Teorema de Tamaño vs Activación donde aproximar $\cos(2x)$ demanda infinitos escalones de Riemann pero exactamente 1 sola neurona armónica $\sin(2x + \pi/2)$.
+15. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`ensambles_random_forest.py`](ensambles_random_forest.py), [`modelos_no_lineales.py`](modelos_no_lineales.py), [`aspectos_practicos.py`](aspectos_practicos.py), [`redes_conexionismo.py`](redes_conexionismo.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py), [`regularizacion_redes.py`](regularizacion_redes.py), [`redes_convolucionales.py`](redes_convolucionales.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (20 Unidades Académicas • 1260 Diapositivas • 81 Laboratorios Interactivos).
 
 ---
 
 ## 15. Referencias Bibliográficas
 
-1. **Cauchy, A. (1847).** *Méthode générale pour la résolution des systèmes d'équations simultanées.* Comptes Rendus Hebdomadaires des Séances de l'Académie des Sciences, 25, 536-538.
-2. **McCulloch, W. S., & Pitts, W. (1943).** *A logical calculus of the ideas immanent in nervous activity.* The Bulletin of Mathematical Biophysics, 5(4), 115-133.
-3. **Robbins, H., & Monro, S. (1951).** *A stochastic approximation method.* The Annals of Mathematical Statistics, 22(3), 400-407.
-4. **Rosenblatt, F. (1958).** *The perceptron: A probabilistic model for information storage and organization in the brain.* Psychological Review, 65(6), 386-408.
-5. **Widrow, B., & Hoff, M. E. (1960).** *Adaptive switching circuits.* IRE WESCON Convention Record, Part 4, 96-104.
-6. **Polyak, B. T. (1964).** *Some methods of speeding up the convergence of iteration methods.* USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.
-7. **Minsky, M., & Papert, S. (1969).** *Perceptrons: An Introduction to Computational Geometry.* MIT Press, Cambridge, MA.
-8. **Hyafil, L., & Rivest, R. L. (1976).** *Constructing optimal binary decision trees is NP-complete.* Information Processing Letters, 5(1), 15-17.
-9. **Nesterov, Y. (1983).** *A method for unconstrained convex minimization problem with the rate of convergence $O(1/k^2)$.* Doklady AN SSSR, 269, 543-547.
-10. **Breiman, L., Friedman, J., Stone, C. J., & Olshen, R. A. (1984).** *Classification and Regression Trees.* Wadsworth & Brooks/Cole, Monterey, CA.
-11. **Quinlan, J. R. (1986).** *Induction of decision trees.* Machine Learning, 1(1), 81-106.
-12. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
-13. **Fahlman, S. E. (1988).** *An empirical study of learning speed in back-propagation networks (QuickProp).* CMU-CS-88-162.
-14. **Brady, M. L., Raghavan, R., & Slawny, J. (1989).** *Back propagation fails to separate where perceptrons succeed.* IEEE Transactions on Circuits and Systems, 36(5), 665-674.
-15. **Baldi, P., & Hornik, K. (1989).** *Neural networks and principal component analysis: Learning from examples without local minima.* Neural Networks, 2(1), 53-58.
-16. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
-17. **LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. (1998).** *Gradient-based learning applied to document recognition (LeNet-5).* Proceedings of the IEEE, 86(11), 2278-2324.
-18. **Riedmiller, M., & Braun, H. (1993).** *A direct adaptive method for faster backpropagation learning: The RPROP algorithm.* IEEE International Conference on Neural Networks, 586-591.
-19. **Tieleman, T., & Hinton, G. (2012).** *Lecture 6.5—rmsprop: Divide the gradient by a running average of its recent magnitude.* COURSERA: Neural Networks for Machine Learning.
-20. **Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012).** *ImageNet classification with deep convolutional neural networks (AlexNet).* Advances in Neural Information Processing Systems (NeurIPS 2012), 25, 1097-1105.
-21. **Simonyan, K., & Zisserman, A. (2014).** *Very deep convolutional networks for large-scale image recognition (VGG).* arXiv:1409.1556.
-22. **Dauphin, Y. N., Pascanu, R., Gulcehre, C., Cho, K., Ganguli, S., & Bengio, Y. (2014).** *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.* NIPS 2014.
-23. **Kingma, D. P., & Ba, J. (2015).** *Adam: A method for stochastic optimization.* ICLR 2015.
-24. **He, K., Zhang, X., Ren, S., & Sun, J. (2016).** *Deep residual learning for image recognition (ResNet).* Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR 2016), 770-778.
-25. **Choromanska, A., Henaff, M., Mathieu, M., Ben Arous, G., & LeCun, Y. (2015).** *The loss surfaces of multilayer networks.* AISTATS 2015.
-26. **Swirszcz, G., Czarnecki, W. M., & Pascanu, R. (2016).** *Local minima in training of neural networks.* arXiv:1611.06310.
-27. **Oakden-Rayner, L., Gale, W., Bonham, T. A., Lungren, M. P., Carneiro, G., Bradley, A. P., & Palmer, L. J. (2019).** *Validation and Algorithmic Audit of a Deep Learning System for the Detection of Pneumothorax in Chest Radiographs.* Scientific Reports, 10, 16140.
-28. **Rand, W. M. (1971).** *Objective criteria for the evaluation of clustering methods.* Journal of the American Statistical Association, 66(336), 846-850.
-29. **Lloyd, S. (1982).** *Least squares quantization in PCM.* IEEE Transactions on Information Theory, 28(2), 129-137.
-30. **Hubert, L., & Arabie, P. (1985).** *Comparing partitions.* Journal of Classification, 2(1), 193-218.
-31. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
-32. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
-33. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
-34. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad, Árboles CART/ID3, Ensambles/Random Forests, Modelos No Lineales y SVM, Regularización de Redes & Redes Neuronales Convolucionales.* Ciencia de Datos — Doctorado UCN.
-35. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
-36. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
-37. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
-38. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
-39. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
-40. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
-41. **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.).* Springer, New York.
-42. **Galton, F. (1907).** *Vox populi (The wisdom of crowds).* Nature, 75(1949), 450-451.
-43. **Breiman, L. (1996).** *Bagging predictors.* Machine Learning, 24(2), 123-140.
-44. **Freund, Y., & Schapire, R. E. (1997).** *A decision-theoretic generalization of on-line learning and an application to boosting.* Journal of Computer and System Sciences, 55(1), 119-139.
-45. **Breiman, L. (2001).** *Random forests.* Machine Learning, 45(1), 5-32.
-46. **Friedman, J. H. (2001).** *Greedy function approximation: A gradient boosting machine.* Annals of Statistics, 29(5), 1189-1232.
-47. **Surowiecki, J. (2004).** *The Wisdom of Crowds: Why the Many Are Smarter Than the Few and How Collective Wisdom Shapes Business, Economies, Societies and Nations.* Doubleday, New York.
-48. **Chen, T., & Guestrin, C. (2016).** *XGBoost: A scalable tree boosting system.* KDD 2016, 785-794.
-49. **Mercer, J. (1909).** *Functions of positive and negative type, and their connection with the theory of integral equations.* Philosophical Transactions of the Royal Society of London. Series A, 209, 415-446.
-50. **Aizerman, M. A., Braverman, E. M., & Rozonoer, L. I. (1964).** *Theoretical foundations of the potential function method in pattern recognition learning.* Automation and Remote Control, 25, 821-837.
-51. **Cover, T. M. (1965).** *Geometrical and statistical properties of systems of linear inequalities with applications in pattern recognition.* IEEE Transactions on Electronic Computers, EC-14(3), 326-334.
-52. **Cortes, C., & Vapnik, V. (1995).** *Support-vector networks.* Machine Learning, 20(3), 273-297.
-53. **Vapnik, V. N. (1998).** *Statistical Learning Theory.* Wiley, New York.
-54. **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning (Chapter 7: Sparse Kernel Machines).* Springer, New York.
-55. **Pascanu, R., Mikolov, T., & Bengio, Y. (2013).** *On the difficulty of training recurrent neural networks (Gradient Clipping).* ICML 2013, 1310-1318.
-56. **Wan, L., Zeiler, M., Zhang, S., LeCun, Y., & Fergus, R. (2013).** *Regularization of neural networks using DropConnect.* ICML 2013, 1058-1066.
-57. **Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014).** *Dropout: A simple way to prevent neural networks from overfitting.* Journal of Machine Learning Research, 15(1), 1929-1958.
-58. **Ioffe, S., & Szegedy, C. (2015).** *Batch Normalization: Accelerating deep network training by reducing internal covariate shift.* ICML 2015, 448-456.
-59. **Power, A., Burda, Y., Edwards, H., Babuschkin, I., & Misra, V. (2022).** *Grokking: Generalization beyond overfitting on small algorithmic datasets.* arXiv:2201.02177.
+1. **Bain, A. (1873).** *Mind and Body: The Theories of Their Relation.* Henry S. King & Co., London.
+2. **Cauchy, A. (1847).** *Méthode générale pour la résolution des systèmes d'équations simultanées.* Comptes Rendus Hebdomadaires des Séances de l'Académie des Sciences, 25, 536-538.
+3. **McCulloch, W. S., & Pitts, W. (1943).** *A logical calculus of the ideas immanent in nervous activity.* The Bulletin of Mathematical Biophysics, 5(4), 115-133.
+4. **Hebb, D. O. (1949).** *The Organization of Behavior: A Neuropsychological Theory.* John Wiley & Sons, New York.
+5. **Robbins, H., & Monro, S. (1951).** *A stochastic approximation method.* The Annals of Mathematical Statistics, 22(3), 400-407.
+6. **Rosenblatt, F. (1958).** *The perceptron: A probabilistic model for information storage and organization in the brain.* Psychological Review, 65(6), 386-408.
+7. **Widrow, B., & Hoff, M. E. (1960).** *Adaptive switching circuits.* IRE WESCON Convention Record, Part 4, 96-104.
+8. **Polyak, B. T. (1964).** *Some methods of speeding up the convergence of iteration methods.* USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.
+9. **Minsky, M., & Papert, S. (1969).** *Perceptrons: An Introduction to Computational Geometry.* MIT Press, Cambridge, MA.
+10. **Oja, E. (1982).** *Simplified neuron model as a principal component analyzer.* Journal of Mathematical Biology, 15(3), 267-273.
+11. **Rubin, D. B. (1976).** *Inference and missing data.* Biometrika, 63(3), 581-592.
+9. **Hyafil, L., & Rivest, R. L. (1976).** *Constructing optimal binary decision trees is NP-complete.* Information Processing Letters, 5(1), 15-17.
+10. **Nesterov, Y. (1983).** *A method for unconstrained convex minimization problem with the rate of convergence $O(1/k^2)$.* Doklady AN SSSR, 269, 543-547.
+11. **Breiman, L., Friedman, J., Stone, C. J., & Olshen, R. A. (1984).** *Classification and Regression Trees.* Wadsworth & Brooks/Cole, Monterey, CA.
+12. **Quinlan, J. R. (1986).** *Induction of decision trees.* Machine Learning, 1(1), 81-106.
+13. **Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986).** *Learning representations by back-propagating errors.* Nature, 323(6088), 533-536.
+14. **Fahlman, S. E. (1988).** *An empirical study of learning speed in back-propagation networks (QuickProp).* CMU-CS-88-162.
+15. **Brady, M. L., Raghavan, R., & Slawny, J. (1989).** *Back propagation fails to separate where perceptrons succeed.* IEEE Transactions on Circuits and Systems, 36(5), 665-674.
+16. **Baldi, P., & Hornik, K. (1989).** *Neural networks and principal component analysis: Learning from examples without local minima.* Neural Networks, 2(1), 53-58.
+17. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
+18. **LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. (1998).** *Gradient-based learning applied to document recognition (LeNet-5).* Proceedings of the IEEE, 86(11), 2278-2324.
+19. **Riedmiller, M., & Braun, H. (1993).** *A direct adaptive method for faster backpropagation learning: The RPROP algorithm.* IEEE International Conference on Neural Networks, 586-591.
+20. **Tieleman, T., & Hinton, G. (2012).** *Lecture 6.5—rmsprop: Divide the gradient by a running average of its recent magnitude.* COURSERA: Neural Networks for Machine Learning.
+21. **Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012).** *ImageNet classification with deep convolutional neural networks (AlexNet).* Advances in Neural Information Processing Systems (NeurIPS 2012), 25, 1097-1105.
+22. **Simonyan, K., & Zisserman, A. (2014).** *Very deep convolutional networks for large-scale image recognition (VGG).* arXiv:1409.1556.
+23. **Dauphin, Y. N., Pascanu, R., Gulcehre, C., Cho, K., Ganguli, S., & Bengio, Y. (2014).** *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.* NIPS 2014.
+24. **Kingma, D. P., & Ba, J. (2015).** *Adam: A method for stochastic optimization.* ICLR 2015.
+25. **He, K., Zhang, X., Ren, S., & Sun, J. (2016).** *Deep residual learning for image recognition (ResNet).* Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR 2016), 770-778.
+26. **Pinheiro, E., Weber, W.-D., & Barroso, L. A. (2007).** *Failure trends in a large disk drive population.* USENIX Conference on File and Storage Technologies (FAST 2007), 17-28.
+27. **McSherry, F., Isard, M., & Murray, D. G. (2015).** *Scalability! But at what COST?* 15th USENIX Workshop on Hot Topics in Operating Systems (HotOS XV).
+28. **Tigani, J. (2023).** *Big Data is Dead.* MotherDuck Analytics Engineering Report.
+29. **Choromanska, A., Henaff, M., Mathieu, M., Ben Arous, G., & LeCun, Y. (2015).** *The loss surfaces of multilayer networks.* AISTATS 2015.
+30. **Swirszcz, G., Czarnecki, W. M., & Pascanu, R. (2016).** *Local minima in training of neural networks.* arXiv:1611.06310.
+31. **Oakden-Rayner, L., Gale, W., Bonham, T. A., Lungren, M. P., Carneiro, G., Bradley, A. P., & Palmer, L. J. (2019).** *Validation and Algorithmic Audit of a Deep Learning System for the Detection of Pneumothorax in Chest Radiographs.* Scientific Reports, 10, 16140.
+32. **Rand, W. M. (1971).** *Objective criteria for the evaluation of clustering methods.* Journal of the American Statistical Association, 66(336), 846-850.
+33. **Lloyd, S. (1982).** *Least squares quantization in PCM.* IEEE Transactions on Information Theory, 28(2), 129-137.
+34. **Hubert, L., & Arabie, P. (1985).** *Comparing partitions.* Journal of Classification, 2(1), 193-218.
+35. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
+36. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
+37. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
+38. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad, Árboles CART/ID3, Ensambles/Random Forests, Modelos No Lineales y SVM, Aspectos Prácticos y Evaluación, Regularización de Redes & Redes Neuronales Convolucionales.* Ciencia de Datos — Doctorado UCN.
+39. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
+40. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
+41. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
+42. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
+43. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
+44. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
+45. **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.).* Springer, New York.
+46. **Galton, F. (1907).** *Vox populi (The wisdom of crowds).* Nature, 75(1949), 450-451.
+47. **Breiman, L. (1996).** *Bagging predictors.* Machine Learning, 24(2), 123-140.
+48. **Freund, Y., & Schapire, R. E. (1997).** *A decision-theoretic generalization of on-line learning and an application to boosting.* Journal of Computer and System Sciences, 55(1), 119-139.
+49. **Breiman, L. (2001).** *Random forests.* Machine Learning, 45(1), 5-32.
+50. **Friedman, J. H. (2001).** *Greedy function approximation: A gradient boosting machine.* Annals of Statistics, 29(5), 1189-1232.
+51. **Surowiecki, J. (2004).** *The Wisdom of Crowds: Why the Many Are Smarter Than the Few and How Collective Wisdom Shapes Business, Economies, Societies and Nations.* Doubleday, New York.
+52. **Chen, T., & Guestrin, C. (2016).** *XGBoost: A scalable tree boosting system.* KDD 2016, 785-794.
+53. **Mercer, J. (1909).** *Functions of positive and negative type, and their connection with the theory of integral equations.* Philosophical Transactions of the Royal Society of London. Series A, 209, 415-446.
+54. **Aizerman, M. A., Braverman, E. M., & Rozonoer, L. I. (1964).** *Theoretical foundations of the potential function method in pattern recognition learning.* Automation and Remote Control, 25, 821-837.
+55. **Cover, T. M. (1965).** *Geometrical and statistical properties of systems of linear inequalities with applications in pattern recognition.* IEEE Transactions on Electronic Computers, EC-14(3), 326-334.
+56. **Cortes, C., & Vapnik, V. (1995).** *Support-vector networks.* Machine Learning, 20(3), 273-297.
+57. **Vapnik, V. N. (1998).** *Statistical Learning Theory.* Wiley, New York.
+58. **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning (Chapter 7: Sparse Kernel Machines).* Springer, New York.
+59. **Pascanu, R., Mikolov, T., & Bengio, Y. (2013).** *On the difficulty of training recurrent neural networks (Gradient Clipping).* ICML 2013, 1310-1318.
+60. **Wan, L., Zeiler, M., Zhang, S., LeCun, Y., & Fergus, R. (2013).** *Regularization of neural networks using DropConnect.* ICML 2013, 1058-1066.
+61. **Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014).** *Dropout: A simple way to prevent neural networks from overfitting.* Journal of Machine Learning Research, 15(1), 1929-1958.
+62. **Ioffe, S., & Szegedy, C. (2015).** *Batch Normalization: Accelerating deep network training by reducing internal covariate shift.* ICML 2015, 448-456.
+63. **Power, A., Burda, Y., Edwards, H., Babuschkin, I., & Misra, V. (2022).** *Grokking: Generalization beyond overfitting on small algorithmic datasets.* arXiv:2201.02177.
 

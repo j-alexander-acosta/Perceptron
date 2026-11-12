@@ -460,6 +460,28 @@ def launch_nonlinear_module():
         print(f"⚠️ Error al cargar el módulo CD10 de Modelos No Lineales: {e}")
 
 
+def launch_practical_module():
+    """
+    Ejecuta el laboratorio interactivo de la Unidad CD11 (undécima en orden): Aspectos Prácticos y Evaluación.
+    """
+    try:
+        from aspectos_practicos import interactive_menu
+        interactive_menu()
+    except Exception as e:
+        print(f"⚠️ Error al cargar el módulo CD11 de Aspectos Prácticos y Evaluación: {e}")
+
+
+def launch_conexionismo_module():
+    """
+    Ejecuta el laboratorio interactivo de la Unidad CD12 (duodécima en orden): Redes Neuronales y Conexionismo.
+    """
+    try:
+        from redes_conexionismo import menu_redes_conexionismo
+        menu_redes_conexionismo()
+    except Exception as e:
+        print(f"⚠️ Error al cargar el módulo CD12 de Redes Neuronales y Conexionismo: {e}")
+
+
 def launch_sgd_module():
     """
     Ejecuta el laboratorio interactivo de la Unidad VI (CD18): Descenso por Gradiente Estocástico y Lotes.
@@ -579,9 +601,25 @@ UNIDADES_CATEDRA = [
         "launcher": launch_nonlinear_module,
     },
     {
+        "id": "CD11",
+        "fase": 1,
+        "num": 11,
+        "nombre": "CD11: Aspectos Prácticos y Evaluación de Modelos",
+        "desc": "Ley de Kolter, Imputación Rubin MCAR/MAR/MNAR, Triage Pandemia (251 pac.), ROC Multipaís y COST McSherry (93 Diaps.)",
+        "launcher": launch_practical_module,
+    },
+    {
+        "id": "CD12",
+        "fase": 1,
+        "num": 12,
+        "nombre": "CD12: Redes Neuronales y Conexionismo",
+        "desc": "Asociacionismo, Bain 1873, McCulloch-Pitts 1943, Hebb vs Oja, Límite XOR, MLP y Universalidad (60 Diaps.)",
+        "launcher": launch_conexionismo_module,
+    },
+    {
         "id": "CD13",
         "fase": 2,
-        "num": 11,
+        "num": 13,
         "nombre": "CD13 (Unidad I): Aproximación Universal con Redes Neuronales",
         "desc": "DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos (61 Diaps.)",
         "launcher": launch_universal_approx,
@@ -589,7 +627,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD14",
         "fase": 2,
-        "num": 12,
+        "num": 14,
         "nombre": "CD14 (Unidad II): Aprendizaje de Redes Neuronales",
         "desc": "Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y Entropía Cruzada KL (56 Diaps.)",
         "launcher": launch_learning_module,
@@ -597,7 +635,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD15",
         "fase": 2,
-        "num": 13,
+        "num": 15,
         "nombre": "CD15 (Unidad III): Descenso por Gradiente y Convergencia",
         "desc": "Ortogonalidad, Hessiana 3D, 200 Épocas y Relación Paso/Curvatura (47 Diaps.)",
         "launcher": launch_gradient_module,
@@ -605,7 +643,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD16",
         "fase": 2,
-        "num": 14,
+        "num": 16,
         "nombre": "CD16 (Unidad IV): Algoritmo de Backpropagation",
         "desc": "Regla de la Cadena, Grafos de Cómputo (Diaps. 21/23), ReLU 2 Capas y Jacobianos (60 Diaps.)",
         "launcher": launch_backprop_module,
@@ -613,7 +651,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD17",
         "fase": 2,
-        "num": 15,
+        "num": 17,
         "nombre": "CD17 (Unidad V): Problemas de Convergencia en el Entrenamiento",
         "desc": "Brady 1989, 6 Trayectorias, Condición κ, Newton, RProp y QuickProp (58 Diaps.)",
         "launcher": launch_convergence_module,
@@ -621,7 +659,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD18",
         "fase": 2,
-        "num": 16,
+        "num": 18,
         "nombre": "CD18 (Unidad VI): Descenso por Gradiente Estocástico y Lotes",
         "desc": "SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, RMSprop y Adam (41 Diaps.)",
         "launcher": launch_sgd_module,
@@ -629,7 +667,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD19",
         "fase": 2,
-        "num": 17,
+        "num": 19,
         "nombre": "CD19 (Unidad VII): Regularización de Redes Neuronales",
         "desc": "L2 vs KL, Suavidad, Weight Decay (1-ηλ), Dropout/Invertido y BatchNorm (46 Diaps.)",
         "launcher": launch_regularization_module,
@@ -637,7 +675,7 @@ UNIDADES_CATEDRA = [
     {
         "id": "CD20",
         "fase": 2,
-        "num": 18,
+        "num": 20,
         "nombre": "CD20 (Unidad VIII): Redes Neuronales Convolucionales (CNNs)",
         "desc": "MLP vs Convolución, Micro-ejemplo 5x5, Padding/Stride, Pooling 4x4, Parámetros (99.8% FC) y Hitos (57 Diaps.)",
         "launcher": launch_cnn_module,
@@ -704,11 +742,11 @@ def ejecutar_unidad_con_navegacion(unit_idx: int):
 
 def menu_fase1():
     """
-    Submenú enfocado y limpio para la Fase 1: Fundamentos y Análisis de Datos (CD01 a CD10).
+    Submenú enfocado y limpio para la Fase 1: Fundamentos y Análisis de Datos (CD01 a CD12 • 12 Unidades).
     """
     while True:
         print("\n" + "═" * 84)
-        print(" 📊 FASE 1: FUNDAMENTOS Y ANÁLISIS DE DATOS (CD01 a CD10 • 10 Unidades)")
+        print(" 📊 FASE 1: FUNDAMENTOS Y ANÁLISIS DE DATOS (CD01 a CD12 • 12 Unidades)")
         print("═" * 84)
         print(" [1] CD01: Introducción al Curso (Pandemia, SIR, Netflix Prize, 3 Relatos IA)")
         print(" [2] CD02: Preprocesamiento y EDA (Gallup/Yelp, CRISP-DM, epl_mini, Anscombe)")
@@ -720,12 +758,14 @@ def menu_fase1():
         print(" [8] CD08: Árboles de Decisión (Impureza Gini/Entropía, ID3 a Mano, Poda CART, Regresión)")
         print(" [9] CD09: Ensamblaje y Random Forests (Galton 1907, Bagging, ESL 15.1, AdaBoost, Stacking)")
         print(" [10] CD10: Modelos No Lineales y Redes (kNN, Trozos, Círculos, SVM Margen, Kernels, XOR)")
+        print(" [11] CD11: Aspectos Prácticos y Evaluación (Kolter, Rubin MCAR/MAR/MNAR, Triage 251, ROC, McSherry)")
+        print(" [12] CD12: Redes Neuronales y Conexionismo (Asociacionismo, Bain 1873, McCulloch-Pitts, Hebb vs Oja, XOR, MLP)")
         print(" [T] Ejecutar todas las demostraciones automáticas de Fase 1")
         print(" [V] Volver al Menú Principal")
         print("─" * 84)
         
         try:
-            opc = input("Fase 1 [1-10, T, V]: ").strip().lower()
+            opc = input("Fase 1 [1-12, T, V]: ").strip().lower()
             if opc == '1':
                 ejecutar_unidad_con_navegacion(0)
             elif opc == '2':
@@ -746,6 +786,10 @@ def menu_fase1():
                 ejecutar_unidad_con_navegacion(8)
             elif opc == '10':
                 ejecutar_unidad_con_navegacion(9)
+            elif opc == '11':
+                ejecutar_unidad_con_navegacion(10)
+            elif opc == '12':
+                ejecutar_unidad_con_navegacion(11)
             elif opc in ('t', 'todos', 'all'):
                 from introduccion_curso import ejecutar_suite_completa
                 ejecutar_suite_completa()
@@ -767,6 +811,10 @@ def menu_fase1():
                 ejecutar_todo_cd09()
                 from modelos_no_lineales import ejecutar_suite_automatizada as ejecutar_todo_cd10
                 ejecutar_todo_cd10()
+                from aspectos_practicos import run_all_tests as ejecutar_todo_cd11
+                ejecutar_todo_cd11()
+                from redes_conexionismo import run_all_tests as ejecutar_todo_cd12
+                ejecutar_todo_cd12()
             elif opc in ('v', 'volver', 'q', 'salir', '0', ''):
                 break
             else:
@@ -798,21 +846,21 @@ def menu_fase2():
         try:
             opc = input("Fase 2 [1-8, T, V]: ").strip().lower()
             if opc == '1':
-                ejecutar_unidad_con_navegacion(10)
-            elif opc == '2':
-                ejecutar_unidad_con_navegacion(11)
-            elif opc == '3':
                 ejecutar_unidad_con_navegacion(12)
-            elif opc == '4':
+            elif opc == '2':
                 ejecutar_unidad_con_navegacion(13)
-            elif opc == '5':
+            elif opc == '3':
                 ejecutar_unidad_con_navegacion(14)
-            elif opc == '6':
+            elif opc == '4':
                 ejecutar_unidad_con_navegacion(15)
-            elif opc == '7':
+            elif opc == '5':
                 ejecutar_unidad_con_navegacion(16)
-            elif opc == '8':
+            elif opc == '6':
                 ejecutar_unidad_con_navegacion(17)
+            elif opc == '7':
+                ejecutar_unidad_con_navegacion(18)
+            elif opc == '8':
+                ejecutar_unidad_con_navegacion(19)
             elif opc in ('t', 'todos', 'all'):
                 from aproximacion_universal import run_all_demos
                 run_all_demos()
@@ -935,6 +983,10 @@ def main():
             ejecutar_todo_cd09()
             from modelos_no_lineales import ejecutar_suite_automatizada as ejecutar_todo_cd10
             ejecutar_todo_cd10()
+            from aspectos_practicos import run_all_tests as ejecutar_todo_cd11
+            ejecutar_todo_cd11()
+            from redes_conexionismo import run_all_tests as ejecutar_todo_cd12
+            ejecutar_todo_cd12()
             run_verification()
             generate_plot()
             from aproximacion_universal import run_all_demos
@@ -984,6 +1036,12 @@ def main():
         elif arg in ('--nonlinear', '--knn', '--svm', '--kernel', '-c10', '--cd10'):
             ejecutar_unidad_con_navegacion(9)
             return
+        elif arg in ('--practica', '--evaluacion', '--eval', '--roc', '-c11', '--cd11'):
+            ejecutar_unidad_con_navegacion(10)
+            return
+        elif arg in ('--conexionismo', '--conexion', '--hebb', '--mcculloch', '-c12', '--cd12'):
+            ejecutar_unidad_con_navegacion(11)
+            return
         elif arg in ('--gui', '-g'):
             launch_gui()
             return
@@ -991,39 +1049,40 @@ def main():
             launch_web()
             return
         elif arg in ('--universal', '-u', '--cd13'):
-            ejecutar_unidad_con_navegacion(10)
-            return
-        elif arg in ('--learning', '-l', '--aprendizaje', '--cd14'):
-            ejecutar_unidad_con_navegacion(11)
-            return
-        elif arg in ('--gradient', '-d', '--gradiente', '--cd15'):
             ejecutar_unidad_con_navegacion(12)
             return
-        elif arg in ('--backprop', '-b', '--backpropagation', '--cd16'):
+        elif arg in ('--learning', '-l', '--aprendizaje', '--cd14'):
             ejecutar_unidad_con_navegacion(13)
             return
-        elif arg in ('--convergence', '-c', '--convergencia', '--cd17'):
+        elif arg in ('--gradient', '-d', '--gradiente', '--cd15'):
             ejecutar_unidad_con_navegacion(14)
             return
-        elif arg in ('--sgd', '-s', '--lotes', '--cd18'):
+        elif arg in ('--backprop', '-b', '--backpropagation', '--cd16'):
             ejecutar_unidad_con_navegacion(15)
             return
-        elif arg in ('--regularization', '--reg', '--dropout', '--batchnorm', '-c19', '--cd19'):
+        elif arg in ('--convergence', '-c', '--convergencia', '--cd17'):
             ejecutar_unidad_con_navegacion(16)
             return
-        elif arg in ('--cnn', '--convolucional', '--conv', '-c20', '--cd20'):
+        elif arg in ('--sgd', '-s', '--lotes', '--cd18'):
             ejecutar_unidad_con_navegacion(17)
+            return
+        elif arg in ('--regularization', '--reg', '--dropout', '--batchnorm', '-c19', '--cd19'):
+            ejecutar_unidad_con_navegacion(18)
+            return
+        elif arg in ('--cnn', '--convolucional', '--conv', '-c20', '--cd20'):
+            ejecutar_unidad_con_navegacion(19)
             return
 
     # Menú Principal Organizado, Desaturado y con Navegación Jerárquica
     while True:
         print("\n" + "═" * 84)
         print("  CIENCIA DE DATOS Y REDES NEURONALES — SUITE ACADÉMICA (DOCTORADO UCN)")
-        print("  18 Unidades de Cátedra (1107 Diapositivas) • 73 Laboratorios Interactivos")
+        print("  20 Unidades de Cátedra (1260 Diapositivas) • 81 Laboratorios Interactivos")
         print("═" * 84)
-        print(" [1] 📊 FASE 1: Fundamentos y Análisis de Datos (CD01 a CD10)")
+        print(" [1] 📊 FASE 1: Fundamentos y Análisis de Datos (CD01 a CD12)")
         print("     • CD01: Intro  • CD02: EDA  • CD03: Viz  • CD04: ML  • CD05: Gen.")
         print("     • CD06: Cluster  • CD07: Reducción Dim  • CD08: Árboles  • CD09: Ensambles  • CD10: No Lineal/SVM")
+        print("     • CD11: Aspectos Prácticos y Evaluación  • CD12: Redes Neuronales y Conexionismo")
         print("")
         print(" [2] 🧠 FASE 2: Redes Neuronales y Optimización (CD13 a CD20)")
         print("     • CD13: Aprox. Univ.  • CD14: Aprendizaje  • CD15: Gradiente  • CD16: Backprop")
@@ -1034,7 +1093,7 @@ def main():
         print("")
         print(" [4] 🌐 INTERFACES GRÁFICAS: Suite Web (Navegador) & GUI de Escritorio (Tkinter)")
         print("")
-        print(" [5] 🚀 VERIFICACIÓN COMPLETA AUTOMATIZADA (--auto, 18 Unidades)")
+        print(" [5] 🚀 VERIFICACIÓN COMPLETA AUTOMATIZADA (--auto, 20 Unidades)")
         print("")
         print(" [0] Salir del Sistema")
         print("─" * 84)
@@ -1070,6 +1129,10 @@ def main():
                 ejecutar_todo_cd09()
                 from modelos_no_lineales import ejecutar_suite_automatizada as ejecutar_todo_cd10
                 ejecutar_todo_cd10()
+                from aspectos_practicos import run_all_tests as ejecutar_todo_cd11
+                ejecutar_todo_cd11()
+                from redes_conexionismo import run_all_tests as ejecutar_todo_cd12
+                ejecutar_todo_cd12()
                 run_verification()
                 generate_plot()
                 from aproximacion_universal import run_all_demos
@@ -1112,22 +1175,26 @@ def main():
                 ejecutar_unidad_con_navegacion(8)
             elif opc in ('cd10', 'knn', 'svm', 'kernel', 'nonlinear'):
                 ejecutar_unidad_con_navegacion(9)
-            elif opc in ('cd13', 'universal'):
+            elif opc in ('cd11', 'practica', 'eval', 'evaluacion'):
                 ejecutar_unidad_con_navegacion(10)
-            elif opc in ('cd14', 'learning'):
+            elif opc in ('cd12', 'conexionismo', 'hebb', 'mcculloch'):
                 ejecutar_unidad_con_navegacion(11)
-            elif opc in ('cd15', 'gradient'):
+            elif opc in ('cd13', 'universal'):
                 ejecutar_unidad_con_navegacion(12)
-            elif opc in ('cd16', 'backprop'):
+            elif opc in ('cd14', 'learning'):
                 ejecutar_unidad_con_navegacion(13)
-            elif opc in ('cd17', 'convergence'):
+            elif opc in ('cd15', 'gradient'):
                 ejecutar_unidad_con_navegacion(14)
-            elif opc in ('cd18', 'sgd'):
+            elif opc in ('cd16', 'backprop'):
                 ejecutar_unidad_con_navegacion(15)
-            elif opc in ('cd19', 'reg', 'regularizacion', 'regularization', 'dropout', 'batchnorm'):
+            elif opc in ('cd17', 'convergence'):
                 ejecutar_unidad_con_navegacion(16)
-            elif opc in ('cd20', 'cnn', 'conv', 'convolucional'):
+            elif opc in ('cd18', 'sgd'):
                 ejecutar_unidad_con_navegacion(17)
+            elif opc in ('cd19', 'reg', 'regularizacion', 'regularization', 'dropout', 'batchnorm'):
+                ejecutar_unidad_con_navegacion(18)
+            elif opc in ('cd20', 'cnn', 'conv', 'convolucional'):
+                ejecutar_unidad_con_navegacion(19)
             elif opc == 'web':
                 launch_web()
             elif opc == 'gui':
