@@ -756,6 +756,136 @@ El módulo [`ensambles_random_forest.py`](ensambles_random_forest.py) y los labo
 
 ---
 
+## 0.13. Décima Unidad CD10 (Décima en Orden de Cátedra y Culminación de Fase 1): Modelos No Lineales y Redes Neuronales (65 Diapositivas)
+
+La décima unidad de la cátedra representa la síntesis y culminación de la **Fase 1 (Fundamentos Clásicos y Estadísticos)** y establece el puente teórico formal hacia la **Fase 2 (Redes Neuronales Profundas, CD13–CD18)**. Esta unidad aborda el dilema fundamental que surge cuando las fronteras de decisión o las relaciones de respuesta en la naturaleza son intrínsecamente no lineales, analizando cuatro paradigmas de complejidad creciente: modelos basados en instancias locales (**kNN**), expansiones explícitas de bases (**Feature Maps**), clasificadores de margen máximo (**SVM**), y espacios de Hilbert con producto interno implícito (**Truco del Kernel**), cerrando con el mapeo adaptativo de las capas ocultas en redes neuronales feedforward.
+
+### Módulo 10.1: k-Nearest Neighbors (kNN) — Aprendizaje No Paramétrico y Memoria Local (Diapositivas 1–19)
+A diferencia de los modelos paramétricos (como la regresión lineal o logística), kNN es un algoritmo de **aprendizaje perezoso** (*lazy learning*) que posterga todo el cómputo hasta la fase de inferencia, memorizando las observaciones de entrenamiento $\mathcal{D} = \{(x_n, y_n)\}_{n=1}^N$.
+1. **Regresión kNN:**
+   Dado un punto de consulta $x_q$, la predicción se obtiene promediando las salidas de los $k$ vecinos más cercanos según la métrica euclidiana $d(x, x') = \|x - x'\|_2$:
+   $$\hat{y}(x_q) = \frac{1}{k} \sum_{i \in N_k(x_q)} y_i$$
+   * **Trazado Numérico del Dataset de Cátedra (9 Puntos, Diapositivas 8–11):**
+     Para el conjunto $\{(1.0, 1.5), (1.5, 2.0), (2.0, 3.8), (2.5, 4.2), (3.0, 3.5), (3.5, 3.0), (4.0, 4.5), (4.5, 5.0), (5.0, 3.0)\}$:
+     * Para $x_q = 2.2$ con $k=1$: el vecino más cercano es $x=2.0$ ($d=0.20 < d(2.5)=0.30$), por ende $\hat{y}(2.2) = y(2.0) = \mathbf{3.80}$.
+     * Para $x_q = 2.2$ con $k=3$: los tres vecinos más cercanos son $x \in \{2.0, 2.5, 1.5\}$ con distancias $0.20, 0.30, 0.70$. La predicción es $\hat{y}(2.2) = \frac{3.8 + 4.2 + 2.0}{3} = \frac{10.0}{3} \approx \mathbf{3.33}$ (o el trío simétrico central $\{2.0, 2.5, 3.0\} \implies \frac{3.8 + 4.2 + 3.5}{3} = \mathbf{3.83}$).
+     * **Punto de Salto Discontinuo:** La frontera de decisión en 1-NN experimenta un salto escalonado exactamente en el punto medio entre dos puntos contiguos: $x_{\text{salto}} = \frac{2.0 + 2.5}{2} = \mathbf{2.25}$.
+2. **Dilema Sesgo-Varianza en kNN (Diapositivas 12–15):**
+   * $k = 1$: **Sesgo nulo y varianza máxima**. El modelo interpola perfectamente cada punto de entrenamiento ($\text{RMSE}_{\text{train}} = 0.00$), pero sufre sobreajuste severo ante perturbaciones estocásticas ($\text{RMSE}_{\text{test}} = 0.23$).
+   * $k = N$: **Varianza nula y sesgo máximo**. El modelo colapsa a la media global $\bar{y} = \frac{1}{9}\sum y_i = 3.50$ ($\text{RMSE}_{\text{train}} = 0.38, \text{RMSE}_{\text{test}} = 0.50$).
+   * $k = 3$: Régimen óptimo que minimiza el error de generalización ($\text{RMSE}_{\text{test}} = 0.19$).
+3. **Clasificación kNN:**
+   Estima la probabilidad posterior por votación mayoritaria local:
+   $$P(y = c \mid x) = \frac{1}{k} \sum_{i \in N_k(x)} \mathbb{I}(y_i = c)$$
+   Para 5 vecinos con 3 azules y 2 naranjas: $P(y = \text{Azul}) = \frac{3}{5} = \mathbf{0.60} \implies$ asignación a Clase Azul.
+4. **La Maldición de la Dimensionalidad (Diapositivas 16–19):**
+   En un espacio hipercúbico $[0, 1]^p$, la distancia promedio desde cualquier punto interior hacia la frontera exterior viene dada por:
+   $$d_{\text{edge}}(p) = 1 - \left(\frac{1}{2}\right)^{1/p}$$
+   * Para $p = 1$: $d_{\text{edge}} = 1 - 0.50 = 50.0\%$.
+   * Para $p = 10$: $d_{\text{edge}} = 1 - (0.50)^{0.10} \approx \mathbf{79.4\%}$.
+   * Para $p = 100$: $d_{\text{edge}} = 1 - (0.50)^{0.01} \approx \mathbf{97.7\%}$.
+   * **Corolario de Beyer et al. (1999):** En alta dimensión, la razón entre la distancia al vecino más lejano y al más cercano converge a 1 ($\lim_{p \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} = 0$), vaciando el espacio local y tornando inútil la noción de vecindad euclidiana.
+
+---
+
+### Módulo 10.2: Feature Maps y Espacios Transformados — Teorema de Cover (Diapositivas 20–34)
+Cuando los datos no son linealmente separables en el espacio original $\mathbb{R}^d$, se aplica una transformación determinista $\phi: \mathbb{R}^d \to \mathbb{R}^D$ con $D \gg d$, de modo que un clasificador lineal estándar opere en el nuevo espacio:
+$$f(x) = \operatorname{sign}(w^T \phi(x) + b)$$
+1. **Frontera Circular mediante Mapeo Cuadrático (Diapositiva 24):**
+   Un disco centrado en $(1, 1)$ con radio $\sqrt{2}$ viene dado por $(x_1 - 1)^2 + (x_2 - 1)^2 \le 2$. Desarrollando:
+   $$x_1^2 - 2x_1 + 1 + x_2^2 - 2x_2 + 1 \le 2 \iff 2x_1 + 2x_2 - (x_1^2 + x_2^2) \ge 0$$
+   Definiendo el vector de características inducido $\phi(x) = [x_1, x_2, x_1^2 + x_2^2]^T$ y los pesos $w = [2, 2, -1]^T$ con sesgo $b = 0$, la frontera circular no lineal en $\mathbb{R}^2$ se convierte en un hiperplano lineal perfecto en $\mathbb{R}^3$.
+2. **Modelos Lineales a Trozos con Indicatrices (Diapositiva 28):**
+   Particionando el dominio 1D en intervalos disjuntos $B_j = [b_{j-1}, b_j)$, las funciones base indicatrices $\phi_j(x) = \mathbb{I}(x \in B_j)$ generan un vector $\phi(x) = [0, \dots, 1, \dots, 0]^T$ de activación *one-hot*. La función de salida $f(x) = \sum_{j=1}^J w_j \phi_j(x)$ es lineal respecto a los parámetros $w$ pero no lineal y discontinua respecto a $x$.
+3. **Teorema de Separabilidad de Thomas Cover (1965, Diapositivas 30–32):**
+   Para $N$ puntos en posición general en $\mathbb{R}^D$, el número de dicotomías linealmente separables es $C(N, D) = 2 \sum_{i=0}^{D-1} \binom{N-1}{i}$. La probabilidad de que una partición binaria arbitraria resulte linealmente separable es:
+   $$P(N, D) = 2^{1-N} \sum_{i=0}^{D-1} \binom{N-1}{i}$$
+   * **Transición de Fase Crítica:** Ocurre exactamente en la razón $\frac{N}{D} = 2$. Si $N \le 2D$, $P(N, D) \approx 1$ (separabilidad garantizada). Si $N > 2D$, la probabilidad colapsa exponencialmente hacia cero.
+4. **La Explosión Combinatoria:**
+   Un polinomio completo de grado $d$ sobre $J$ variables genera una dimensión inducida dada por las combinaciones con repetición:
+   $$\operatorname{dim}(\phi) = \binom{J + d}{d}$$
+   Para $J = 100$ variables y grado moderado $d = 5$:
+   $$\binom{105}{5} = \frac{105 \times 104 \times 103 \times 102 \times 101}{120} = \mathbf{96\,560\,646}\text{ dimensiones}$$
+   Este crecimiento prohibitivo hace inviable la computación explícita de $\phi(x)$ para dimensiones realistas.
+
+---
+
+### Módulo 10.3: Support Vector Machines (SVM) — Margen Máximo y Dualidad (Diapositivas 35–48)
+Propuesto por Vladimir Vapnik (1995), SVM busca el hiperplano que maximiza la distancia mínima hacia cualquier muestra de entrenamiento (**margen geométrico** $\gamma$).
+1. **Distancia con Signo a un Hiperplano (Diapositivas 36–37):**
+   Para un hiperplano $w \cdot x + b = 0$, la distancia ortogonal con signo desde cualquier punto $x$ es:
+   $$d(x) = \frac{w \cdot x + b}{\|w\|}$$
+   * *Verificación Numérica:* Para el plano $3x_1 + 4x_2 - 5 = 0$ con $\|w\| = \sqrt{3^2 + 4^2} = 5$:
+     * Punto $(2, 3)$: $d = \frac{3(2) + 4(3) - 5}{5} = \frac{13}{5} = +\mathbf{2.60}$.
+     * Punto $(0, 0)$: $d = \frac{-5}{5} = -\mathbf{1.00}$.
+     * Punto $(4, -1)$: $d = \frac{12 - 4 - 5}{5} = \frac{3}{5} = +\mathbf{0.60}$.
+2. **Formulación Primal de Margen Rígido (Hard Margin, Diapositivas 38–41):**
+   Exigiendo que cada punto satisfaga $y_n(w \cdot x_n + b) \ge 1$, el margen entre las clases es $\gamma = \frac{2}{\|w\|}$. Maximizar $\gamma$ equivale a minimizar el semi-cuadrado de la norma:
+   $$\min_{w, b} \frac{1}{2}\|w\|^2 \quad \text{sujeto a} \quad y_n(w \cdot x_n + b) \ge 1, \quad \forall n = 1, \dots, N$$
+   * *Resolución de los 8 Puntos (Diapositiva 41):* Positivos $\{(2,2), (2,3), (3,2), (3,3)\}$ y Negativos $\{(0,0), (0,1), (1,0), (0.5, 0.2)\}$.
+     Los vectores de soporte activos son $x_1 = (2, 2)$ ($y_1 = +1$) y $x_2 = (0, 0)$ ($y_2 = -1$).
+     El vector normal óptimo es $w = [0.5, 0.5]^T$ con $b = -1.0$.
+     La norma es $\|w\| = \sqrt{0.5^2 + 0.5^2} = \frac{1}{\sqrt{2}} \approx 0.707$.
+     El ancho del margen es $\gamma = \frac{2}{1/\sqrt{2}} = \mathbf{2\sqrt{2}} \approx \mathbf{2.828}$.
+3. **Formulación Primal de Margen Blando (Soft Margin con Holguras $\xi_n$, Diapositivas 42–46):**
+   Para tolerar datos no separables y ruido, se introducen variables de holgura $\xi_n \ge 0$:
+   $$\min_{w, b, \xi} \frac{1}{2}\|w\|^2 + C \sum_{n=1}^N \xi_n \quad \text{sujeto a} \quad y_n(w \cdot x_n + b) \ge 1 - \xi_n, \quad \xi_n \ge 0$$
+   * Si $\xi_n = 0$: punto correctamente clasificado fuera o en el margen.
+   * Si $0 < \xi_n \le 1$: punto clasificado correctamente pero dentro del margen.
+   * Si $\xi_n > 1$: punto mal clasificado (cruza la frontera de decisión).
+   * **Equivalencia Exacta con Hinge Loss:** Esta optimización es isomorfa al problema no restringido:
+     $$\min_{w, b} \sum_{n=1}^N \max(0, 1 - y_n(w \cdot x_n + b)) + \lambda \|w\|^2, \quad \text{donde } \lambda = \frac{1}{2C}$$
+   * Para $C \to \infty$ ($\lambda \to 0$): margen rígido, intolerancia absoluta a violaciones.
+   * Para $C \to 0$ ($\lambda \to \infty$): margen amplio, alta tolerancia a errores.
+4. **Dualidad de Wolfe y Condiciones KKT (Diapositivas 47–48):**
+   Construyendo el Lagrangiano y maximizando respecto a los multiplicadores $\alpha_n$:
+   $$\max_{\alpha} \sum_{n=1}^N \alpha_n - \frac{1}{2} \sum_{i=1}^N \sum_{j=1}^N \alpha_i \alpha_j y_i y_j (x_i \cdot x_j) \quad \text{s.a.} \quad 0 \le \alpha_n \le C, \quad \sum_{n=1}^N \alpha_n y_n = 0$$
+   Por la condición de holgura complementaria de Karush-Kuhn-Tucker (KKT):
+   $$\alpha_n [y_n(w \cdot x_n + b) - 1 + \xi_n] = 0$$
+   Únicamente los puntos con $\alpha_n > 0$ son **vectores de soporte**; todos los demás tienen $\alpha_n = 0$ y pueden eliminarse del dataset sin alterar la frontera de decisión.
+
+---
+
+### Módulo 10.4: El Truco del Kernel y Conexión con Redes Neuronales (Diapositivas 49–65)
+1. **El Truco del Kernel (Aizerman et al., 1964; Boser, Guyon & Vapnik, 1992):**
+   Dado que el problema dual depende exclusivamente de productos escalares $x_i \cdot x_j$, al sustituir las entradas por sus representaciones $\phi(x)$, el cómputo solo requiere el producto interno en el espacio inducido:
+   $$K(x, z) = \langle \phi(x), \phi(z) \rangle$$
+   * **Teorema de James Mercer (1909):** Una función continua simétrica $K(x, z)$ corresponde a un producto interno en un espacio de Hilbert $\mathcal{H}$ si y solo si la matriz de Gram asociada $K_{ij} = K(x_i, x_j)$ es semidefinida positiva ($\forall c \in \mathbb{R}^N, c^T K c \ge 0$).
+2. **Kernel Polinomial Cuadrático:**
+   Para $x, z \in \mathbb{R}^2$, el kernel $K(x, z) = (1 + x \cdot z)^2$:
+   $$(1 + x_1 z_1 + x_2 z_2)^2 = 1 + 2 x_1 z_1 + 2 x_2 z_2 + x_1^2 z_1^2 + 2 x_1 x_2 z_1 z_2 + x_2^2 z_2^2$$
+   Lo cual coincide exactamente con el producto punto de $\phi(x) = [1, \sqrt{2}x_1, \sqrt{2}x_2, x_1^2, \sqrt{2}x_1 x_2, x_2^2]^T \in \mathbb{R}^6$.
+   * *Ejemplo Cátedra:* Para $x = [1, 2]^T$ y $z = [2, 1]^T$:
+     $$x \cdot z = 2 + 2 = 4 \implies K(x, z) = (1 + 4)^2 = \mathbf{25.00}$$
+     El cómputo toma $O(d)$ en lugar de $O(D)$.
+3. **Kernel RBF Gaussiano (Radial Basis Function):**
+   $$K(x, z) = \exp\left( -\gamma \|x - z\|^2 \right) = \exp\left( -\frac{\|x - z\|^2}{2\sigma^2} \right), \quad \text{donde } \gamma = \frac{1}{2\sigma^2}$$
+   Expandiendo la exponencial en serie de Taylor:
+   $$\exp(2\gamma x \cdot z) = \sum_{k=0}^\infty \frac{(2\gamma)^k}{k!} (x \cdot z)^k$$
+   El Kernel RBF mapea los datos a un espacio de Hilbert de **dimensión infinita** ($\mathcal{H} = \ell_2$).
+   * *Comportamiento Asintótico:*
+     * Para $\gamma \to 0$ ($\sigma \to \infty$): $K(x, z) \to 1$, la frontera colapsa a un hiperplano lineal simple.
+     * Para $\gamma \to \infty$ ($\sigma \to 0$): $K(x, z) \to 0$ para $x \neq z$, formando pequeñas campanas aisladas alrededor de cada muestra (memorización/sobreajuste extremo).
+4. **El Puente hacia las Redes Neuronales: Feature Maps Adaptativos (Diapositivas 60–65):**
+   Una red neuronal multicapa (MLP) feedforward con 1 capa oculta de $H$ neuronas y activación continua $\sigma$ computa:
+   $$f(x) = w^T \sigma(V x + c) + b$$
+   * **Correspondencia Fundamental:** La capa oculta actúa exactamente como un **Feature Map paramétrico** $\phi_V(x) = \sigma(V x + c)$.
+   * **Diferencia Crítica con SVM:** Mientras que en SVM y los métodos de Kernel el mapa $\phi$ es fijo e independiente de la distribución de los datos, en una Red Neuronal los pesos de la capa oculta $V$ **se aprenden mediante descenso por gradiente y Backpropagation**, optimizando una representación intermedia adaptada específicamente al objetivo.
+   * **Resolución Formal de XOR en el Espacio Oculto (Diapositiva 63):**
+     Para entradas $x \in \{0, 1\}^2$ y pesos de la capa oculta con activación ReLU:
+     $$h_1 = \operatorname{ReLU}(x_1 + x_2 - 0.5), \quad h_2 = \operatorname{ReLU}(x_1 + x_2 - 1.5)$$
+     Las coordenadas transformadas en el espacio oculto $\mathbb{R}^2$ son:
+     * $(0, 0) \to [\operatorname{ReLU}(-0.5), \operatorname{ReLU}(-1.5)] = [0.0, 0.0] \quad (\text{Clase 0})$
+     * $(0, 1) \to [\operatorname{ReLU}(0.5), \operatorname{ReLU}(-0.5)] = [0.5, 0.0] \quad (\text{Clase 1})$
+     * $(1, 0) \to [\operatorname{ReLU}(0.5), \operatorname{ReLU}(-0.5)] = [0.5, 0.0] \quad (\text{Clase 1})$
+     * $(1, 1) \to [\operatorname{ReLU}(1.5), \operatorname{ReLU}(0.5)] = [1.5, 0.5] \quad (\text{Clase 0})$
+     En el espacio $(h_1, h_2)$, el problema resulta **linealmente separable** mediante la neurona de salida:
+     $$y = \operatorname{sign}(h_1 - 2 h_2 - 0.25)$$
+     Evaluando: para Clase 1 ($h=[0.5, 0]$), $0.5 - 0 - 0.25 = +0.25 > 0$; para $(0,0)$ ($h=[0,0]$), $-0.25 < 0$; para $(1,1)$ ($h=[1.5, 0.5]$), $1.5 - 2(0.5) - 0.25 = -0.25 < 0$.
+     ¡Queda así demostrado matemáticamente que las capas ocultas aprenden representaciones donde problemas no lineales se resuelven linealmente, enlazando directamente con la Unidad CD13!
+
+---
+
 ## 1. Introducción y Contexto Histórico (Unidad CD13 / Unidad I)
 
 El estudio de las redes neuronales artificiales experimentó un hito fundacional en 1943 con el modelo de neurona formal de Warren McCulloch y Walter Pitts, y posteriormente en 1958 con el Perceptrón propuesto por Frank Rosenblatt. El perceptrón simple demostró ser capaz de aprender y clasificar patrones linealmente separables (como las funciones lógicas AND y OR).
@@ -1191,7 +1321,335 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 
 ---
 
-## 12. Conclusiones
+## 12. Regularización de Redes Neuronales (Unidad VII — 46 Diapositivas)
+
+### 12.1. Divergencias, Saturación Sigmoidal y Suavidad de la Red (Diapositivas 2–14)
+* **Divergencias en el Espacio de Activación y Pérdida Cuadrática vs. Entropía Cruzada:**
+  El entrenamiento de redes profundas requiere cuantificar la discrepancia entre la distribución predicha $\mathbf{y} = \text{softmax}(\mathbf{z}) \in \Delta^{K-1}$ y el vector de etiquetas objetivo $\mathbf{d} \in \{0, 1\}^K$. Consideremos una neurona sigmoidal $y = \sigma(z) = \frac{1}{1 + e^{-z}}$. Bajo la pérdida cuadrática estándar:
+  $$\text{div}_{L2}(y, d) = \frac{1}{2}(y - d)^2 \implies \frac{\partial \text{div}_{L2}}{\partial z} = (y - d)\,\sigma'(z) = (y - d)\,y(1 - y)$$
+  Si el logit $z = 6.0$ y el objetivo verdadero es $d = 0$, la red comete un error severo:
+  $$y = \sigma(6) \approx 0.997527 \implies y - d \approx 0.997527$$
+  Sin embargo, la derivada logística satura abruptamente:
+  $$\sigma'(6) = 0.997527 \times (1 - 0.997527) \approx 0.0024665$$
+  Por consiguiente, el gradiente que retropropaga la red se desvanece de forma crítica:
+  $$\frac{\partial \text{div}_{L2}}{\partial z} \approx 0.997527 \times 0.0024665 \approx 0.00246$$
+  A pesar de que el error predictivo es prácticamente unitario ($\approx 1.0$), el gradiente empírico es cercano a cero ($\sim 0.0025$), bloqueando el avance del optimizador.
+* **Convexidad y Gradiente Directo con Entropía Cruzada / Divergencia KL:**
+  Al emplear la divergencia de Kullback-Leibler sobre la distribución de salida de una capa Softmax:
+  $$\text{div}_{KL}(\mathbf{y}, \mathbf{d}) = -\sum_{i=1}^K d_i \ln y_i, \quad y_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$
+  El gradiente analítico respecto a los logits de preactivación $\mathbf{z}$ cancela exactamente los denominadores no lineales:
+  $$\nabla_{\mathbf{z}} \text{div}_{KL} = \mathbf{y} - \mathbf{d}$$
+  En el ejemplo numérico exacto de cátedra (Diaps. 6–7), si $\mathbf{d} = [0, 1, 0]^\top$ e $\mathbf{y} = [0.2, 0.5, 0.3]^\top$, el gradiente resultante es directamente el vector de error neto:
+  $$\nabla_{\mathbf{z}} \text{div}_{KL} = [0.2 - 0, 0.5 - 1, 0.3 - 0]^\top = [0.2, -0.5, 0.3]^\top$$
+  No existe factor multiplicativo $\sigma'$ que amortigüe la señal: la superficie de pérdida es estrictamente convexa respecto a $\mathbf{z}$, restaurando el flujo de información en toda la jerarquía de capas.
+* **Subespecificación de Datos y la Necesidad de Regularizar:**
+  Consideremos un dominio booleano de $N = 100$ variables de entrada, $\{0, 1\}^{100}$. El cardinal del espacio de configuraciones posibles es astronómico:
+  $$|\mathcal{X}| = 2^{100} \approx 1.26765 \times 10^{30}$$
+  Incluso si se dispone de un conjunto de datos masivo con $T = 10^{15}$ ejemplos etiquetados, la fracción observada del espacio es:
+  $$\frac{T}{|\mathcal{X}|} = \frac{10^{15}}{1.26765 \times 10^{30}} \approx 7.89 \times 10^{-16}$$
+  Falta un factor de $10^{15}$ observaciones para cubrir el espacio. Existen infinitas funciones que interpolan perfectamente los $10^{15}$ puntos pero exhiben comportamientos erráticos en el $99.999999999999999999999999999\%$ restante.
+* **Suavidad del Perceptrón y Cota de Lipschitz:**
+  Para un perceptrón individual $f(x) = \sigma(wx)$, la pendiente local es $f'(x) = w\,\sigma(wx)(1 - \sigma(wx))$. La pendiente máxima ocurre en el umbral $x = 0$, donde $\sigma(0) = 0.5$:
+  $$\max_x |f'(x)| = \frac{|w|}{4}$$
+  Para $w = 0.5$, la pendiente máxima es $0.125$ (transición suave). Para $w = 5.0$, la pendiente máxima es $1.25$ (escalón abrupto que sobreajusta). En una red de $L$ capas, la constante de Lipschitz está acotada por:
+  $$\text{Lip}(f) \le \prod_{k=1}^L \|W_k\|$$
+  Restringir la magnitud de las matrices de peso $\|W_k\|$ garantiza una cota superior en la constante de Lipschitz de la red completa, forzando transiciones suaves entre puntos observados y previniendo oscilaciones espurias.
+
+---
+
+### 12.2. Regularización L2 y Decaimiento de Pesos (Weight Decay) (Diapositivas 15–20)
+* **Objetivo de Optimización Regularizado:**
+  Se añade una penalización por norma de Frobenius al riesgo empírico tradicional:
+  $$J(W) = \frac{1}{T}\sum_{t=1}^T \text{div}(Y_t, d_t) + \frac{1}{2}\lambda \sum_{k=1}^L \|W_k\|_F^2, \quad \|W_k\|_F^2 = \sum_{i,j} W_{k,ij}^2$$
+  El gradiente de la penalización respecto a la matriz $W_k$ es lineal y exacto:
+  $$\nabla_{W_k} \left( \frac{\lambda}{2}\|W_k\|_F^2 \right) = \lambda W_k$$
+* **Regla de Actualización con Mini-lotes y Weight Decay:**
+  Al aplicar descenso de gradiente sobre un mini-lote de tamaño $b$:
+  $$W_k \leftarrow W_k - \eta \left( \frac{1}{b}\sum_{t \in B} \nabla_{W_k}\text{div}_t + \lambda W_k \right) = (1 - \eta \lambda) W_k - \frac{\eta}{b}\sum_{t \in B} \nabla_{W_k}\text{div}_t$$
+  Cada paso de optimización multiplica el vector de pesos por un factor de contracción geométrico $(1 - \eta \lambda)$.
+  *Ejemplo numérico exacto de cátedra (Diap. 18):* Con tasa de aprendizaje $\eta = 0.1$ y coeficiente de regularización $\lambda = 0.1$:
+  $$(1 - \eta \lambda) = 1 - (0.1 \times 0.1) = 1 - 0.01 = 0.99$$
+  En cada iteración, los pesos se encogen exactamente un $1\%$ antes de incorporar la corrección de error de los datos.
+* **El Espectro del Hiperparámetro $\lambda$:**
+  1. $\lambda = 0$: Régimen sin penalización; los pesos crecen libremente para memorizar el ruido muestral.
+  2. $\lambda$ óptimo: Limita la capacidad efectiva del modelo, suprimiendo pendientes abruptas y maximizando la generalización.
+  3. $\lambda \to \infty$: Los pesos $W_k \to 0$. Dado que los términos de sesgo $\mathbf{b}$ no se penalizan (pues controlan la posición del umbral y no la pendiente de Lipschitz), la red colapsa a la función constante $\hat{y} = \bar{y}$ (subajuste severo).
+* **Profundidad y Suavidad Implícita:**
+  Para un mismo número total de parámetros, las redes profundas generan superficies funcionales significativamente más suaves que las redes anchas y poco profundas. La recomendación de diseño moderna es sobredimensionar la capacidad arquitectónica y regularizar mediante decaimiento de pesos.
+
+---
+
+### 12.3. Dropout y Dropout Invertido (Srivastava et al., 2014) (Diapositivas 21–30)
+* **Mecanismo de Desconexión Aleatoria:**
+  En cada pasada de entrenamiento, cada neurona oculta $j$ se retiene con probabilidad $\alpha \in (0, 1]$ y se apaga con probabilidad $1 - \alpha$, muestreando una variable aleatoria de Bernoulli $D_j \sim \text{Bernoulli}(\alpha)$.
+  Valores estándar: $\alpha \approx 0.5$ en capas ocultas y $\alpha \approx 0.8$ en capas de entrada.
+* **Interpretación Estadística: Ensamble Implícito de $2^N$ Subredes (Bagging):**
+  Una red con $N$ unidades ocultas contiene $2^N$ subredes posibles. Cada iteración de entrenamiento actualiza una subred distinta compartiendo la misma matriz global de pesos. Dropout implementa un algoritmo de *Bagging* sobre un ensamble exponencial de $2^N$ modelos sin el costo prohibitivo de entrenarlos por separado.
+* **Eliminación de la Co-adaptación:**
+  Al forzar la ausencia aleatoria de neuronas, ninguna unidad oculta puede apoyarse en la presencia garantizada de una característica adyacente. Cada neurona aprende representaciones robustas, redundantes y generalizables.
+* **Dropout Tradicional vs. Dropout Invertido (Diapositiva 30):**
+  Consideremos una activación base $f(z) = 2.0$ con probabilidad de retención $\alpha = 0.8$:
+  1. *Dropout Tradicional (Srivastava et al., 2014):*
+     - En entrenamiento: $y_{\text{train}} = D \cdot f(z) \in \{0, 2.0\}$, con esperanza $\mathbb{E}[y] = \alpha f(z) = 0.8 \times 2.0 = 1.60$.
+     - En inferencia: La red se evalúa completa multiplicando todas las salidas por $\alpha$:
+       $$y_{\text{test}} = \alpha f(z) = 0.8 \times 2.0 = 1.60$$
+  2. *Dropout Invertido (Estándar moderno en PyTorch y TensorFlow):*
+     - En entrenamiento: La señal se escala inversamente por $\frac{1}{\alpha}$:
+       $$y_{\text{train}} = \frac{D}{\alpha} f(z) \implies \text{si activa: } y_{\text{train}} = \frac{2.0}{0.8} = 2.50$$
+       La esperanza matemática durante el entrenamiento es:
+       $$\mathbb{E}[y_{\text{train}}] = \alpha \left(\frac{1}{\alpha} f(z)\right) = f(z) = 2.00$$
+     - En inferencia: **No se requiere ninguna operación ni escalamiento**, evaluándose la red directamente como la función identidad $y_{\text{test}} = f(z) = 2.00$ con costo computacional cero en producción.
+* **Variantes de Dropout:**
+  - *DropConnect (Wan et al., 2013):* Apaga selectivamente entradas en la matriz de pesos $W_{ij}$ en lugar de nodos completos.
+  - *Zoneout (Krueger et al., 2016):* Diseñado para redes neuronales recurrentes (RNNs); en lugar de anular la activación a cero, retiene el valor del estado temporal previo $h_{t-1}$.
+  - *Whiteout:* Inyecta ruido gaussiano aditivo $N(0, \sigma^2)$ en vez de multiplicadores de Bernoulli discretos.
+
+---
+
+### 12.4. Trucos del Oficio y Normalización por Lotes (Batch Normalization) (Diapositivas 31–46)
+* **Detención Temprana (*Early Stopping*) y el Fenómeno de *Grokking*:**
+  Se evalúa la pérdida en un conjunto de validación independiente en cada época; el entrenamiento se detiene cuando el error de validación alcanza su mínimo y comienza a crecer, evitando el régimen de memorización.
+  *Grokking (Power et al., 2022):* En problemas algorítmicos abstractos (aritmética modular), la red puede alcanzar pérdida de entrenamiento cero (memorización) y, miles de épocas más tarde tras un extenso régimen plano, generalizar de forma súbita hacia una precisión de validación del 100%.
+* **Recorte de Gradientes (*Gradient Clipping*, Pascanu et al., 2013):**
+  Para evitar gradientes explosivos en redes profundas y recurrentes:
+  - Por norma L2: si $\|\mathbf{g}\| > \theta$, se escala como $\mathbf{g} \leftarrow \frac{\theta}{\|\mathbf{g}\|}\mathbf{g}$.
+  - Por valor elemento a elemento: si $|g_i| > \theta$, se fija $g_i \leftarrow \operatorname{sign}(g_i)\theta$. Umbral empírico estándar: $\theta = 5.0$.
+* **Batch Normalization (Ioffe & Szegedy, 2015):**
+  Para mitigar el desplazamiento interno de covariables (*Internal Covariate Shift*), se normalizan las activaciones lineales intermedias $\mathbf{z}$ dentro de cada mini-lote antes de aplicar la función de activación no lineal:
+  $$\mathbf{z} \longrightarrow \hat{\mathbf{z}} = \gamma \mathbf{u} + \beta \longrightarrow f(\hat{\mathbf{z}})$$
+  Para un lote $B = \{z_1, z_2, \dots, z_B\}$:
+  1. Media del lote: $\mu_B = \frac{1}{B}\sum_{i=1}^B z_i$.
+  2. Varianza del lote: $\sigma_B^2 = \frac{1}{B}\sum_{i=1}^B (z_i - \mu_B)^2$.
+  3. Estandarización: $u_i = \frac{z_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}$.
+  4. Escalamiento y desplazamiento aprendidos: $\hat{z}_i = \gamma u_i + \beta$, con parámetros entrenables $\gamma$ (ganancia) y $\beta$ (sesgo), inicializados convencionalmente en $\gamma = 1, \beta = 0$.
+* **Micro-ejemplos Numéricos Exactos de Cátedra:**
+  - *Lote 1 (Diapositiva 39):* $z = \{1, 2, 3, 6\}$, $B = 4$.
+    $$\mu_B = \frac{1+2+3+6}{4} = \frac{12}{4} = 3.0$$
+    $$\sigma_B^2 = \frac{(1-3)^2 + (2-3)^2 + (3-3)^2 + (6-3)^2}{4} = \frac{4 + 1 + 0 + 9}{4} = \frac{14}{4} = 3.5 \implies \sigma_B = \sqrt{3.5} \approx 1.8708$$
+    $$u_1 = \frac{1 - 3}{1.8708} \approx -1.069 \approx -1.07, \quad u_2 = \frac{2 - 3}{1.8708} \approx -0.534 \approx -0.53$$
+    $$u_3 = \frac{3 - 3}{1.8708} = 0.00, \quad u_4 = \frac{6 - 3}{1.8708} \approx 1.603 \approx 1.60$$
+    $$\mathbf{u} \approx [-1.07, -0.53, 0.00, 1.60]^\top$$
+  - *Lote 2 (Diapositiva 42):* $z = \{2, 4, 6, 8\}$, $B = 4$.
+    $$\mu_B = \frac{20}{4} = 5.0, \quad \sigma_B^2 = \frac{9 + 1 + 1 + 9}{4} = \frac{20}{4} = 5.0 \implies \sigma_B = \sqrt{5} \approx 2.236$$
+    $$\mathbf{u} \approx [-1.34, -0.45, 0.45, 1.34]^\top$$
+* **Estadísticas de Inferencia y Corrección de Bessel:**
+  Durante la fase de inferencia (evaluación), no se calculan estadísticas sobre lotes individuales, sino que se utilizan promedios móviles acumulados o la varianza insesgada de la población global aplicando el factor de Bessel:
+  $$\sigma_{BN}^2 = \frac{B}{B - 1} \frac{1}{N_{\text{lotes}}} \sum_{b=1}^{N_{\text{lotes}}} \sigma_B^2$$
+  Para lotes de tamaño $B = 4$, el factor de corrección de Bessel es $\frac{4}{3} \approx 1.3333$.
+
+---
+
+## 13. Redes Neuronales Convolucionales (Unidad VIII — 57 Diapositivas)
+
+### 13.1. ¿Por qué las Imágenes Rompen a los MLP? (Diapositivas 5–13)
+
+Las redes neuronales clásicas totalmente conectadas (Multilayer Perceptrons, MLP) asumen que las variables de entrada son independientes y carecen de topología espacial. Al alimentar una imagen bidimensional $H \times W$ con $C$ canales de color (e.g. RGB, $C=3$) a un MLP, el primer paso obligado consiste en **aplanar** la cuadrícula en un vector unidimensional $\mathbf{x} \in \mathbb{R}^{H \cdot W \cdot C}$.
+
+Esta operación desencadena dos fallas críticas insalvables para visión por computador:
+
+#### 1. Explosión Combinatoria de Parámetros
+Cada una de las $M$ neuronas de la primera capa oculta debe conectarse a cada uno de los píxeles de entrada más un término de sesgo (*bias*), demandando:
+$$N_{\text{params}} = M \cdot (H \cdot W \cdot C + 1)$$
+
+| Caso de Estudio | Dimensiones ($H \times W \times C$) | Entradas Aplanadas ($N$) | Neuronas Ocultas ($M$) | Parámetros Capa 1 | Memoria (Float32) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Juguete Monocromático** (Diap. 5) | $4 \times 4 \times 1$ | $16$ | $1$ | **17** | $< 0.1\text{ KB}$ |
+| **CIFAR-10 RGB** (Diap. 6) | $32 \times 32 \times 3$ | $3\,072$ | $1$ | **3,073** / neurona | $\approx 12\text{ KB}$ |
+| **Caso Modesto de Cátedra** (Diap. 7) | $100 \times 100 \times 1$ | $10\,000$ | $64$ | **640,064** | $\approx 2.44\text{ MB}$ |
+| **ImageNet RGB** (Diap. 7) | $224 \times 224 \times 3$ | $150\,528$ | $128$ | **19,267,712** | **73.50 MB** |
+
+Solo la primera capa oculta en ImageNet consume más de **19.2 millones de pesos aprendibles**. En conjuntos de entrenamiento de escala moderada (cientos o miles de fotos), una red con tal capacidad memoriza trivialmente el ruido, destruyendo por completo la capacidad de generalización.
+
+#### 2. Pérdida de Topología 2D y Falta de Invarianza a Traslaciones
+Un MLP trata al píxel $(0, 0)$ y al píxel $(0, 1)$ como variables tan desvinculadas como el píxel $(0, 0)$ y el $(223, 223)$. Si un gato aparece en la esquina superior izquierda, activa un subconjunto específico de pesos; si el mismo gato se desplaza hacia la esquina inferior derecha, activa pesos completamente ajenos. El MLP se ve forzado a «reaprender» el concepto visual de gato de manera independiente en cada coordenada del plano.
+
+#### 3. La Historia del Cisne y el Fracaso de Detectores Manuales
+La visión clásica intentaba formular reglas manuales rígidas (*«Cisne = cabeza naranja + cuello curvo blanco + cuerpo flotante»*), fracasando estrepitosamente ante variaciones naturales: cisnes sumergiendo la cabeza para alimentarse, cisnes negros de Australia o cisnes inflables. Los detectores analíticos artesanales (SIFT, SURF, FAST) requerían ingeniería exhaustiva. Las Redes Convolucionales (CNN) sustituyen esto por *Representation Learning* fundamentado en dos leyes físicas del mundo visual:
+* **Localidad Espacial:** Los píxeles cercanos exhiben correlaciones estadísticas exponencialmente más fuertes que los lejanos.
+* **Jerarquía Visual:** Las características complejas se componen jerárquicamente a partir de primitivas simples (bordes orientados $\to$ esquinas y texturas $\to$ partes de objetos $\to$ objetos completos).
+
+---
+
+### 13.2. La Operación de Convolución 2D, Filtros, Padding y Stride (Diapositivas 14–28)
+
+En lugar de conectar cada neurona a toda la imagen, una capa convolucional aplica un **filtro local pequeño** (típicamente $3 \times 3$ o $5 \times 5$) que se desplaza sobre la imagen con **pesos compartidos**:
+
+$$S(i, j) = (\mathbf{X} * \mathbf{W})(i, j) + b = \sum_{u=0}^{K_h-1} \sum_{v=0}^{K_w-1} X(i \cdot S + u, j \cdot S + v) \cdot W(u, v) + b$$
+
+donde $S$ es el paso de avance (*stride*) y $b$ es el sesgo compartido por todo el mapa.
+
+#### Micro-ejemplo Numérico Exacto de Cátedra (Diapositivas 17–21)
+Sea una imagen monocromática de $5 \times 5$ píxeles con una transición nítida de claro (3) a oscuro (0):
+$$\mathbf{X} = \begin{bmatrix}
+3 & 3 & 3 & 0 & 0 \\
+3 & 3 & 3 & 0 & 0 \\
+3 & 3 & 3 & 0 & 0 \\
+3 & 3 & 3 & 0 & 0 \\
+3 & 3 & 3 & 0 & 0
+\end{bmatrix}$$
+
+Se aplica un filtro detector de bordes verticales de $3 \times 3$ con sesgo $b = 0$:
+$$\mathbf{W} = \begin{bmatrix}
+1 & 0 & -1 \\
+1 & 0 & -1 \\
+1 & 0 & -1
+\end{bmatrix}, \quad b = 0$$
+
+Evaluación paso a paso de las 3 posiciones horizontales de la primera fila ($S=1, P=0$):
+1. **Posición 1 (Columnas 0 a 2):**
+   $$h_{11} = [3(1) + 3(0) + 3(-1)] + [3(1) + 3(0) + 3(-1)] + [3(1) + 3(0) + 3(-1)] = 0 + 0 + 0 = \mathbf{0}$$
+2. **Posición 2 (Columnas 1 a 3):**
+   $$h_{12} = [3(1) + 3(0) + 0(-1)] + [3(1) + 3(0) + 0(-1)] + [3(1) + 3(0) + 0(-1)] = 3 + 3 + 3 = \mathbf{9}$$
+   *(¡Disparo máximo al detectar la discontinuidad del borde!)*
+3. **Posición 3 (Columnas 2 a 4):**
+   $$h_{13} = [3(1) + 0(0) + 0(-1)] + [3(1) + 0(0) + 0(-1)] + [3(1) + 0(0) + 0(-1)] = 3 + 3 + 3 = \mathbf{9}$$
+
+Al repetirse de forma idéntica en las 3 filas verticales, la matriz de salida resulta:
+$$\mathbf{S} = \begin{bmatrix}
+0 & 9 & 9 \\
+0 & 9 & 9 \\
+0 & 9 & 9
+\end{bmatrix}$$
+El filtro produce una respuesta alta precisamente donde ocurre la transición espacial.
+
+#### Conteo de Paradas y Pérdida de Bordes
+En una foto de gato de $140 \times 140$ píxeles con filtro $3 \times 3$, el filtro se detiene exactamente:
+$$(140 - 3 + 1) \times (140 - 3 + 1) = 138 \times 138 = \mathbf{19\,044\text{ paradas}}$$
+Sin embargo, los píxeles en las esquinas participan en una sola ventana, mientras que los del centro participan en 9.
+
+#### Relleno de Ceros (Padding) y Paso (Stride)
+Para conservar el tamaño espacial (*same padding*), se añaden anillos perimetrales de ceros ($P$). Para un filtro de tamaño $K \times K$ y paso $S=1$, el relleno necesario es $P = \lfloor K/2 \rfloor$ ($P=1$ para $3\times 3$; $P=2$ para $5\times 5$).
+
+La **fórmula analítica universal** para la dimensión de salida $O$ es:
+$$O = \left\lfloor \frac{W - K + 2P}{S} \right\rfloor + 1$$
+
+Evaluación en MNIST ($W = 28, K = 5$):
+1. **Sin padding, paso 1 (*valid*):** $P=0, S=1 \implies O = \lfloor (28 - 5 + 0)/1 \rfloor + 1 = 23 + 1 = \mathbf{24 \times 24}$.
+2. **Padding 2, paso 1 (*same*):** $P=2, S=1 \implies O = \lfloor (28 - 5 + 4)/1 \rfloor + 1 = 27 + 1 = \mathbf{28 \times 28}$.
+3. **Padding 2, paso 2 (*downsampling*):** $P=2, S=2 \implies O = \lfloor (28 - 5 + 4)/2 \rfloor + 1 = \lfloor 27/2 \rfloor + 1 = 13 + 1 = \mathbf{14 \times 14}$.
+
+---
+
+### 13.3. Activación ReLU y Submuestreo Espacial mediante Pooling (Diapositivas 29–35)
+
+Tras la convolución afín, se aplica una función de activación no lineal elemento a elemento. El estándar indiscutido en visión es la **Rectified Linear Unit (ReLU)**:
+$$\text{ReLU}(z) = \max\{0, z\}$$
+ReLU anula las respuestas negativas (supresión de fondos irrelevantes) y mantiene gradiente constante $\frac{d}{dz}\text{ReLU}(z) = 1$ para $z > 0$, previniendo la saturación que afectaba a la sigmoide.
+
+#### Submuestreo Espacial: Max Pooling vs. Mean Pooling
+El **Pooling** reduce la resolución espacial de los mapas de activación. Se evalúa sobre una ventana (usualmente $2 \times 2$ con paso $S=2$), comprimiendo bloques de 4 números en 1:
+
+**Micro-ejemplo de Cátedra (Diapositiva 29):**
+$$\mathbf{Z} = \begin{bmatrix}
+1 & 1 & 2 & 5 \\
+5 & 7 & 7 & 8 \\
+3 & 1 & 1 & 0 \\
+1 & 2 & 3 & 4
+\end{bmatrix}$$
+
+Se divide la matriz en 4 cuadrantes disjuntos de $2 \times 2$:
+* Cuadrante Sup-Izq $\{1, 1, 5, 7\}$: $\max = \mathbf{7}$, $\operatorname{mean} = \frac{1+1+5+7}{4} = \mathbf{3.50}$
+* Cuadrante Sup-Der $\{2, 5, 7, 8\}$: $\max = \mathbf{8}$, $\operatorname{mean} = \frac{2+5+7+8}{4} = \mathbf{5.50}$
+* Cuadrante Inf-Izq $\{3, 1, 1, 2\}$: $\max = \mathbf{3}$, $\operatorname{mean} = \frac{3+1+1+2}{4} = \mathbf{1.75}$
+* Cuadrante Inf-Der $\{1, 0, 3, 4\}$: $\max = \mathbf{4}$, $\operatorname{mean} = \frac{1+0+3+4}{4} = \mathbf{2.00}$
+
+$$\mathbf{P}_{\text{max}} = \begin{bmatrix}
+7 & 8 \\
+3 & 4
+\end{bmatrix}, \qquad \mathbf{P}_{\text{mean}} = \begin{bmatrix}
+3.50 & 5.50 \\
+1.75 & 2.00
+\end{bmatrix}$$
+
+**Propiedades del Pooling:**
+1. **Cero parámetros aprendibles:** No contiene pesos ni sesgos; es una operación determinista fija.
+2. **Reducción exponencial:** 3 rondas sucesivas de Max Pooling $2 \times 2$ sobre una imagen de $560 \times 560$ la reducen a $280 \times 280 \to 140 \times 140 \to 70 \times 70$, reduciendo los datos en un factor de $4^3 = \mathbf{64\times}$.
+3. **Invarianza a pequeñas traslaciones:** Si un píxel no-máximo cambia o el objeto se desplaza 1 píxel dentro de la ventana, el valor máximo permanece inalterado.
+
+---
+
+### 13.4. Arquitectura de una CNN y Conteo Riguroso de Parámetros (Diapositivas 36–42)
+
+Las capas de una CNN se clasifican formalmente en tres tipos con reglas exactas de conteo de parámetros aprendibles:
+1. **Capa Convolucional:** $N_{\text{filtros}} \cdot (K_w \cdot K_h \cdot C_{\text{in}}) + N_{\text{filtros}}$
+2. **Capa de Pooling:** $\mathbf{0}$ parámetros.
+3. **Capa Totalmente Conectada (Densa / FC):** $N_{\text{in}} \cdot N_{\text{out}} + N_{\text{out}}$
+
+#### Ejemplos de Conteo Elemental
+* 1 filtro $3 \times 3$ sobre imagen RGB ($C_{\text{in}}=3$): $1 \cdot (3 \cdot 3 \cdot 3) + 1 = 27 + 1 = \mathbf{28}$ parámetros.
+* 16 filtros $3 \times 3$ sobre imagen RGB ($C_{\text{in}}=3$): $16 \cdot (3 \cdot 3 \cdot 3) + 16 = 432 + 16 = \mathbf{448}$ parámetros.
+* Capa intermedia (Diap. 42): Entrada $14 \times 14 \times 16$, con 32 filtros $3 \times 3$, padding *same*, $S=1$:
+  $$\text{Parámetros} = 32 \cdot (3 \cdot 3 \cdot 16) + 32 = 32 \cdot 144 + 32 = 4\,608 + 32 = \mathbf{4\,640\text{ parámetros}}$$
+  Dimensión de salida: $14 \times 14 \times 32$.
+
+#### Desglose Arquitectónico de la Red Completa de Cátedra (Diapositivas 39–41)
+Entrada: imagen $32 \times 32 \times 3$ (RGB) clasificada en 4 categorías:
+
+| Capa | Tipo | Configuración | Dimensión Salida | Cálculo de Parámetros | Parámetros Aprendibles | % del Total |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Entrada** | Input | Imagen RGB | $32 \times 32 \times 3$ | — | 0 | 0.00% |
+| **Conv 1** | Convolución | 8 filtros $3 \times 3$, $S=1$, *same* | $32 \times 32 \times 8$ | $8 \cdot (3 \cdot 3 \cdot 3) + 8$ | **224** | 0.01% |
+| **Conv 2** | Convolución | 16 filtros $5 \times 5$, $S=2$, *same* | $16 \times 16 \times 16$ | $16 \cdot (5 \cdot 5 \cdot 8) + 16$ | **3,216** | 0.15% |
+| *Subtotal Conv* | *Extractor* | *2 capas convolucionales* | — | $224 + 3\,216$ | **3,440** | **0.16%** |
+| **Flatten** | Aplanado | Vectorización | $4\,096$ valores | $16 \cdot 16 \cdot 16$ | 0 | 0.00% |
+| **FC 1** | Densa + ReLU | 512 nodos | $512$ valores | $4\,096 \cdot 512 + 512$ | **2,097,664** | 99.74% |
+| **FC 2** | Densa + Softmax | 4 nodos de salida | $4$ valores | $512 \cdot 4 + 4$ | **2,052** | 0.10% |
+| *Subtotal Denso* | *Clasificador* | *2 capas FC* | — | $2\,097\,664 + 2\,052$ | **2,099,716** | **99.84%** |
+| **TOTAL RED** | — | — | — | $3\,440 + 2\,099\,716$ | **2,103,156** | **100.0%** |
+
+$$\text{Proporción Bloque Denso} = \frac{2\,099\,716}{2\,103\,156} \approx \mathbf{99.836\% \implies 99.8\%}$$
+
+> [!IMPORTANT]
+> **Hallazgo Arquitectónico Clave:** En las arquitecturas clásicas de redes convolucionales, prácticamente la totalidad de los parámetros ($> 99.8\%$) reside en las capas densas totalmente conectadas finales. Las capas convolucionales actúan como extractores de características altamente parametrizados en representaciones compactas con un costo paramétrico mínimo ($< 0.2\%$).
+
+---
+
+### 13.5. Transfer Learning, Fine-Tuning y Tres Hitos Históricos (Diapositivas 43–57)
+
+En problemas reales de ingeniería y ciencia de datos, entrenar una red profunda desde cero con millones de parámetros (e.g. VGG16 con $\approx 138\text{M}$ pesos) sobre unos pocos cientos de fotos produce sobreajuste catastrófico. **Transfer Learning** resuelve esta paradoja reutilizando los filtros convolucionales universales (bordes, curvas, texturas) aprendidos previamente sobre conjuntos masivos como ImageNet ($1.2\text{M}$ imágenes).
+
+#### Matriz de Decisión 2×2 de Transfer Learning
+La estrategia de adaptación se rige por la relación entre el **tamaño del nuevo conjunto de datos** y la **similitud de dominio**:
+
+```
+                       SIMILITUD DE DOMINIO
+                   Similar                   Distinto
+            ┌────────────────────────┬────────────────────────┐
+      Pocos │  CONGELAR BASE +       │  CONGELAR TEMPRANAS +  │
+      Datos │  NUEVA CABEZA LINEAL   │  FINE-TUNING PARCIAL   │
+TAMAÑO      │  (Ej: 600 fotos fauna  │  (Ej: 400 espectrogramas│
+DATASET     │   altiplánica)         │   sísmicos)            │
+            ├────────────────────────┼────────────────────────┤
+     Muchos │  FINE-TUNING COMPLETO  │  FINE-TUNING GLOBAL O  │
+      Datos │  (Ej: 2M fotos fallas  │  ENTRENAR DESDE CERO   │
+            │   industriales)        │  (Ej: Millones de RMN) │
+            └────────────────────────┴────────────────────────┘
+```
+
+#### Estrategia de Tasas de Aprendizaje Escalonadas (Decrecientes)
+Al realizar fine-tuning, las capas no deben actualizarse con la misma velocidad:
+$$\eta_{\text{temprana}} \approx \left(\frac{1}{3} \dots \frac{1}{10}\right) \cdot \eta_{\text{tardía}}$$
+* **Capas convolucionales iniciales:** Tasa diminuta ($\eta \approx 10^{-5}$) o congeladas ($\eta = 0$) para preservar detectores universales de Gabor/bordes.
+* **Capas intermedias:** Tasa intermedia ($\eta \approx 10^{-4}$).
+* **Nueva cabeza clasificadora:** Tasa estándar ($\eta \approx 10^{-3}$).
+
+#### Tres Hitos Históricos que Transformaron la Disciplina
+1. **LeNet-5 (1998, Yann LeCun et al.):**
+   * Pionera en lectura óptica de cheques bancarios y dígitos manuscritos (MNIST $32 \times 32$).
+   * Introdujo la alternancia canónica: $\text{Conv} \to \text{Pool} \to \text{Conv} \to \text{Pool} \to \text{FC}$.
+   * $\approx 60\,000$ parámetros entrenados con backpropagation por gradiente estocástico.
+2. **AlexNet (2012, Alex Krizhevsky, Ilya Sutskever y Geoffrey Hinton):**
+   * Ganadora del desafío ImageNet ILSVRC 2012 con un error top-5 de **$16.4\%$** frente al **$26.2\%$** del segundo lugar (métodos tradicionales).
+   * 8 capas con pesos (5 convolucionales + 3 densas), $\approx 60\text{M}$ parámetros.
+   * Introdujo el entrenamiento acelerado masivo en **GPU** con CUDA, la función **ReLU**, la regularización por **Dropout** y el aumento artificial de datos (**Data Augmentation**).
+3. **ResNet (2015, Kaiming He et al.):**
+   * Resolvió el problema de degradación en redes ultraprofundas introduciendo **bloques residuales** con conexiones de atajo (*skip connections*):
+     $$\mathbf{y} = \mathbf{x} + \mathcal{F}(\mathbf{x})$$
+   * Permitió entrenar redes estables de hasta **152 capas**, alcanzando un error top-5 de **$3.6\%$** en ImageNet, superando por primera vez el nivel de error humano estimado en $\approx 5.1\%$.
+
+---
+
+## 14. Conclusiones
 
 1. **Comprobación de la teoría (Unidad I):** Se demostró de manera analítica y computacional que el MLP de 3 neuronas y la variante compacta de 2 neuronas de Friedland resuelven de forma exacta el operador lógico XOR, y que un MLP de una sola capa oculta es un aproximador universal booleano, geométrico y continuo cuyo ancho puede crecer como $2^{N-1}$ si no se emplea profundidad ($3(N-1)$).
 2. **Aprendizaje y diferenciabilidad (Unidad II):** Se comprobó empíricamente la convergencia del perceptrón de Rosenblatt en 3 pasos sobre el conjunto de la Diapositiva 22 ($\mathbf{w} = [3.25, 1.9]$), la regla Delta de ADALINE, la diferencia entre el paisaje plano del conteo de errores y la señal continua de la sigmoide, y la superioridad del par Sigmoide/Softmax + Entropía Cruzada (KL) frente a L2 en problemas de clasificación.
@@ -1202,11 +1660,14 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 7. **Descenso por Gradiente Estocástico, Mini-lotes y Optimizadores con Tendencia (Unidad VI):** Se reprodujo exactamente la tabla de «SGD a mano: una época» de la Diapositiva 14 ($[0.20, 0.20] \to [0.68, 1.16] \to [0.22, -0.70]$), la necesidad del barajado por época (*shuffling*), las condiciones de convergencia de Robbins y Monro (1951), la ley de reducción de varianza $\frac{1}{b}\text{Var}(\text{Loss})$ en mini-lotes, la tabla direccional de RMSprop ($\text{RMS}_x \approx 1.36, \text{RMS}_y \approx 2.36$) y la superioridad de Momentum, Nesterov, RMSprop y Adam en valles angostos y puntos de silla.
 8. **Árboles de Decisión, CART e ID3 (Unidad CD08):** Se comprobó analítica y numéricamente que los árboles CART producen particiones ortogonales estrictamente paralelas a los ejes coordenados requiriendo escaleras para aproximar diagonales, la explosión combinatoria $2^{2^n}$ de funciones booleanas ($3.4028 \times 10^{38}$ en $n=7$), la NP-completitud de Hyafil & Rivest (1976), la insensibilidad de la tasa de error ($\Delta E = 0.000$) frente a la concavidad estricta de Gini y Entropía, el trazado exacto de ID3 en 10 días ($H(S)=1.0, IG(\text{Clima})=0.60, IG(\text{Viento}|\text{Soleado})=1.0$), la miopía del *early stopping*, la poda por costo-complejidad de Breiman mediante el eslabón más débil $g(t)$ en el árbol de 100 puntos ($\alpha \in \{0.04, 0.32\}$), y la formulación continua de CART para regresión donde la partición $x<3.5$ minimiza el MSE a $0.167$ antes de memorizar a profundidad 3 ($MSE=0$).
 9. **Ensamblaje de Modelos y Random Forests (Unidad CD09):** Se verificó analítica y numéricamente el Teorema del Jurado de Condorcet y el experimento de Galton en Plymouth ($N=787$, mediana 1207 lbs vs 1198 lbs real, error 0.75%), la matemática de bootstrap donde la probabilidad OOB es $(1-1/N)^N \to e^{-1} \approx 36.8\%$ y la bolsa retiene $63.2\%$ de muestras únicas, la derivación analítica de la ecuación ESL 15.1 de Hastie et al. $\operatorname{var}(\bar{X}) = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2$ y su piso irreducible $\rho \sigma^2$, la descorrelación mediante subespacios aleatorios $m=\sqrt{J}$, el algoritmo AdaBoost con convergencia a 0 errores en 3 rondas sobre 13 clientes bancarios, el descenso en espacio de funciones sobre residuos en Gradient Boosting, la discrepancia entre Hard Voting y Soft Voting ($[0.45, 0.45, 0.90] \to -1$ vs $+1$), y la arquitectura de Stacking con validación fuera de pliegue.
-10. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`ensambles_random_forest.py`](ensambles_random_forest.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (15 Unidades Académicas • 939 Diapositivas • 61 Laboratorios Interactivos).
+10. **Modelos No Lineales y SVM (Unidad CD10):** Se verificó la memoria local y el dilema sesgo-varianza en kNN ($k=1$ varianza máxima vs $k=N$ sesgo máximo), la maldición dimensional en distancias relativas ($79.4\%$ a $97.7\%$ en $d=10$ a $100$), el Teorema de Cover para espacios proyectados polinomiales y de funciones base, la formulación de margen máximo de Vapnik con regularización de holguras $C$, el Truco del Kernel de Mercer con RBF gaussiano, y la red neuronal bi-capa ReLU como transformador adaptativo del espacio hacia separabilidad lineal.
+11. **Regularización de Redes Neuronales (Unidad VII / CD19):** Se verificó analítica y computacionalmente el desvanecimiento del gradiente $L_2$ bajo saturación sigmoidal ($\sigma'(6) \approx 0.0025 \implies \nabla_z \text{div} \approx 0.00246$) frente a la convexidad y preservación directa de error de Softmax + KL ($\nabla_z \text{div} = \mathbf{y} - \mathbf{d}$); la subespecificación en $\{0,1\}^{100}$ ($2^{100} \approx 10^{30}$) y el control de Lipschitz mediante la norma de los pesos; la regla de Weight Decay $(1 - \eta \lambda)W$ con contracción del $1\%$ por paso ($\eta = 0.1, \lambda = 0.1$); la interpretación estadística de Dropout como Bagging implícito de $2^N$ subredes con pesos compartidos y la equivalencia exacta de Dropout Invertido ($y_{\text{train}} = f(z)/\alpha \implies \mathbb{E}[y] = f(z)$) permitiendo inferencia sin escalamiento; y el algoritmo de Batch Normalization comprobado en los lotes $\{1,2,3,6\}$ y $\{2,4,6,8\}$ con corrección insesgada de Bessel $B/(B-1)$.
+12. **Redes Neuronales Convolucionales (Unidad VIII / CD20):** Se demostró matemática y numéricamente la inviabilidad de aplicar capas densas a imágenes masivas (ImageNet $224\times 224\times 3$ con 128 neuronas demandando $19\,267\,712$ parámetros en capa 1), comprobando la superioridad de la convolución con pesos compartidos y suma ponderada local; se validó el micro-ejemplo de detección de borde vertical $5\times 5$ produciendo filas exactas $[0, 9, 9]$; se evaluó la fórmula de dimensiones de salida $O = \lfloor(W-K+2P)/S\rfloor+1$ en los casos canónicos de MNIST ($24\times 24$, $28\times 28$, $14\times 14$) y las $19\,044$ paradas de filtro en $140\times 140$; se verificaron Max y Mean Pooling en la matriz $4\times 4$ ($\begin{bmatrix}7 & 8\\ 3 & 4\end{bmatrix}$ y $\begin{bmatrix}3.5 & 5.5\\ 1.75 & 2.0\end{bmatrix}$) con cero parámetros; se demostró que el $99.8\%$ de los parámetros de una CNN clásica ($2\,099\,716$ de $2\,103\,156$) reside en el bloque denso; y se formalizó la matriz $2\times 2$ de Transfer Learning y los tres hitos históricos (LeNet-5, AlexNet, ResNet).
+13. **Validación integral:** Todos los módulos evaluados en [`perceptron_xor.py`](perceptron_xor.py), [`introduccion_curso.py`](introduccion_curso.py), [`preprocesamiento_eda.py`](preprocesamiento_eda.py), [`visualizacion_datos.py`](visualizacion_datos.py), [`introduccion_ml.py`](introduccion_ml.py), [`generalizacion_validacion.py`](generalizacion_validacion.py), [`clustering_metricas.py`](clustering_metricas.py), [`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py), [`arboles_decision.py`](arboles_decision.py), [`ensambles_random_forest.py`](ensambles_random_forest.py), [`modelos_no_lineales.py`](modelos_no_lineales.py), [`aproximacion_universal.py`](aproximacion_universal.py), [`aprendizaje_redes.py`](aprendizaje_redes.py), [`descenso_gradiente.py`](descenso_gradiente.py), [`backpropagation.py`](backpropagation.py), [`problemas_convergencia.py`](problemas_convergencia.py), [`sgd_lotes.py`](sgd_lotes.py), [`regularizacion_redes.py`](regularizacion_redes.py), [`redes_convolucionales.py`](redes_convolucionales.py) y la suite web [`web/index.html`](web/index.html) arrojaron concordancia del 100% con el material de cátedra (18 Unidades Académicas • 1107 Diapositivas • 73 Laboratorios Interactivos).
 
 ---
 
-## 13. Referencias Bibliográficas
+## 15. Referencias Bibliográficas
 
 1. **Cauchy, A. (1847).** *Méthode générale pour la résolution des systèmes d'équations simultanées.* Comptes Rendus Hebdomadaires des Séances de l'Académie des Sciences, 25, 536-538.
 2. **McCulloch, W. S., & Pitts, W. (1943).** *A logical calculus of the ideas immanent in nervous activity.* The Bulletin of Mathematical Biophysics, 5(4), 115-133.
@@ -1224,32 +1685,47 @@ Para una capa vectorial $\mathbf{z}_k = W_k\mathbf{y}_{k-1} + \mathbf{b}_k$, $\m
 14. **Brady, M. L., Raghavan, R., & Slawny, J. (1989).** *Back propagation fails to separate where perceptrons succeed.* IEEE Transactions on Circuits and Systems, 36(5), 665-674.
 15. **Baldi, P., & Hornik, K. (1989).** *Neural networks and principal component analysis: Learning from examples without local minima.* Neural Networks, 2(1), 53-58.
 16. **Cybenko, G. (1989).** *Approximation by superpositions of a sigmoidal function.* Mathematics of Control, Signals and Systems, 2(4), 303-314.
-17. **Riedmiller, M., & Braun, H. (1993).** *A direct adaptive method for faster backpropagation learning: The RPROP algorithm.* IEEE International Conference on Neural Networks, 586-591.
-18. **Tieleman, T., & Hinton, G. (2012).** *Lecture 6.5—rmsprop: Divide the gradient by a running average of its recent magnitude.* COURSERA: Neural Networks for Machine Learning.
-19. **Dauphin, Y. N., Pascanu, R., Gulcehre, C., Cho, K., Ganguli, S., & Bengio, Y. (2014).** *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.* NIPS 2014.
-20. **Kingma, D. P., & Ba, J. (2015).** *Adam: A method for stochastic optimization.* ICLR 2015.
-21. **Choromanska, A., Henaff, M., Mathieu, M., Ben Arous, G., & LeCun, Y. (2015).** *The loss surfaces of multilayer networks.* AISTATS 2015.
-22. **Swirszcz, G., Czarnecki, W. M., & Pascanu, R. (2016).** *Local minima in training of neural networks.* arXiv:1611.06310.
-23. **Oakden-Rayner, L., Gale, W., Bonham, T. A., Lungren, M. P., Carneiro, G., Bradley, A. P., & Palmer, L. J. (2019).** *Validation and Algorithmic Audit of a Deep Learning System for the Detection of Pneumothorax in Chest Radiographs.* Scientific Reports, 10, 16140.
-24. **Rand, W. M. (1971).** *Objective criteria for the evaluation of clustering methods.* Journal of the American Statistical Association, 66(336), 846-850.
-25. **Lloyd, S. (1982).** *Least squares quantization in PCM.* IEEE Transactions on Information Theory, 28(2), 129-137.
-26. **Hubert, L., & Arabie, P. (1985).** *Comparing partitions.* Journal of Classification, 2(1), 193-218.
-27. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
-28. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
-29. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
-30. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad, Árboles CART/ID3 & Ensambles/Random Forests.* Ciencia de Datos — Doctorado UCN.
-31. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
-32. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
-33. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
-34. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
-35. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
-36. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
-37. **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.).* Springer, New York.
-38. **Galton, F. (1907).** *Vox populi (The wisdom of crowds).* Nature, 75(1949), 450-451.
-39. **Breiman, L. (1996).** *Bagging predictors.* Machine Learning, 24(2), 123-140.
-40. **Freund, Y., & Schapire, R. E. (1997).** *A decision-theoretic generalization of on-line learning and an application to boosting.* Journal of Computer and System Sciences, 55(1), 119-139.
-41. **Breiman, L. (2001).** *Random forests.* Machine Learning, 45(1), 5-32.
-42. **Friedman, J. H. (2001).** *Greedy function approximation: A gradient boosting machine.* Annals of Statistics, 29(5), 1189-1232.
-43. **Surowiecki, J. (2004).** *The Wisdom of Crowds: Why the Many Are Smarter Than the Few and How Collective Wisdom Shapes Business, Economies, Societies and Nations.* Doubleday, New York.
-44. **Chen, T., & Guestrin, C. (2016).** *XGBoost: A scalable tree boosting system.* KDD 2016, 785-794.
+17. **LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. (1998).** *Gradient-based learning applied to document recognition (LeNet-5).* Proceedings of the IEEE, 86(11), 2278-2324.
+18. **Riedmiller, M., & Braun, H. (1993).** *A direct adaptive method for faster backpropagation learning: The RPROP algorithm.* IEEE International Conference on Neural Networks, 586-591.
+19. **Tieleman, T., & Hinton, G. (2012).** *Lecture 6.5—rmsprop: Divide the gradient by a running average of its recent magnitude.* COURSERA: Neural Networks for Machine Learning.
+20. **Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012).** *ImageNet classification with deep convolutional neural networks (AlexNet).* Advances in Neural Information Processing Systems (NeurIPS 2012), 25, 1097-1105.
+21. **Simonyan, K., & Zisserman, A. (2014).** *Very deep convolutional networks for large-scale image recognition (VGG).* arXiv:1409.1556.
+22. **Dauphin, Y. N., Pascanu, R., Gulcehre, C., Cho, K., Ganguli, S., & Bengio, Y. (2014).** *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.* NIPS 2014.
+23. **Kingma, D. P., & Ba, J. (2015).** *Adam: A method for stochastic optimization.* ICLR 2015.
+24. **He, K., Zhang, X., Ren, S., & Sun, J. (2016).** *Deep residual learning for image recognition (ResNet).* Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR 2016), 770-778.
+25. **Choromanska, A., Henaff, M., Mathieu, M., Ben Arous, G., & LeCun, Y. (2015).** *The loss surfaces of multilayer networks.* AISTATS 2015.
+26. **Swirszcz, G., Czarnecki, W. M., & Pascanu, R. (2016).** *Local minima in training of neural networks.* arXiv:1611.06310.
+27. **Oakden-Rayner, L., Gale, W., Bonham, T. A., Lungren, M. P., Carneiro, G., Bradley, A. P., & Palmer, L. J. (2019).** *Validation and Algorithmic Audit of a Deep Learning System for the Detection of Pneumothorax in Chest Radiographs.* Scientific Reports, 10, 16140.
+28. **Rand, W. M. (1971).** *Objective criteria for the evaluation of clustering methods.* Journal of the American Statistical Association, 66(336), 846-850.
+29. **Lloyd, S. (1982).** *Least squares quantization in PCM.* IEEE Transactions on Information Theory, 28(2), 129-137.
+30. **Hubert, L., & Arabie, P. (1985).** *Comparing partitions.* Journal of Classification, 2(1), 193-218.
+31. **Ester, M., Kriegel, H.-P., Sander, J., & Xu, X. (1996).** *A density-based algorithm for discovering clusters in large spatial databases with noise.* KDD 1996, 226-231.
+32. **Arthur, D., & Vassilvitskii, S. (2007).** *k-means++: The advantages of careful seeding.* SODA 2007, 1027-1035.
+33. **Campello, R. J., Moulavi, D., & Zimek, A. (2013).** *Density-based clustering based on hierarchical density estimates.* PAKDD 2013, 160-172.
+34. **Raj, B., et al. (CMU 11-785), Protopapas, P., et al. (Harvard CS109), Liang, P., et al. (Stanford CS221) & Kolter, Z. (CMU 15-388).** *Aproximación Universal, Aprendizaje de Redes Neuronales, Descenso por Gradiente, Backpropagation, Problemas de Convergencia, Descenso Estocástico, Introducción a Machine Learning, Generalización y Validación, Reducción de Dimensionalidad, Árboles CART/ID3, Ensambles/Random Forests, Modelos No Lineales y SVM, Regularización de Redes & Redes Neuronales Convolucionales.* Ciencia de Datos — Doctorado UCN.
+35. **Fisher, R. A. (1936).** *The use of multiple measurements in taxonomic problems.* Annals of Eugenics, 7(2), 179-188.
+36. **Turk, M., & Pentland, A. (1991).** *Eigenfaces for recognition.* Journal of Cognitive Neuroscience, 3(1), 71-86.
+37. **Beyer, K., Goldstein, J., Ramakrishnan, R., & Shaft, U. (1999).** *When is "nearest neighbor" meaningful?* ICDT 1999, 217-235.
+38. **van der Maaten, L., & Hinton, G. (2008).** *Visualizing data using t-SNE.* Journal of Machine Learning Research, 9(Nov), 2579-2605.
+39. **Wattenberg, M., Viégas, F., & Johnson, I. (2016).** *How to use t-SNE effectively.* Distill, 1(10), e2.
+40. **McInnes, L., Healy, J., & Melville, J. (2018).** *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv:1802.03426.
+41. **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.).* Springer, New York.
+42. **Galton, F. (1907).** *Vox populi (The wisdom of crowds).* Nature, 75(1949), 450-451.
+43. **Breiman, L. (1996).** *Bagging predictors.* Machine Learning, 24(2), 123-140.
+44. **Freund, Y., & Schapire, R. E. (1997).** *A decision-theoretic generalization of on-line learning and an application to boosting.* Journal of Computer and System Sciences, 55(1), 119-139.
+45. **Breiman, L. (2001).** *Random forests.* Machine Learning, 45(1), 5-32.
+46. **Friedman, J. H. (2001).** *Greedy function approximation: A gradient boosting machine.* Annals of Statistics, 29(5), 1189-1232.
+47. **Surowiecki, J. (2004).** *The Wisdom of Crowds: Why the Many Are Smarter Than the Few and How Collective Wisdom Shapes Business, Economies, Societies and Nations.* Doubleday, New York.
+48. **Chen, T., & Guestrin, C. (2016).** *XGBoost: A scalable tree boosting system.* KDD 2016, 785-794.
+49. **Mercer, J. (1909).** *Functions of positive and negative type, and their connection with the theory of integral equations.* Philosophical Transactions of the Royal Society of London. Series A, 209, 415-446.
+50. **Aizerman, M. A., Braverman, E. M., & Rozonoer, L. I. (1964).** *Theoretical foundations of the potential function method in pattern recognition learning.* Automation and Remote Control, 25, 821-837.
+51. **Cover, T. M. (1965).** *Geometrical and statistical properties of systems of linear inequalities with applications in pattern recognition.* IEEE Transactions on Electronic Computers, EC-14(3), 326-334.
+52. **Cortes, C., & Vapnik, V. (1995).** *Support-vector networks.* Machine Learning, 20(3), 273-297.
+53. **Vapnik, V. N. (1998).** *Statistical Learning Theory.* Wiley, New York.
+54. **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning (Chapter 7: Sparse Kernel Machines).* Springer, New York.
+55. **Pascanu, R., Mikolov, T., & Bengio, Y. (2013).** *On the difficulty of training recurrent neural networks (Gradient Clipping).* ICML 2013, 1310-1318.
+56. **Wan, L., Zeiler, M., Zhang, S., LeCun, Y., & Fergus, R. (2013).** *Regularization of neural networks using DropConnect.* ICML 2013, 1058-1066.
+57. **Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014).** *Dropout: A simple way to prevent neural networks from overfitting.* Journal of Machine Learning Research, 15(1), 1929-1958.
+58. **Ioffe, S., & Szegedy, C. (2015).** *Batch Normalization: Accelerating deep network training by reducing internal covariate shift.* ICML 2015, 448-456.
+59. **Power, A., Burda, Y., Edwards, H., Babuschkin, I., & Misra, V. (2022).** *Grokking: Generalization beyond overfitting on small algorithmic datasets.* arXiv:2201.02177.
 

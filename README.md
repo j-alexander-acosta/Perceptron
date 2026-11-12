@@ -1,6 +1,6 @@
-# Suite Educativa de Ciencia de Datos y Redes Neuronales (15 Unidades Académicas • 939 Diapositivas • 61 Laboratorios)
+# Suite Educativa de Ciencia de Datos y Redes Neuronales (18 Unidades Académicas • 1107 Diapositivas • 73 Laboratorios)
 
-Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al., Hastie, Tibshirani & Friedman ESL y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD13`–`CD18`)**:
+Este repositorio implementa de manera interactiva, visual y educativa los fundamentos teóricos y prácticos de las unidades del curso (*Ciencia de Datos — Doctorado UCN, basado en CMU 15-388/688 de Z. Kolter, Harvard CS109 de P. Protopapas et al., CMU 11-785 de B. Raj et al., Stanford CS221 de P. Liang et al., Hastie, Tibshirani & Friedman ESL, Vapnik SVM y UC Berkeley DS100*), **ordenadas estrictamente según el código secuencial del archivo de cátedra (`CD01`, ..., `CD10`, `CD13`–`CD20`)**:
 
 * **CD01 (Primera en orden) — Introducción al Curso (63 Diapositivas):** Laboratorios 0.1 a 0.4 ([`introduccion_curso.py`](introduccion_curso.py)).
 * **CD02 (Segunda en orden) — Preprocesamiento y Análisis Exploratorio de Datos (74 Diapositivas):** Laboratorios 02.1 a 02.4 ([`preprocesamiento_eda.py`](preprocesamiento_eda.py)).
@@ -11,13 +11,16 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 * **CD07 (Séptima en orden) — Reducción de Dimensionalidad (73 Diapositivas):** Laboratorios 07.1 a 07.4 ([`reduccion_dimensionalidad.py`](reduccion_dimensionalidad.py)).
 * **CD08 (Octava en orden) — Modelos de Árboles de Clasificación y Regresión (68 Diapositivas):** Laboratorios 08.1 a 08.4 ([`arboles_decision.py`](arboles_decision.py)).
 * **CD09 (Novena en orden) — Ensamblaje de Modelos y Random Forests (59 Diapositivas):** Laboratorios 09.1 a 09.4 ([`ensambles_random_forest.py`](ensambles_random_forest.py)).
-* *(Espacio reservado en secuencia para las próximas unidades `CD10` a `CD12` según orden de cátedra).*
+* **CD10 (Décima en orden — Culminación Fase 1) — Modelos No Lineales y Support Vector Machines (65 Diapositivas):** Laboratorios 10.1 a 10.4 ([`modelos_no_lineales.py`](modelos_no_lineales.py)).
+* *(Espacio reservado en secuencia para las próximas unidades `CD11` a `CD12` según orden de cátedra).*
 * **CD13 (Unidad I) — Representación y Aproximación Universal (61 Diapositivas):** Laboratorios 1.1 a 1.5 ([`aproximacion_universal.py`](aproximacion_universal.py)).
 * **CD14 (Unidad II) — Aprendizaje de Redes Neuronales (56 Diapositivas):** Laboratorios 2.1 a 2.4 ([`aprendizaje_redes.py`](aprendizaje_redes.py)).
 * **CD15 (Unidad III) — Descenso por Gradiente y Convergencia (47 Diapositivas):** Laboratorios 3.1 a 3.4 ([`descenso_gradiente.py`](descenso_gradiente.py)).
 * **CD16 (Unidad IV) — Algoritmo de Backpropagation (60 Diapositivas):** Laboratorios 4.1 a 4.4 ([`backpropagation.py`](backpropagation.py)).
 * **CD17 (Unidad V) — Problemas de Convergencia en el Entrenamiento (58 Diapositivas):** Laboratorios 5.1 a 5.4 ([`problemas_convergencia.py`](problemas_convergencia.py)).
 * **CD18 (Unidad VI) — Descenso por Gradiente Estocástico y Lotes (41 Diapositivas):** Laboratorios 6.1 a 6.4 ([`sgd_lotes.py`](sgd_lotes.py)).
+* **CD19 (Unidad VII) — Regularización de Redes Neuronales (46 Diapositivas):** Laboratorios 7.1 a 7.4 ([`regularizacion_redes.py`](regularizacion_redes.py)).
+* **CD20 (Unidad VIII) — Redes Neuronales Convolucionales (CNNs) (57 Diapositivas):** Laboratorios 8.1 a 8.4 ([`redes_convolucionales.py`](redes_convolucionales.py)).
 
 > 📄 **Informe Académico Completo:** Consulta el desarrollo matemático y las demostraciones en [`INFORME.md`](INFORME.md).
 
@@ -273,6 +276,34 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 💠 CD10 (DÉCIMA EN ORDEN — CULMINACIÓN FASE 1): Modelos No Lineales y Support Vector Machines (65 Diapositivas)
+
+1. **Módulo 10.1 — k-Nearest Neighbors (kNN), Regresión, Clasificación y Maldición Dimensional (Diaps. 1–19):**
+   * **Regresión kNN:** Estimador no paramétrico $\hat{y}(x_q) = \frac{1}{k}\sum_{i \in N_k(x_q)} y_i$. Trazado numérico sobre 9 puntos: para $x_q = 2.2$, $1\text{-NN}$ predice $\mathbf{3.80}$ y $3\text{-NN}$ predice $\mathbf{4.00}$ (o $3.83$), con salto escalonado en el punto medio $x = \mathbf{2.25}$.
+   * **Dilema Sesgo-Varianza:** $k=1$ posee sesgo cero y varianza máxima ($\text{RMSE}_{\text{train}} = 0.00, \text{RMSE}_{\text{test}} = 0.23$, sobreajuste); $k=N$ predice la media global con sesgo máximo y varianza nula ($3.50, \text{RMSE}_{\text{test}} = 0.50$); $k=3$ ofrece el óptimo balance ($\text{RMSE}_{\text{test}} = 0.19$).
+   * **Clasificación kNN:** Votación mayoritaria $P(y=c|x) = \frac{1}{k}\sum \mathbb{I}(y_i=c)$ (3 azules vs 2 naranjas $\implies P=0.60 \to \text{Azul}$).
+   * **Maldición de la Dimensionalidad:** En $[0, 1]^p$, la distancia promedio a la cáscara exterior es $d_{\text{edge}}(p) = 1 - (1/2)^{1/p}$. Para $p=10 \implies \mathbf{79.4\%}$; para $p=100 \implies \mathbf{97.7\%}$. La métrica euclidiana pierde contraste y no existen vecinos genuinamente locales (Beyer et al., 1999).
+
+2. **Módulo 10.2 — Feature Maps, Espacios Transformados y Teorema de Separabilidad de Cover (Diaps. 20–34):**
+   * **Frontera Circular Cuadrática:** Separación del disco $(x_1-1)^2 + (x_2-1)^2 \le 2$ mapeando a $\phi(x) = [x_1, x_2, x_1^2 + x_2^2]^T$ con pesos $w = [2, 2, -1]^T$ y sesgo $b=0$, transformando un círculo en un hiperplano lineal en $\mathbb{R}^3$.
+   * **Modelos a Trozos:** Base de indicatrices de soporte compacto $\phi_j(x) = \mathbb{I}(x \in B_j)$ generando vectores *one-hot*.
+   * **Teorema de Thomas Cover (1965):** Probabilidad de separabilidad lineal $P(N, D) = 2^{1-N}\sum_{i=0}^{D-1}\binom{N-1}{i}$, con transición de fase crítica en $N = 2D$.
+   * **Explosión Combinatoria:** Un polinomio de grado $d=5$ sobre $J=100$ variables requiere $\binom{105}{5} = \mathbf{96\,560\,646}$ dimensiones, colapsando la memoria y el cómputo explícito.
+
+3. **Módulo 10.3 — Support Vector Machines (SVM), Margen Máximo y Soft-Margin C (Diaps. 35–48):**
+   * **Distancia con Signo:** $d(x) = \frac{w \cdot x + b}{\|w\|}$. Para $3x_1 + 4x_2 - 5 = 0$, punto $(2, 3) \implies d = +2.60$, punto $(0, 0) \implies d = -1.00$.
+   * **Margen Rígido (Hard Margin):** Minimizar $\frac{1}{2}\|w\|^2$ sujeto a $y_n(w \cdot x_n + b) \ge 1$. Resolución exacta para 8 puntos separables con vectores de soporte $(2, 2)$ y $(0, 0)$: $w = [0.5, 0.5]^T, b = -1.0 \implies \|w\| = \frac{1}{\sqrt{2}} \approx 0.707 \implies \text{Margen } \gamma = \mathbf{2\sqrt{2}} \approx \mathbf{2.828}$.
+   * **Margen Blando (Soft Margin) y Holguras $\xi_n$:** Minimizar $\frac{1}{2}\|w\|^2 + C \sum \xi_n$, equivalente a Hinge Loss con regularización $\lambda = \frac{1}{2C}$.
+   * **Dualidad de Wolfe y Condiciones KKT:** $\alpha_n [y_n(w \cdot x_n + b) - 1 + \xi_n] = 0$. Únicamente los puntos con $\alpha_n > 0$ determinan la frontera óptima.
+
+4. **Módulo 10.4 — El Truco del Kernel y Conexión con Redes Neuronales (Diaps. 49–65):**
+   * **Truco del Kernel (Aizerman et al., 1964; Mercer, 1909):** Evalúa productos internos $K(x, z) = \langle \phi(x), \phi(z) \rangle$ en espacios de Hilbert sin jamás proyectar explícitamente los datos.
+   * **Kernel Polinomial:** $(1 + x \cdot z)^2 = 36$ computado en $O(d)$ sin instanciar el vector de dimensión 6.
+   * **Kernel RBF Gaussiano:** $K(x, z) = \exp(-\gamma \|x - z\|^2)$ con radio $\sigma = \sqrt{1/(2\gamma)}$. Corresponde mediante serie de Taylor a un espacio de Hilbert de dimensión *infinita*. Comportamiento asintótico: $\gamma \to 0$ (lineal/subajuste) vs $\gamma \to \infty$ (islas de memorización).
+   * **Puente hacia Redes Neuronales (MLP):** La capa oculta $h = \sigma(Vx + c)$ es un **Feature Map adaptativo** aprendido por Backpropagation. Demostración formal: 2 neuronas ReLU con $V = [[1, 1], [1, 1]]$ y $c = [-0.5, -1.5]$ proyectan XOR a $(0,0)\to[0,0], (0,1)\to[0.5,0], (1,0)\to[0.5,0], (1,1)\to[1.5,0.5]$, donde la salida $h_1 - 2h_2 - 0.25 = 0$ **lo separa linealmente**.
+
+---
+
 ### 🟦 CD13 (UNIDAD I): Representación y Aproximación Universal con Redes Neuronales
 
 1. **Módulo 1.1 — Compuertas de Umbral y Arquitecturas XOR (Diaps. 6–15):**
@@ -398,9 +429,50 @@ Este repositorio implementa de manera interactiva, visual y educativa los fundam
 
 ---
 
+### 🟪 UNIDAD VII: Regularización de Redes Neuronales (46 Diapositivas)
+
+1. **Módulo 7.1 — Divergencias, Saturación Sigmoidal y Suavidad de la Red (Diaps. 2–14):**
+   * **L2 vs. Divergencia KL con Softmax:** En saturación logística ($z = 6, d = 0 \implies y \approx 0.9975$), la derivada $\sigma'(6) \approx 0.0025$ aplana el gradiente $L_2$ a $(y-d)\sigma' \approx 0.00246$ a pesar del error máximo. Con Softmax + KL, $\nabla_z \text{div} = \mathbf{y} - \mathbf{d}$ (en cátedra: $[0.2, 0.5, 0.3] - [0, 1, 0] = [0.2, -0.5, 0.3]$).
+   * **Subespecificación de datos:** En $\{0,1\}^{100}$ hay $2^{100} \approx 1.267 \times 10^{30}$ puntos; incluso con $10^{15}$ ejemplos observados falta un factor de $10^{15}$. Controlar $\prod \|W_k\|$ acota la constante de Lipschitz $\text{Lip}(f) \le \prod \|W_k\|$, forzando transiciones lentas ($w=0.5 \implies \max |f'|=0.125$ vs $w=5.0 \implies \max |f'|=1.25$).
+2. **Módulo 7.2 — Regularización L2 y Decaimiento de Pesos (Weight Decay 1-ηλ) (Diaps. 15–20):**
+   * **Objetivo regularizado:** $\min_W \frac{1}{T}\sum \text{div} + \frac{1}{2}\lambda \sum \|W\|_F^2$.
+   * **Regla de actualización con decaimiento:** $W \leftarrow (1 - \eta\lambda)W - \frac{\eta}{b}\sum \nabla\text{div}$. Ejemplo exacto de cátedra: con $\eta = 0.1, \lambda = 0.1$, el factor es $1 - 0.01 = 0.99$ (encoge los pesos un $1\%$ por paso).
+   * **Espectro de $\lambda$:** $\lambda = 0$ (sobreajuste), $\lambda$ óptimo (generalización), $\lambda \to \infty$ (pesos a cero, sesgo libre colapsa a la función constante $\bar{y}$).
+3. **Módulo 7.3 — Dropout y Dropout Invertido (Srivastava et al., 2014) (Diaps. 21–30):**
+   * **Desconexión Bernoulli:** Retención $\alpha$ (típico $0.5$ en capa oculta, $0.8$ en entrada). Previene la co-adaptación de neuronas y entrena un ensamble implícito de $2^N$ subredes con pesos compartidos (Bagging).
+   * **Dropout Tradicional vs Invertido:** Con $f(z) = 2.0, \alpha = 0.8$, tradicional propaga $2.0$ y en prueba escala por $0.8 \to 1.6$. Dropout Invertido escala en entrenamiento por $1/\alpha = 1.25$ ($2.0/0.8 = 2.50$, $\mathbb{E}[y] = 2.0$), permitiendo inferencia directa como identidad sin escalamiento adicional.
+   * **Variantes:** DropConnect (pesos), Zoneout (RNNs), Whiteout (ruido gaussiano aditivo).
+4. **Módulo 7.4 — Trucos del Oficio y Batch Normalization (Ioffe & Szegedy, 2015) (Diaps. 31–46):**
+   * **Arsenal del Ingeniero:** Early Stopping, Grokking (Power et al., 2022), Gradient Clipping ($\theta = 5.0$) y Aumento de Datos.
+   * **Batch Normalization:** $\mu_B, \sigma_B^2, u_i = (z_i - \mu_B)/\sqrt{\sigma_B^2+\epsilon}, \hat{z}_i = \gamma u_i + \beta$.
+   * **Micro-ejemplos exactos de cátedra:** Lote $z = \{1, 2, 3, 6\} \implies \mu_B = 3.0, \sigma_B^2 = 3.5 \implies u \approx \{-1.07, -0.53, 0.00, 1.60\}$. Lote $z = \{2, 4, 6, 8\} \implies \mu_B = 5.0, \sigma_B^2 = 5.0 \implies u \approx \{-1.34, -0.45, 0.45, 1.34\}$. Factor de Bessel $B/(B-1) = 4/3 \approx 1.333$ en inferencia.
+
+---
+
+### 🟦 UNIDAD VIII: Redes Neuronales Convolucionales (57 Diapositivas)
+
+1. **Módulo 8.1 — ¿Por qué las Imágenes Rompen a los MLP? (Diaps. 5–13):**
+   * **Aplanamiento 1D y Explosión Combinatoria:** ImageNet ($224\times 224\times 3 = 150\,528$ entradas) con 128 neuronas en primera capa oculta requiere **$19\,267\,712$ parámetros** ($128 \times 150\,529$ pesos + sesgos); caso modesto ($100\times 100\times 1$, 64 neuronas) exige **$640\,064$ parámetros**.
+   * **Falta de Invarianza a Traslaciones:** En un MLP, un objeto en la esquina superior izquierda activa pesos completamente distintos que en la esquina inferior derecha.
+   * **La Historia del Cisne y Visión Clásica:** Fracaso de reglas manuales rígidas y detectores artesanales (SIFT, SURF, FAST). Fundamentos de CNN: *Localidad Espacial* (correlación de vecindad) y *Jerarquía Visual* (bordes $\to$ partes $\to$ objetos).
+2. **Módulo 8.2 — Convolución 2D, Filtros, Padding y Stride (Diaps. 14–28):**
+   * **Suma ponderada local con pesos compartidos:** $h = \sum w_{ij} x_{ij} + b$.
+   * **Micro-ejemplo exacto de cátedra (Diaps. 17–21):** Imagen $5 \times 5$ con borde vertical (columnas $[3,3,3,0,0]$) y filtro vertical $3\times 3$ ($[1,0,-1]$ en cada fila, $b=0$) produce exactamente una salida $3\times 3$ con filas $[0, 9, 9]$, detectando la transición del borde.
+   * **Fórmula analítica de dimensiones de salida:** $O = \lfloor(W - K + 2P)/S\rfloor + 1$. Verificada en los 3 casos de MNIST ($28\times 28$, $K=5$): Valid $24\times 24$, Same ($P=2$) $28\times 28$, y Stride 2 $14\times 14$. Foto de gato $140\times 140$ con filtro $3\times 3 \implies \mathbf{19\,044}$ paradas de filtro.
+3. **Módulo 8.3 — Pooling (Max vs Mean) y No Linealidad ReLU (Diaps. 29–35):**
+   * **Micro-ejemplo de cátedra en matriz $4\times 4$ (Diap. 29):** Max Pooling $2\times 2$ ($S=2$) produce $[[7, 8], [3, 4]]$, Mean Pooling produce $[[3.50, 5.50], [1.75, 2.00]]$, con **0 parámetros aprendibles**.
+   * **Reducción espacial y robustez:** 3 rondas sucesivas de Max Pooling $2\times 2$ en foto $560\times 560$ la reducen a $70\times 70$ (factor $64\times$), proveyendo invarianza a pequeñas traslaciones.
+   * **ReLU:** $\text{ReLU}(z) = \max\{0, z\}$ aplicada elemento a elemento para preservar gradientes positivos.
+4. **Módulo 8.4 — Desglose Arquitectónico, Conteo de Parámetros (99.8% FC) y Transfer Learning (Diaps. 36–57):**
+   * **Conteo a mano de la red de cátedra ($32\times 32\times 3 \to 4$ clases):** Conv1 ($224$), Conv2 ($3\,216$) $\to$ Subtotal Conv $3\,440$ ($0.16\%$). Flatten $4\,096$ valores. FC1 ($2\,097\,664$), FC2 ($2\,052$) $\to$ Subtotal Denso $2\,099\,716$ ($99.84\%$). **Total Red: $2\,103\,156$ parámetros** ($99.8\%$ en bloque denso). Capa intermedia ($14\times 14\times 16$, 32 filtros $3\times 3$) $\implies 4\,640$ parámetros.
+   * **Matriz 2×2 Transfer Learning:** Similitud de dominio vs Tamaño del dataset. Escenarios: 600 fotos fauna altiplánica (congelar base + nueva cabeza), 2M fotos industriales (fine-tuning completo), 400 espectrogramas sísmicos. Tasas de aprendizaje decrecientes: $\eta_{\text{temprana}} = \frac{1}{3}\dots\frac{1}{10}\eta_{\text{tardía}}$.
+   * **Tres Hitos Históricos:** LeNet-5 (1998, cheques MNIST, ~60k params), AlexNet (2012, ImageNet 16.4% top-5, 60M params, GPU CUDA+ReLU+Dropout), ResNet (2015, bloques residuales $\mathbf{x}+F(\mathbf{x})$, 152 capas, 3.6% top-5 superando al humano).
+
+---
+
 ## 🚀 Cómo Ejecutar los Laboratorios Educativos
 
-### 1. 🌐 Suite Web Educativa Interactiva (15 Unidades: CD01–CD09 y CD13–CD18 • 61 Laboratorios en Navegador)
+### 1. 🌐 Suite Web Educativa Interactiva (18 Unidades: CD01–CD10 y CD13–CD20 • 73 Laboratorios en Navegador)
 ```bash
 open web/index.html
 # O desde Python:
@@ -409,7 +481,7 @@ python3 perceptron_xor.py --web
 
 ### 2. ⚡ Laboratorios en Consola por Unidad (Python Puro, Orden de Cátedra)
 ```bash
-# Ejecutar TODAS las verificaciones de CD01–CD09 y CD13–CD18 automáticamente (15 Unidades):
+# Ejecutar TODAS las verificaciones de CD01–CD10 y CD13–CD20 automáticamente (18 Unidades):
 python3 perceptron_xor.py --auto
 
 # Laboratorio interactivo de CD01 (Primera en orden — Introducción al Curso):
@@ -439,6 +511,9 @@ python3 arboles_decision.py
 # Laboratorio interactivo de CD09 (Novena en orden — Ensambles, Bagging, Random Forest y Boosting):
 python3 ensambles_random_forest.py
 
+# Laboratorio interactivo de CD10 (Décima en orden — kNN, Feature Maps, SVM y Truco del Kernel):
+python3 modelos_no_lineales.py
+
 # Laboratorio interactivo de CD13 / Unidad I (Aproximación Universal):
 python3 aproximacion_universal.py
 
@@ -457,6 +532,12 @@ python3 problemas_convergencia.py
 # Laboratorio interactivo de CD18 / Unidad VI (Descenso por Gradiente Estocástico y Lotes):
 python3 sgd_lotes.py
 
+# Laboratorio interactivo de CD19 / Unidad VII (Regularización de Redes Neuronales):
+python3 regularizacion_redes.py
+
+# Laboratorio interactivo de CD20 / Unidad VIII (Redes Neuronales Convolucionales - CNNs):
+python3 redes_convolucionales.py
+
 # Menú principal integrado con navegación secuencial:
 python3 perceptron_xor.py
 ```
@@ -465,9 +546,9 @@ python3 perceptron_xor.py
 
 ## 📁 Estructura del Proyecto
 ```
-├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD09, luego CD13 a CD18)
-├── INFORME.md                   # Informe académico detallado de las 15 unidades (CD01–CD09 y CD13–CD18)
-├── perceptron_xor.py            # Lanzador central y verificador integrado (15 unidades • 61 laboratorios)
+├── README.md                    # Guía general ordenada por código de cátedra (CD01 a CD10, luego CD13 a CD20)
+├── INFORME.md                   # Informe académico detallado de las 18 unidades (CD01–CD10 y CD13–CD20)
+├── perceptron_xor.py            # Lanzador central y verificador integrado (18 unidades • 73 laboratorios)
 ├── introduccion_curso.py        # CD01 (Primera en orden): Pandemia, SIR (Diap. 13), Netflix Prize, 3 Relatos IA y LLMs
 ├── preprocesamiento_eda.py      # CD02 (Segunda en orden): Sesgos Gallup/Yelp/QR, CRISP-DM, Pandas epl_mini (23 jug.) y Anscombe
 ├── visualizacion_datos.py       # CD03 (Tercera en orden): Datasaurus, Burtin 1951 (16 bacterias), Tufte Lie Factor, Stevens, Correll y Mirages
@@ -477,14 +558,17 @@ python3 perceptron_xor.py
 ├── reduccion_dimensionalidad.py # CD07 (Séptima en orden): Maldición Dim P_d, PCA Paso a Paso (6 pts), Fisher LDA (8 pts), t-SNE y UMAP
 ├── arboles_decision.py          # CD08 (Octava en orden): Particionado Ortogonal, Impureza Error/Gini/Entropía, ID3, Weakest Link y CART Regresión
 ├── ensambles_random_forest.py   # CD09 (Novena en orden): Galton 1907 (787 votos), Condorcet, Bagging (1-1/e), ESL 15.1, Random Forest m=√J y AdaBoost
+├── modelos_no_lineales.py       # CD10 (Décima en orden): kNN (Diap. 8), Feature Maps Cover N=2D, SVM Margen Máximo y Truco Kernel
 ├── aproximacion_universal.py    # CD13 (Unidad I): DNF, Karnaugh, Paridad N-aria, Polígonos y Pulsos
 ├── aprendizaje_redes.py         # CD14 (Unidad II): Rosenblatt (Diap. 22), ADALINE, Sigmoide, Softmax y KL
 ├── descenso_gradiente.py        # CD15 (Unidad III): Gradiente, Hessiana 3D (Diap. 24), 200 Épocas y Step Size
 ├── backpropagation.py           # CD16 (Unidad IV): Reglas de la Cadena, Grafos (Diaps. 21/23), Red ReLU 2 Capas y Jacobianos
 ├── problemas_convergencia.py    # CD17 (Unidad V): Brady et al. (1989), 6 Trayectorias, Condición κ, Newton, RProp y QuickProp
 ├── sgd_lotes.py                 # CD18 (Unidad VI): SGD a mano (Diap. 14), Robbins-Monro, Varianza 1/b, Momentum, Nesterov, RMSprop y Adam
+├── regularizacion_redes.py      # CD19 (Unidad VII): L2 vs KL, Suavidad, Weight Decay (1-ηλ), Dropout/Invertido y BatchNorm
+├── redes_convolucionales.py     # CD20 (Unidad VIII): MLP vs Convolución, Micro-ejemplo 5x5, Pooling 4x4, Parámetros (99.8% FC) e Hitos
 ├── gui_xor.py                   # Interfaz gráfica de escritorio nativa (Tkinter)
 ├── web/
-│   └── index.html               # Suite Web Interactiva (15 Unidades: CD01–CD09 y CD13–CD18 • 61 Laboratorios)
-└── contexto/                    # Historial secuencial de planes de trabajo (context1..context21)
+│   └── index.html               # Suite Web Interactiva (18 Unidades: CD01–CD10 y CD13–CD20 • 73 Laboratorios)
+└── contexto/                    # Historial secuencial de planes de trabajo (context1..context24)
 ```
